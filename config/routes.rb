@@ -1,4 +1,10 @@
 Rails.application.routes.draw do
+  
+  namespace :admin do
+    resources :rooms do
+      resources :room_amenities
+    end
+  end
 
   namespace :rui do
     get "about", to: "pages#about"
