@@ -31,7 +31,9 @@
             </td>
             <td class="px-4 py-2">
               <% if room.qr_code.attached? %>
-                <%= image_tag room.qr_code.variant(resize: "50x50"), class: "rounded-lg shadow-md" %>
+               <%# <%= image_tag url_for(room.qr_code), class: "rounded-lg shadow-md" %> %>
+               <%= image_tag url_for(room.qr_code.variant(resize_to_limit: [50, 50]).processed), class: "rounded-lg shadow-md" %>
+
               <% else %>
                 <span class="text-gray-500">No QR Code</span>
               <% end %>
