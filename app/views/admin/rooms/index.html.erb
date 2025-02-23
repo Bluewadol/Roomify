@@ -1,51 +1,49 @@
 <div class="container mx-auto p-6">
-  <h1 class="text-2xl font-bold mb-4">Rooms Management</h1>
+    <h1 class="text-2xl font-bold mb-4">Rooms Management</h1>
 
-  <div class="mb-4">
-    <%= link_to "Add New Room", new_admin_room_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-  </div>
+    <div class="mb-4">
+        <%= link_to "Add New Room", new_admin_room_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+    </div>
 
-  <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-    <table class="min-w-full bg-white border border-gray-300 rounded-lg">
-      <thead class="bg-gray-100">
-        <tr class="border-b">
-          <th class="px-4 py-2 text-left">Name</th>
-          <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
-          <th class="px-4 py-2 text-left">Status</th>
-          <th class="px-4 py-2 text-left">QR Code</th>
-          <th class="px-4 py-2 text-left">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @rooms.each do |room| %>
-          <tr class="border-b hover:bg-gray-50">
-            <td class="px-4 py-2">
-              <%= link_to room.name, admin_room_path(room), class: "text-blue-600 hover:underline" %>
-            </td>
-            <td class="px-4 py-2"><%= "#{room.capacity_min} - #{room.capacity_max}" %></td>
-            <td class="px-4 py-2">
-              <span class="px-2 py-1 rounded text-white 
-                <%= room.available? ? 'bg-green-500' : room.booked? ? 'bg-yellow-500' : 'bg-red-500' %>">
-                <%= room.status.capitalize %>
-              </span>
-            </td>
-            <td class="px-4 py-2">
-              <% if room.qr_code.attached? %>
-               <%# <%= image_tag url_for(room.qr_code), class: "rounded-lg shadow-md" %> %>
-               <%= image_tag url_for(room.qr_code.variant(resize_to_limit: [50, 50]).processed), class: "rounded-lg shadow-md" %>
-
-              <% else %>
-                <span class="text-gray-500">No QR Code</span>
-              <% end %>
-            </td>
-            <td class="px-4 py-2">
-                <%= link_to "Amenities", admin_room_room_amenities_path(room), class: "text-blue-500 hover:underline" %> |
-                <%= link_to "Edit", edit_admin_room_path(room), class: "text-yellow-600 hover:underline mr-2" %>  |
-                <%= button_to "Delete", admin_room_path(room), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
-            </td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </div>
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+        <thead class="bg-gray-100">
+            <tr class="border-b">
+            <th class="px-4 py-2 text-left">Name</th>
+            <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
+            <th class="px-4 py-2 text-left">Status</th>
+            <th class="px-4 py-2 text-left">QR Code</th>
+            <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @rooms.each do |room| %>
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2">
+                <%= link_to room.name, admin_room_path(room), class: "text-blue-600 hover:underline" %>
+                </td>
+                <td class="px-4 py-2"><%= "#{room.capacity_min} - #{room.capacity_max}" %></td>
+                <td class="px-4 py-2">
+                <span class="px-2 py-1 rounded text-white 
+                    <%= room.available? ? 'bg-green-500' : room.booked? ? 'bg-yellow-500' : 'bg-red-500' %>">
+                    <%= room.status.capitalize %>
+                </span>
+                </td>
+                <td class="px-4 py-2">
+                <% if room.qr_code.attached? %>
+                    <%= image_tag url_for(room.qr_code.variant(resize_to_limit: [50, 50]).processed), class: "rounded-lg shadow-md" %>
+                <% else %>
+                    <span class="text-gray-500">No QR Code</span>
+                <% end %>
+                </td>
+                <td class="px-4 py-2">
+                    <%= link_to "Amenities", admin_room_room_amenities_path(room), class: "text-blue-500 hover:underline" %> |
+                    <%= link_to "Edit", edit_admin_room_path(room), class: "text-yellow-600 hover:underline mr-2" %>  |
+                    <%= button_to "Delete", admin_room_path(room), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+        </table>
+    </div>
 </div>
