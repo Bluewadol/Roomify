@@ -1,5 +1,5 @@
 class Admin::RoomsController < ApplicationController
-    before_action :set_room, only: [:show, :edit, :update, :destroy]
+    before_action :set_room, only: [ :show, :edit, :update, :destroy ]
 
     def index
         @rooms = Room.all
@@ -31,7 +31,7 @@ class Admin::RoomsController < ApplicationController
     end
 
     def destroy
-        @room.qr_code.purge 
+        @room.qr_code.purge
         @room.destroy
         redirect_to admin_rooms_path, notice: "Room deleted successfully."
     end

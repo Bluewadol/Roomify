@@ -16,13 +16,13 @@ class Rui::PagesController < ApplicationController
   end
 
   def custom_layout_exists?(page_obj)
-    page_obj['layout'].present? &&
+    page_obj["layout"].present? &&
       lookup_context.exists?("layouts/rui/railsui_#{page_obj['layout']}")
   end
 
   def admin_layout?(page_obj)
-    page_obj['namespace'] == 'admin' &&
+    page_obj["namespace"] == "admin" &&
       lookup_context.exists?("layouts/rui/railsui_admin") &&
-      !page_obj['layout'].present?
+      !page_obj["layout"].present?
   end
 end

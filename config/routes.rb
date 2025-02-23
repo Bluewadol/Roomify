@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  
   namespace :admin do
     resources :rooms do
       resources :room_amenities
@@ -27,7 +26,7 @@ Rails.application.routes.draw do
   end
 
   if Rails.env.development?
-     # Visit the start page for Rails UI any time at /railsui/start
+    # Visit the start page for Rails UI any time at /railsui/start
     mount Railsui::Engine, at: "/railsui"
   end
 
