@@ -2,30 +2,29 @@
     <%= form_with(model: @amenity, url: @amenity.persisted? ? admin_room_room_amenity_path(@room, @amenity) : admin_room_room_amenities_path(@room), local: true) do |f| %>
 
         <% if @amenity.errors.any? %>
-        <div class="text-red-500">
-            <h2>Errors:</h2>
-            <ul>
-            <% @amenity.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-            <% end %>
-            </ul>
-        </div>
+            <div class="text-red-500">
+                <h2>Errors:</h2>
+                <ul>
+                <% @amenity.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                <% end %>
+                </ul>
+            </div>
         <% end %>
 
         <div class="mb-4">
-        <%= f.label :amenity_name, "Amenity Name", class: "block font-medium text-gray-700" %>
-        <%= f.text_field :amenity_name, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
+            <%= f.label :amenity_name, "Amenity Name", class: "block font-medium text-gray-700" %>
+            <%= f.text_field :amenity_name, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
         </div>
 
         <div class="mb-4">
-        <%= f.label :quantity, "Quantity", class: "block font-medium text-gray-700" %>
-        <%= f.number_field :quantity, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
+            <%= f.label :quantity, "Quantity", class: "block font-medium text-gray-700" %>
+            <%= f.number_field :quantity, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
         </div>
 
         <div class="flex space-x-2">
-        <%= f.submit @amenity.persisted? ? "Update Amenity" : "Create Amenity", class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-        <%= link_to "Cancel", admin_room_room_amenities_path(@room), class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
+            <%= f.submit @amenity.persisted? ? "Update Amenity" : "Create Amenity", class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+            <%= link_to "Cancel", admin_room_room_amenities_path(@room), class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
         </div>
-
     <% end %>
 </div>
