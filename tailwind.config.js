@@ -16,5 +16,9 @@ module.exports = {
     './app/views/**/*.html.erb',
     rails_ui_path,
     rails_ui_template_path
-  ]
+  ],
+  theme: {
+    extend: {}
+  },
+  plugins: []
 }

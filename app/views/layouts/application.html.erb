@@ -25,9 +25,10 @@
     <%= railsui_head %>
 </head>
 
-  <body>
+  <body class="dark:bg-gray-900" >
     <%= yield %>
   
     <%= railsui_launcher if Rails.env.development? %>
-</body>
+  
+  </body>
 </html>

@@ -15,13 +15,11 @@ class Admin::RoomAmenitiesController < ApplicationController
     def create
         @amenity = @room.room_amenities.new(amenity_params)
         if @amenity.save
-        puts "✅ Amenity saved successfully!"
-          redirect_to admin_room_room_amenities_path(@room), notice: "Amenity added successfully."
+            redirect_to admin_room_room_amenities_path(@room), notice: "Amenity added successfully."
         else
-            puts @amenity.errors.full_messages
             render :new, status: :unprocessable_entity
         end
-      end
+    end
 
 
     def edit; end

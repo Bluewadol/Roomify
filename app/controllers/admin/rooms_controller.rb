@@ -14,9 +14,9 @@ class Admin::RoomsController < ApplicationController
     def create
         @room = Room.new(room_params)
         if @room.save
-        redirect_to admin_rooms_path, notice: "Room created successfully."
+            redirect_to admin_rooms_path, notice: "Room created successfully."
         else
-        render :new, status: :unprocessable_entity
+            render :new, status: :unprocessable_entity
         end
     end
 
@@ -24,9 +24,9 @@ class Admin::RoomsController < ApplicationController
 
     def update
         if @room.update(room_params)
-        redirect_to admin_rooms_path, notice: "Room updated successfully."
+            redirect_to admin_rooms_path, notice: "Room updated successfully."
         else
-        render :edit, status: :unprocessable_entity
+            render :edit, status: :unprocessable_entity
         end
     end
 

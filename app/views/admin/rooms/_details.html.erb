@@ -2,7 +2,8 @@
     <h2 class="text-xl font-semibold mb-4"><%= @room.name %></h2>
 
     <div class="mb-2">
-        <span class="font-medium">Capacity:</span> <%= "#{@room.capacity_min} - #{@room.capacity_max}" %>
+        <span class="font-medium">Capacity:</span> 
+        <%= @room.capacity_min == @room.capacity_max ? @room.capacity_max : "#{@room.capacity_min} - #{@room.capacity_max}" %> คน
     </div>
 
     <div class="mb-2">

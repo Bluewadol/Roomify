@@ -1,36 +1,50 @@
-<div class="bg-white shadow-md rounded-lg p-6">
+<div class="form-group">
     <%= form_with(model: @room, url: @room.persisted? ? admin_room_path(@room) : admin_rooms_path, method: @room.persisted? ? :patch : :post, local: true) do |f| %>
-        
-        <div class="mb-4">
-        <%= f.label :name, "Room Name", class: "block font-medium text-gray-700" %>
-        <%= f.text_field :name, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
-        </div>
 
-        <div class="mb-4 flex space-x-4">
+    <%= error_messages(@room) if @room.errors.any? %>
+
+    <div class="mb-4">
+        <%= f.label :name, "Room Name", class: "form-label" %>
+        <div class="relative">
+            <%= f.text_field :name, class: input_class(@room, :name), placeholder: "Enter room name" %>
+            <%= error_icon(@room, :name) %>
+        </div>
+        <%= field_error_tag(@room, :name) %>
+    </div>
+
+    <div class="mb-4 flex space-x-4">
         <div class="w-1/2">
-            <%= f.label :capacity_min, "Minimum Capacity", class: "block font-medium text-gray-700" %>
-            <%= f.number_field :capacity_min, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
+            <%= f.label :capacity_min, "Minimum Capacity", class: "form-label" %>
+            <div class="relative">
+                <%= f.number_field :capacity_min, class: input_class(@room, :capacity_min), placeholder: "Min capacity" %>
+                <%= error_icon(@room, :capacity_min) %>
+            </div>
+            <%= field_error_tag(@room, :capacity_min) %>
         </div>
+
         <div class="w-1/2">
-            <%= f.label :capacity_max, "Maximum Capacity", class: "block font-medium text-gray-700" %>
-            <%= f.number_field :capacity_max, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
+            <%= f.label :capacity_max, "Maximum Capacity", class: "form-label" %>
+            <div class="relative">
+                <%= f.number_field :capacity_max, class: input_class(@room, :capacity_max), placeholder: "Max capacity" %>
+                <%= error_icon(@room, :capacity_max) %>
+            </div>
+            <%= field_error_tag(@room, :capacity_max) %>
         </div>
-        </div>
+    </div>
 
-        <div class="mb-4">
-        <%= f.label :status, "Status", class: "block font-medium text-gray-700" %>
-        <%= f.select :status, Room.statuses.keys.map { |status| [status.capitalize, status] }, {}, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
+    <div class="mb-4">
+        <%= f.label :qr_code, "QR Code", class: "form-label" %>
+        <div class="relative">
+            <%= f.file_field :qr_code, class: input_class(@room, :qr_code), placeholder: "Upload QR Code" %>
+            <%= error_icon(@room, :qr_code) %>
         </div>
+        <%= field_error_tag(@room, :qr_code) %>
+    </div>
 
-        <div class="mb-4">
-        <%= f.label :qr_code, "QR Code", class: "block font-medium text-gray-700" %>
-        <%= f.file_field :qr_code, class: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300" %>
-        </div>
-
-        <div class="flex space-x-2">
+    <div class="flex space-x-2">
         <%= f.submit @room.persisted? ? "Update Room" : "Create Room", class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
         <%= link_to "Cancel", admin_rooms_path, class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
-        </div>
+    </div>
 
     <% end %>
 </div>
