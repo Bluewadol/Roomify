@@ -43,6 +43,6 @@ class Admin::RoomsController < ApplicationController
     end
 
     def room_params
-        params.require(:room).permit(:name, :capacity_min, :capacity_max, :status, :qr_code)
+        params.require(:room).permit(:name, :capacity_min, :capacity_max, :status, :qr_code, images: [])
     end
 end

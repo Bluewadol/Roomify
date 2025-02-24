@@ -3,6 +3,8 @@ class Room < ApplicationRecord
 
     has_one_attached :qr_code
 
+    has_many_attached :images
+
     enum :status, { available: 0, booked: 1, unavailable: 2 }, default: :available
 
     validates :name, presence: true, uniqueness: true
@@ -11,6 +13,10 @@ class Room < ApplicationRecord
     validate :validate_capacity_range
     validates :qr_code, presence: true
     validate :qr_code_must_be_image
+
+    validates :images, presence: true
+    validate :validate_images
+    validate :images_count_within_limit
 
     private
 
@@ -32,6 +38,20 @@ class Room < ApplicationRecord
 
         if !qr_code.content_type.in?(%w[image/jpeg image/png])
         errors.add(:qr_code, "must be a JPG or PNG image")
+        end
+    end
+
+    def validate_images
+        images.each do |image|
+            unless image.content_type.in?(%w[image/jpeg image/png image/webp])
+            errors.add(:images, "ต้องเป็นไฟล์ JPEG, PNG หรือ WebP เท่านั้น")
+            end
+        end
+    end
+
+    def images_count_within_limit
+        if images.count > 4
+            errors.add(:images, "can't have more than 4 images")
         end
     end
     

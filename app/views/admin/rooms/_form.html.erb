@@ -40,7 +40,46 @@
         </div>
         <%= field_error_tag(@room, :qr_code) %>
     </div>
+ <!--    
+    <div class="mb-4" data-controller="image-upload">
+        <%= f.label :images, "Room Images", class: "form-label" %>
+        <div id="image-upload-container">
+            <div class="relative mb-2" data-image-upload-target="field">
+                <%= f.file_field :images, multiple: false, accept: "image/png,image/jpeg,image/webp", class: "form-control", data: { action: "change->image-upload#updateCount" } %>
+            </div>
+        </div>
 
+        <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm" 
+                data-action="click->image-upload#addField">+ Add Image</button>
+
+        <p class="text-sm text-gray-500 mt-2">Maximum 4 images allowed.</p>
+    </div>
+-->
+    <div class="mb-4" data-controller="image-upload">
+    <%= f.label :images, "Room Images", class: "form-label" %>
+    <div id="image-upload-container">
+        <div class="relative mb-2" data-image-upload-target="field">
+            <%= f.file_field :images, multiple: true, accept: "image/png,image/jpeg,image/webp", class: "form-control", name: "room[images][]" %>
+        </div>
+    </div>
+
+    <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm" 
+            data-action="click->image-upload#addField">+ Add Image</button>
+
+    <p class="text-sm text-gray-500 mt-2">Maximum 4 images allowed.</p>
+</div>
+
+
+<!-- 
+    <div class="mb-4">
+        <%= f.label :images, "Room Images", class: "form-label" %>
+        <div class="relative">
+            <%= f.file_field :images, multiple: true, accept: "image/png,image/jpeg,image/webp", class: input_class(@room, :images), placeholder: "Upload Room Images" %>
+            <%= error_icon(@room, :images) %>
+        </div>
+        <%= field_error_tag(@room, :images) %>
+    </div>
+-->
     <div class="flex space-x-2">
         <%= f.submit @room.persisted? ? "Update Room" : "Create Room", class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
         <%= link_to "Cancel", admin_rooms_path, class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
