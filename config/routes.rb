@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :rooms, only: [:index, :show]
+
   namespace :admin do
     resources :rooms do
       resources :room_amenities
