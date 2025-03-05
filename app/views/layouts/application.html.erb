@@ -29,6 +29,18 @@
     <%= yield %>
   
     <%= railsui_launcher if Rails.env.development? %>
+
+    <% if notice %>
+      <div class="notice bg-primary-600 text-white text-center p-4" role="alert">
+        <p><%= notice %></p>
+      </div>
+    <% end %>
+
+    <% if alert %>
+      <div class="alert bg-rose-600 text-white text-center p-4" role="alert">
+        <p><%= alert %></p>
+      </div>
+    <% end %>
   
   </body>
 </html>

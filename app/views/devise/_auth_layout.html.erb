@@ -1,0 +1,46 @@
+<!-- app/views/devise/_auth_layout.html.erb -->
+<div class="sm:h-[calc(100vh_-_52px)] pt-10 sm:pt-0 flex flex-col items-center justify-center bg-cover bg-center px-4" style="background-image: url('<%= asset_url('railsui/fusion.png') %>')" >
+  <div class="sm:flex-1 flex flex-col justify-center sm:w-[428px] w-full">
+    <div>
+      <div class="flex justify-center">
+        <%= link_to root_path do %>
+          <%= icon "logo", custom_path: "/railsui/logo.svg", class: "w-10 h-auto" %>
+        <% end %>
+      </div>
+
+      <div class="mt-6">
+        <%= yield :masthead %>
+      </div>
+
+      <div class="bg-white shadow-sm rounded-lg p-8 border border-slate-300/60">
+
+        <!-- Add or yield form content here -->
+        <%= yield %>
+
+        <!--
+        Add additional provider SVG icons in app/assets/images/railsui/omniauth as necessary.
+        Default options include: Google, LinkedIn, X, Facebook, GitHub, YouTube, Instagram.
+
+        **You will need to install additional dependencies
+        not included in Rails UI for omniauth support.**
+        -->
+
+        <% if devise_mapping.omniauthable? && %w{ registrations sessions }.include?(controller_name) %>
+          <hr class="my-6"/>
+          <% resource_class.omniauth_providers.each do |provider| %>
+            <div class="my-2">
+            <%= button_to omniauth_authorize_path(resource_name, provider), class: "btn btn-white w-full", data: { turbo: false } do %>
+              <%= icon "#{provider.gsub(/\s+/, '').downcase}", custom_path: "/railsui/omniauth/#{provider.gsub(/\s+/, '').downcase}.svg", class: "mr-2 size-5" %>
+              <span>"Sign in with <%= OmniAuth::Utils.camelize(provider) %></span>
+            <% end %>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="mt-4">
+        <%= render "devise/shared/links" %>
+      </div>
+    </div>
+  </div>
+</div>
