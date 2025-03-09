@@ -1,0 +1,60 @@
+<div class="form-group">
+    <%= form_with(model: @reservation, url: @reservation.persisted? ? reservation_path(@reservation) : reservations_path, method: @reservation.persisted? ? :patch : :post, local: true) do |f| %>
+
+        <%= error_messages(@reservation) if @reservation.errors.any? %>
+
+        <div class="mb-4">
+            <%= f.label :room_id, "Select Room", class: "form-label" %>
+            <div class="relative">
+                <%= f.collection_select :room_id, Room.where.not(status: 'unavailable'), :id, :name, { prompt: "Choose a Room" }, class: input_class(@reservation, :room_id) %>
+                <%= error_icon(@reservation, :room_id) %>
+            </div>
+            <%= field_error_tag(@reservation, :room_id) %>
+        </div>
+
+        <div class="mb-4">
+            <%= f.label :date, "Reservation Date", class: "form-label" %>
+            <div class="relative">
+                <%= f.date_field :date, class: input_class(@reservation, :date) %>
+                <%= error_icon(@reservation, :date) %>
+            </div>
+            <%= field_error_tag(@reservation, :date) %>
+        </div>
+
+        <div class="mb-4 flex space-x-4">
+            <div class="w-1/2">
+                <%= f.label :start_time, "Start Time", class: "form-label" %>
+                <div class="relative">
+                    <%= f.time_field :start_time, class: input_class(@reservation, :start_time) %>
+                    <%= error_icon(@reservation, :start_time) %>
+                </div>
+                <%= field_error_tag(@reservation, :start_time) %>
+            </div>
+
+            <div class="w-1/2">
+                <%= f.label :end_time, "End Time", class: "form-label" %>
+                <div class="relative">
+                    <%= f.time_field :end_time, class: input_class(@reservation, :end_time) %>
+                    <%= error_icon(@reservation, :end_time) %>
+                </div>
+                <%= field_error_tag(@reservation, :end_time) %>
+            </div>
+        </div>
+
+        <div class="mb-4" data-controller="reservation-members">
+            <%= f.label :reservation_members, "Add Members", class: "form-label" %>
+            <div id="reservation-members-container">
+                <div class="relative mb-2" data-reservation-members-target="field">
+                    <%= f.collection_select :user_ids, User.all, :id, :email, { prompt: "Select Members" }, class: "form-control", multiple: true, name: "reservation[user_ids][]" %>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">Hold CTRL (Windows) or CMD (Mac) to select multiple users.</p>
+        </div>
+
+        <div class="flex space-x-2">
+            <%= f.submit @reservation.persisted? ? "Update Reservation" : "Create Reservation", class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+            <%= link_to "Cancel", reservations_path, class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
+        </div>
+
+    <% end %>
+</div>

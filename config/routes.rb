@@ -1,4 +1,7 @@
 Rails.application.routes.draw do
+  get "reservations/index"
+  get "reservations/new"
+  get "reservations/show"
 
   # root action: :index, controller: "railsui/default"
   root "home#index"
@@ -6,6 +9,8 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :rooms, only: [:index, :show]
+
+  resources :reservations
 
   namespace :admin do
     resources :rooms do

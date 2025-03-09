@@ -21,26 +21,33 @@
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
-  
+    
     <%= railsui_head %>
-</head>
+  </head>
 
-  <body class="dark:bg-gray-900" >
-    <%= yield %>
-  
+  <body class="dark:bg-gray-900">
+    <div class="flex">
+      <% if user_signed_in? %>
+        <%= render "shared/sidebar" %>
+      <% end %>
+
+      <div class="flex-1 p-6">
+        <% if notice %>
+          <div class="notice bg-primary-600 text-white text-center p-4" role="alert">
+            <p><%= notice %></p>
+          </div>
+        <% end %>
+
+        <% if alert %>
+          <div class="alert bg-rose-600 text-white text-center p-4" role="alert">
+            <p><%= alert %></p>
+          </div>
+        <% end %>
+
+        <%= yield %>
+      </div>
+    </div>
+
     <%= railsui_launcher if Rails.env.development? %>
-
-    <% if notice %>
-      <div class="notice bg-primary-600 text-white text-center p-4" role="alert">
-        <p><%= notice %></p>
-      </div>
-    <% end %>
-
-    <% if alert %>
-      <div class="alert bg-rose-600 text-white text-center p-4" role="alert">
-        <p><%= alert %></p>
-      </div>
-    <% end %>
-  
   </body>
 </html>

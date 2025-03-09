@@ -21,7 +21,6 @@ class Admin::RoomAmenitiesController < ApplicationController
         end
     end
 
-
     def edit; end
 
     def update

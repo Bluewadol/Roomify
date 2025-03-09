@@ -7,6 +7,8 @@ class Room < ApplicationRecord
 
     enum :status, { available: 0, booked: 1, unavailable: 2 }, default: :available
 
+    has_many :reservations, dependent: :destroy
+
     validates :name, presence: true, uniqueness: true
     validates :capacity_min, presence: true, numericality: { only_integer: true, greater_than: 0 }
     validates :capacity_max, presence: true, numericality: { only_integer: true, greater_than: 0 }

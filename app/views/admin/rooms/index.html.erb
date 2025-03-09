@@ -20,7 +20,7 @@
             <% @rooms.each do |room| %>
             <tr class="border-b hover:bg-gray-50">
                 <td class="px-4 py-2">
-                <%= link_to room.name, admin_room_path(room), class: "text-blue-600 hover:underline" %>
+                    <%= link_to room.name, admin_room_path(room), class: "text-blue-600 hover:underline" %>
                 </td>
                 <td class="px-4 py-2"><%= room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}" %> คน</td>
                 <td class="px-4 py-2">

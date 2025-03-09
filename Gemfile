@@ -69,3 +69,5 @@ gem "railsui", github: "getrailsui/railsui", branch: "main"
 gem "image_processing", "~> 1.2"
 
 gem "devise", "~> 4.9"
+
+# gem "rolify", "~> 6.0"
