@@ -1,4 +1,4 @@
-class Admin::RoomsController < ApplicationController
+class Admin::RoomsController < Admin::BaseController
     before_action :set_room, only: [ :show, :edit, :update, :destroy ]
 
     def index

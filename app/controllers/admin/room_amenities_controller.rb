@@ -1,4 +1,4 @@
-class Admin::RoomAmenitiesController < ApplicationController
+class Admin::RoomAmenitiesController < Admin::BaseController
     before_action :set_room
     before_action :set_amenity, only: [ :show, :edit, :update, :destroy ]
 

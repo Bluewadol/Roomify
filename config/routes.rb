@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  get "reservations/index"
-  get "reservations/new"
-  get "reservations/show"
 
   # root action: :index, controller: "railsui/default"
   root "home#index"
