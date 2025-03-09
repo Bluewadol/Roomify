@@ -3,6 +3,7 @@ class Reservation < ApplicationRecord
   belongs_to :room
   has_many :reservation_members, dependent: :destroy
   has_many :members, through: :reservation_members, source: :user
+  has_one :check_in, dependent: :destroy
 
   enum :status, { 
     pending: 0, 
@@ -37,7 +38,7 @@ class Reservation < ApplicationRecord
 
     overlapping_reservations = Reservation.where(room_id: room.id, date: date)
                                           .where('start_time < ? AND end_time > ?', end_time, start_time)
-                                          
+
     overlapping_reservations = overlapping_reservations.where.not(id: id) if persisted?
 
     if overlapping_reservations.exists?

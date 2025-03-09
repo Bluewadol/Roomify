@@ -1,22 +1,20 @@
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-4">Rooms Management</h1>
 
-    <!--
     <div class="mb-4">
         <%= link_to "Add New Room", new_admin_room_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
     </div>
-    -->
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg mb-6">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg">
             <thead class="bg-gray-100">
-            <tr class="border-b">
-                <th class="px-4 py-2 text-left">Name</th>
-                <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
-                <th class="px-4 py-2 text-left">Status</th>
-                <th class="px-4 py-2 text-left">QR Code</th>
-                <th class="px-4 py-2 text-left">Actions</th>
-            </tr>
+                <tr class="border-b">
+                    <th class="px-4 py-2 text-left">Name</th>
+                    <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
+                    <th class="px-4 py-2 text-left">Status</th>
+                    <th class="px-4 py-2 text-left">QR Code</th>
+                    <th class="px-4 py-2 text-left">Actions</th>
+                </tr>
             </thead>
             <tbody>
             <% @rooms.each do |room| %>
@@ -52,9 +50,11 @@
     </div>
 
     <h2 class="text-xl font-semibold mb-4">Reservations</h2>
+    <!--
     <div class="mb-4">
         <%= link_to "Add New Reservations", new_admin_reservation_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
     </div>
+    -->
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg">
             <thead class="bg-gray-100">

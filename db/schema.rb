@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_09_085152) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_09_160724) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -40,6 +40,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_085152) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "check_ins", force: :cascade do |t|
+    t.bigint "reservation_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "check_in_time"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reservation_id"], name: "index_check_ins_on_reservation_id"
+    t.index ["user_id"], name: "index_check_ins_on_user_id"
   end
 
   create_table "reservation_members", force: :cascade do |t|
@@ -114,6 +124,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_09_085152) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "check_ins", "reservations"
+  add_foreign_key "check_ins", "users"
   add_foreign_key "reservation_members", "reservations"
   add_foreign_key "reservation_members", "users"
   add_foreign_key "reservations", "rooms"

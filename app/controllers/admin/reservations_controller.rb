@@ -44,6 +44,7 @@ class Admin::ReservationsController < Admin::BaseController
     #         render :edit, status: :unprocessable_entity
     #     end
     # end
+
     def update
         if @reservation.update(reservation_params)
             if params[:reservation][:user_ids].present?
@@ -52,7 +53,7 @@ class Admin::ReservationsController < Admin::BaseController
                     @reservation.members.delete(member)
                     end
                 end
-            
+
                 params[:reservation][:user_ids].each do |user_id|
                     user = User.find(user_id)
                     unless @reservation.members.include?(user)
@@ -60,7 +61,7 @@ class Admin::ReservationsController < Admin::BaseController
                     end
                 end
             end
-        
+
             if @reservation.save
                 redirect_to admin_room_reservation_path(@room, @reservation), notice: "Reservation was successfully updated."
             else
@@ -70,7 +71,6 @@ class Admin::ReservationsController < Admin::BaseController
             render :edit, status: :unprocessable_entity
         end
     end
-            
 
     def destroy
         @reservation.destroy

@@ -8,6 +8,12 @@ Rails.application.routes.draw do
   resources :rooms, only: [:index, :show], controller: 'user/rooms'
   resources :reservations, controller: 'user/reservations'
 
+  namespace :room do
+    resources :reservations do
+      resource :check_in, only: [:new, :create, :show, :edit, :update, :destroy], controller: 'check_ins'
+    end
+  end   
+
   namespace :admin do
     resources :rooms do
       resources :room_amenities
