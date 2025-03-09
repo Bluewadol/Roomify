@@ -11,7 +11,9 @@ Rails.application.routes.draw do
   namespace :admin do
     resources :rooms do
       resources :room_amenities
+      resources :reservations, only: [:show, :edit, :update, :destroy]
     end
+    resources :reservations, only: [:new, :create]
   end
 
   namespace :rui do

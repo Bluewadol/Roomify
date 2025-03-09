@@ -2,7 +2,7 @@ class Admin::RoomsController < Admin::BaseController
     before_action :set_room, only: [ :show, :edit, :update, :destroy ]
 
     def index
-        @rooms = Room.all
+        @rooms = Room.includes(:reservations).all
     end
 
     def show; end

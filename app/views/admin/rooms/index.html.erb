@@ -1,22 +1,24 @@
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-4">Rooms Management</h1>
 
+    <!--
     <div class="mb-4">
         <%= link_to "Add New Room", new_admin_room_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
     </div>
+    -->
 
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg mb-6">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg">
-        <thead class="bg-gray-100">
+            <thead class="bg-gray-100">
             <tr class="border-b">
-            <th class="px-4 py-2 text-left">Name</th>
-            <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
-            <th class="px-4 py-2 text-left">Status</th>
-            <th class="px-4 py-2 text-left">QR Code</th>
-            <th class="px-4 py-2 text-left">Actions</th>
+                <th class="px-4 py-2 text-left">Name</th>
+                <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">QR Code</th>
+                <th class="px-4 py-2 text-left">Actions</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <% @rooms.each do |room| %>
             <tr class="border-b hover:bg-gray-50">
                 <td class="px-4 py-2">
@@ -37,13 +39,61 @@
                 <% end %>
                 </td>
                 <td class="px-4 py-2">
-                    <%= link_to "Amenities", admin_room_room_amenities_path(room), class: "text-blue-500 hover:underline" %> |
-                    <%= link_to "Edit", edit_admin_room_path(room), class: "text-yellow-600 hover:underline mr-2" %>  |
-                    <%= button_to "Delete", admin_room_path(room), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
+                <%= link_to "Amenities", admin_room_room_amenities_path(room), class: "text-blue-500 hover:underline" %> |
+                <!--
+                <%= link_to "Edit", edit_admin_room_path(room), class: "text-yellow-600 hover:underline mr-2" %>  |
+                -->
+                <%= button_to "Delete", admin_room_path(room), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
                 </td>
             </tr>
             <% end %>
-        </tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="text-xl font-semibold mb-4">Reservations</h2>
+    <div class="mb-4">
+        <%= link_to "Add New Reservations", new_admin_reservation_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
+    </div>
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+            <tr class="border-b">
+                <th class="px-4 py-2 text-left">Room</th>
+                <th class="px-4 py-2 text-left">User</th>
+                <th class="px-4 py-2 text-left">Date</th>
+                <th class="px-4 py-2 text-left">Time</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <% @rooms.each do |room| %>
+                <% room.reservations.each do |reservation| %>
+                <tr class="border-b hover:bg-gray-50">
+                    <td class="px-4 py-2"><%= room.name %></td>
+                    <td class="px-4 py-2"><%= reservation.user.email %></td>
+                    <td class="px-4 py-2"><%= reservation.date.strftime('%B %d, %Y') %></td>
+                    <td class="px-4 py-2"><%= reservation.start_time.strftime('%H:%M') %> - <%= reservation.end_time.strftime('%H:%M') %></td>
+                    <td class="px-4 py-2">
+                    <span class="px-2 py-1 rounded text-white 
+                        <%= reservation.status == "pending" ? 'bg-yellow-500' : 
+                            reservation.status == "checked_in" ? 'bg-green-500' : 
+                            reservation.status == "checked_out" ? 'bg-gray-500' : 
+                            reservation.status == "canceled" ? 'bg-red-500' : 
+                            reservation.status == "expired" ? 'bg-purple-500' : 'bg-blue-500' %>">
+                        <%= reservation.status.capitalize %>
+                    </span>
+                    </td>
+                    <td class="px-4 py-2">
+                    <%= link_to "View", admin_room_reservation_path(room, reservation), class: "text-blue-500 hover:underline" %> |
+                    <%= link_to "Edit", edit_admin_room_reservation_path(room, reservation), class: "text-yellow-600 hover:underline mr-2" %>  |
+                    <%= button_to "Delete", admin_room_reservation_path(room, reservation), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
+                    </td>
+                </tr>
+                <% end %>
+            <% end %>
+            </tbody>
         </table>
     </div>
 </div>

@@ -1,5 +1,4 @@
 class User::ReservationsController < ApplicationController
-  before_action :authenticate_user!
   before_action :set_reservation, only: %i[show edit update destroy]
 
   def index
@@ -14,23 +13,20 @@ class User::ReservationsController < ApplicationController
 
   def create
     @reservation = current_user.reservations.build(reservation_params)
-
+  
     if @reservation.save
-      if params[:reservation][:user_ids].present?
-        params[:reservation][:user_ids].each do |user_id|
-          @reservation.members << User.find(user_id) unless user_id.blank?
-        end
-      end
+      @reservation.members = User.where(id: params[:reservation][:member_ids].reject(&:blank?)) if params[:reservation][:member_ids]
       redirect_to @reservation, notice: "Reservation was successfully created."
     else
       render :new, status: :unprocessable_entity
     end
-  end
+  end  
 
   def edit; end
 
   def update
     if @reservation.update(reservation_params)
+      @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
       redirect_to @reservation, notice: "Reservation was successfully updated."
     else
       render :edit, status: :unprocessable_entity
@@ -49,6 +45,6 @@ class User::ReservationsController < ApplicationController
   end
 
   def reservation_params
-    params.require(:reservation).permit(:room_id, :date, :start_time, :end_time)
+    params.require(:reservation).permit(:room_id, :date, :start_time, :end_time, member_ids: [])
   end
 end
