@@ -5,9 +5,8 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :rooms, only: [:index, :show]
-
-  resources :reservations
+  resources :rooms, only: [:index, :show], controller: 'user/rooms'
+  resources :reservations, controller: 'user/reservations'
 
   namespace :admin do
     resources :rooms do

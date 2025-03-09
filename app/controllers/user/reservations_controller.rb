@@ -1,4 +1,4 @@
-class ReservationsController < ApplicationController
+class User::ReservationsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_reservation, only: %i[show edit update destroy]
 
