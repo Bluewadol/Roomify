@@ -25,10 +25,14 @@
     <%= railsui_head %>
   </head>
 
-  <body class="dark:bg-gray-900">
-    <div class="flex">
+  <body class="dark:bg-gray-900 min-h-screen flex flex-col">
+    <%= render "nav" %>
+
+    <div class="flex flex-1">
       <% if user_signed_in? %>
-        <%= render "shared/sidebar" %>
+        <div class="w-64 bg-gray-100 dark:bg-gray-800">
+          <%= render "shared/sidebar" %>
+        </div>
       <% end %>
 
       <div class="flex-1 p-6">
