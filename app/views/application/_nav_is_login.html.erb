@@ -3,9 +3,8 @@
         <div class="md:flex items-center flex-wrap md:space-x-2">
             <div class="md:block flex items-center justify-between">
                 <%= link_to root_path, class: "size-12 flex justify-center" do %>
-                <svg class="fill-current w-5 h-auto text-primary-600 hover:text-primary-700 duration-300 transition ease-in-out dark:hover:text-primary-500" width="39" height="50" viewBox="0 0 39 50" fill="none" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" clip-rule="evenodd" d="M8.55264 0C3.82915 0 0 3.82915 0 8.55265V26.1842C0 30.9077 3.82915 34.7368 8.55264 34.7368C13.2761 34.7368 17.1053 30.9077 17.1053 26.1842V8.55264C17.1053 3.82915 13.2761 0 8.55264 0ZM29.6053 0C24.8818 0 21.0527 3.82915 21.0527 8.55264V41.4474C21.0527 46.1709 24.8818 50 29.6053 50C34.3288 50 38.1579 46.1708 38.1579 41.4474V8.55264C38.1579 3.82915 34.3288 0 29.6053 0Z" />
-                </svg>
-                <span class="sr-only">Hound</span>
+                    <img src="<%= asset_path('roomify/logo.svg') %>" alt="Roomify Logo" class="w-12 h-auto text-primary-600 hover:text-primary-700 duration-300 transition ease-in-out dark:hover:text-primary-500">
+                    <span class="sr-only">Roomify</span>
                 <% end %>
 
                 <button id="base-nav-toggle" data-action="click->nav#toggle" class="md:hidden block p-1 rounded focus:ring-4 focus:ring-slate-100 active:bg-white group focus:bg-white/50 dark:focus:bg-slate-800 dark:focus:ring-slate-700">
@@ -17,7 +16,6 @@
                     </div>
                 </button>
             </div>
-
         <div id="base-navigation" class="md:flex-1 md:block hidden md:static absolute top-14 left-0 w-full bg-white dark:bg-slate-900 md:bg-transparent transform origin-top p-4 md:p-0 lg:p-0 rounded-b md:shadow-none shadow-xl z-40"
             data-nav-target="nav"
             data-transition-enter-active="transition ease-out duration-200"
@@ -136,7 +134,7 @@
                                 </a>
                             </div>
                             </div>
-                        </li>-->
+                        </li> -->
 
                         <li class="md:mt-0 mt-4 flex flex-col items-center relative" data-controller="railsui-dropdown">
                             <button class="group" type="button" data-action="click->railsui-dropdown#toggle click@window->railsui-dropdown#hide">
@@ -148,12 +146,16 @@
                                 data-transition-enter-to="opacity-100 scale-100"
                                 data-transition-leave-from="opacity-100 scale-100"
                                 data-transition-leave-to="opacity-0 scale-95">
-                                <div role="none">
+                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center">
+                                    <%= icon "cog-6-tooth", class: "flex-shrink-0 stroke-current size-5 text-slate-500 group-hover:text-primary-600 dark:group-hover:text-primary-400" %>
                                     <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Profile</a>
-                                    <!--<a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Preferences</a>
-                                    <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Billing</a>-->
+                                    <!--
+                                    <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Preferences</a>
+                                    <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Billing</a>
+                                    -->
                                 </div>
-                                <div role="none">
+                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center">
+                                    <%= icon "arrow-right-on-rectangle", class: "flex-shrink-0 stroke-current size-5 text-slate-500 group-hover:text-primary-600 dark:group-hover:text-primary-400" %>
                                     <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block" %>
                                 </div>
                             </div>
