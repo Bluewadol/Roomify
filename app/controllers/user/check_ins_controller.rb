@@ -1,4 +1,4 @@
-class Room::CheckInsController < ApplicationController
+class User::CheckInsController < ApplicationController
     before_action :set_reservation
     before_action :set_check_in, only: [:show, :edit, :update, :destroy]
 
@@ -7,15 +7,14 @@ class Room::CheckInsController < ApplicationController
     end
   
     def create
-        @check_in = @reservation.build_check_in(check_in_params)
-        
-        if @check_in.save
-            @reservation.update(status: :checked_in)
-            redirect_to reservation_path(@reservation), notice: 'Check-in successful.'
-        else
-            render :new, status: :unprocessable_entity
-        end
-    end
+      @check_in = @reservation.build_check_in(check_in_params)
+      if @check_in.save
+        @reservation.update(status: :checked_in)
+        redirect_to reservation_path(@reservation), notice: 'Check-in successful.'
+      else
+        render :new, status: :unprocessable_entity
+      end
+    end    
 
     def show
     end
@@ -27,7 +26,7 @@ class Room::CheckInsController < ApplicationController
       if @check_in.update(check_in_params)
         redirect_to room_check_in_path(@check_in), notice: "Check-in was successfully updated."
       else
-        render :edit
+        render :edit, status: :unprocessable_entity
       end
     end
 

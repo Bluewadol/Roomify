@@ -17,6 +17,7 @@
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
+
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
@@ -29,12 +30,6 @@
     <%= render "nav" %>
 
     <div class="flex flex-1">
-      <% if user_signed_in? %>
-        <div class="w-64 bg-gray-100 dark:bg-gray-800">
-          <%= render "shared/sidebar" %>
-        </div>
-      <% end %>
-
       <div class="flex-1 p-6">
         <% if notice %>
           <div class="notice bg-primary-600 text-white text-center p-4" role="alert">

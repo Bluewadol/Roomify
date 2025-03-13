@@ -6,13 +6,10 @@ Rails.application.routes.draw do
   devise_for :users
 
   resources :rooms, only: [:index, :show], controller: 'user/rooms'
-  resources :reservations, controller: 'user/reservations'
 
-  namespace :room do
-    resources :reservations do
-      resource :check_in, only: [:new, :create, :show, :edit, :update, :destroy], controller: 'check_ins'
-    end
-  end   
+  resources :reservations, controller: 'user/reservations' do
+    resource :check_in, only: [:new, :create, :show], controller: 'user/check_ins'
+  end  
 
   namespace :admin do
     resources :rooms do

@@ -2,11 +2,7 @@
     <div class="container mx-auto px-4">
         <div class="md:flex items-center flex-wrap md:space-x-2">
             <div class="md:block flex items-center justify-between">
-                <%= link_to root_path, class: "size-12 flex justify-center" do %>
-                <img src="<%= asset_path('roomify/logo.svg') %>" alt="Roomify Logo" class="w-12 h-auto text-primary-600 hover:text-primary-700 duration-300 transition ease-in-out dark:hover:text-primary-500">
-                <span class="sr-only">Hound</span>
-                <% end %>
-
+                <%= render "shared/logo"%>
                 <button id="base-nav-toggle" data-action="click->nav#toggle" class="md:hidden block p-1 rounded focus:ring-4 focus:ring-slate-100 active:bg-white group focus:bg-white/50 dark:focus:bg-slate-800 dark:focus:ring-slate-700">
                     <div role="none" data-nav-target="menuBars">
                         <%= icon "bars-3-center-left", class: "size-8 text-slate-600 group-focus:text-primary-600 dark:text-slate-400 dark:group-focus:text-slate-100" %>
