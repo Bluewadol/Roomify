@@ -1,0 +1,19 @@
+<% if notice %>
+    <div data-controller="flash" id="flash-notice" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-primary-600 text-white text-center p-4 rounded-md shadow-lg z-50 pr-6" role="alert" data-testid="flash-notice">
+        <button type="button" data-action="click->flash#close" class="absolute -top-0.5 -right-0.5 flex items-center justify-center w-8 h-8" data-testid="flash-notice-close">
+            <%= icon "x-mark", class: "size-5 text-white hover:text-gray-200" %>
+        </button>
+        <p><%= notice %></p>
+        <div data-flash-target="progress" class="h-1 bg-white mt-2 w-full"></div>
+    </div>
+<% end %>
+
+<% if alert %>
+    <div data-controller="flash" id="flash-alert" class="fixed top-4 left-1/2 transform -translate-x-1/2 bg-rose-600 text-white text-center p-4 rounded-md shadow-lg z-50 pr-6" role="alert" data-testid="flash-alert">
+        <button type="button" data-action="click->flash#close" class="absolute -top-0.5 -right-0.5 flex items-center justify-center w-8 h-8" data-testid="flash-alert-close">
+            <%= icon "x-mark", class: "size-5 text-white hover:text-gray-200" %>
+        </button>
+        <p><%= alert %></p>
+        <div data-flash-target="progress" class="h-1 bg-white mt-2 w-full"></div>
+    </div>
+<% end %>
