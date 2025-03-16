@@ -1,6 +1,7 @@
 module InputHelper
-    def input_class(resource, field, extra_classes = "")
+    def input_class(resource, field, has_icon_left: false, extra_classes: "")
         base_classes = "form-input peer pr-10 #{extra_classes}"
+        base_classes += " pl-12" if has_icon_left
 
         if resource.errors[field].any?
             base_classes += " border-red-700 text-red-700 ring-red-50 dark:border-red-400 dark:text-red-400 dark:ring-red-50/10"

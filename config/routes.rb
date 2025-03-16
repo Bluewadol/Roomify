@@ -1,24 +1,5 @@
 Rails.application.routes.draw do
 
-  # root action: :index, controller: "railsui/default"
-  root "home#index"
-
-  devise_for :users
-
-  resources :rooms, only: [:index, :show], controller: 'user/rooms'
-
-  resources :reservations, controller: 'user/reservations' do
-    resource :check_in, only: [:new, :create, :show], controller: 'user/check_ins'
-  end  
-
-  namespace :admin do
-    resources :rooms do
-      resources :room_amenities
-      resources :reservations, only: [:show, :edit, :update, :destroy]
-    end
-    resources :reservations, only: [:new, :create]
-  end
-
   namespace :rui do
     get "about", to: "pages#about"
     get "pricing", to: "pages#pricing"
@@ -37,6 +18,25 @@ Rails.application.routes.draw do
     get "billing", to: "pages#billing"
     get "team", to: "pages#team"
     get "integrations", to: "pages#integrations"
+  end
+
+  # root action: :index, controller: "railsui/default"
+  root "home#index"
+
+  devise_for :users
+
+  resources :rooms, only: [:index, :show], controller: 'user/rooms'
+
+  resources :reservations, controller: 'user/reservations' do
+    resource :check_in, only: [:new, :create, :show], controller: 'user/check_ins'
+  end  
+
+  namespace :admin do
+    resources :rooms do
+      resources :room_amenities
+      resources :reservations, only: [:show, :edit, :update, :destroy]
+    end
+    resources :reservations, only: [:new, :create]
   end
 
   if Rails.env.development?
