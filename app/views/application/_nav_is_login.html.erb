@@ -3,14 +3,7 @@
         <div class="md:flex items-center flex-wrap md:space-x-2">
             <div class="md:block flex items-center justify-between">
                 <%= render "shared/logo"%>
-                <button id="base-nav-toggle" data-action="click->nav#toggle" class="md:hidden block p-1 rounded focus:ring-4 focus:ring-slate-100 active:bg-white group focus:bg-white/50 dark:focus:bg-slate-800 dark:focus:ring-slate-700">
-                    <div role="none" data-nav-target="menuBars">
-                        <%= icon "bars-3-center-left", class: "size-8 text-slate-600 group-focus:text-primary-600 dark:text-slate-400 dark:group-focus:text-slate-100" %>
-                    </div>
-                    <div role="none" data-nav-target="menuCross" class="hidden">
-                        <%= icon "x-mark", class: "size-8 text-slate-600 group-focus:text-primary-600 dark:text-slate-400 dark:group-focus:text-slate-100" %>
-                    </div>
-                </button>
+                <%= render "shared/navigation/nav_toggle"%>
             </div>
         <div id="base-navigation" class="md:flex-1 md:block hidden md:static absolute top-14 left-0 w-full bg-white dark:bg-slate-900 md:bg-transparent transform origin-top p-4 md:p-0 lg:p-0 rounded-b md:shadow-none shadow-xl z-40"
             data-nav-target="nav"
@@ -23,11 +16,11 @@
             <div class="md:flex-1 md:flex flex-wrap items-center justify-between lg:text-left text-center">
                 <nav role="Primary navigation">
                     <ul class="md:flex block items-center flex-wrap space-x-0 md:space-x-3 md:text-base text-lg md:leading-normal leading-relaxed space-y-1 md:space-y-0 sm:mb-0 mb-4 h-13">
-                        <li>
+                        <li data-testid="nav-rooms-page">
                             <%= nav_link_to "Room", rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/rooms')}" %>
                         </li>
 
-                        <li>
+                        <li data-testid="nav-reservations-page">
                             <%= nav_link_to "Reservations", reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/reservations')}" %>
                         </li>
                     </ul>
@@ -134,7 +127,7 @@
                         </li> -->
 
                         <li class="md:mt-0 mt-4 flex flex-col items-center relative" data-controller="railsui-dropdown">
-                            <button class="group" type="button" data-action="click->railsui-dropdown#toggle click@window->railsui-dropdown#hide">
+                            <button class="group" type="button" data-action="click->railsui-dropdown#toggle click@window->railsui-dropdown#hide" data-testid="nav-avatar">
                                 <img class="rounded-full md:w-10 w-12 md:h-10 h-12 object-cover border-2 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out" src="https://randomuser.me/api/portraits/women/18.jpg" />
                             </button>
 
@@ -143,7 +136,7 @@
                                 data-transition-enter-to="opacity-100 scale-100"
                                 data-transition-leave-from="opacity-100 scale-100"
                                 data-transition-leave-to="opacity-0 scale-95">
-                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center">
+                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center" data-testid="nav-my-profile-btn">
                                     <%= icon "cog-6-tooth", class: "flex-shrink-0 stroke-current size-5 text-slate-500 group-hover:text-primary-600 dark:group-hover:text-primary-400" %>
                                     <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Profile</a>
                                     <!--
@@ -151,7 +144,7 @@
                                     <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Billing</a>
                                     -->
                                 </div>
-                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center">
+                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center" data-testid="nav-sign-out-btn">
                                     <%= icon "arrow-right-on-rectangle", class: "flex-shrink-0 stroke-current size-5 text-slate-500 group-hover:text-primary-600 dark:group-hover:text-primary-400" %>
                                     <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block" %>
                                 </div>
