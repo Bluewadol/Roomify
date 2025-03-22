@@ -1,0 +1,44 @@
+<div class="container mx-auto p-6">
+  <h1 class="text-2xl font-bold mb-4">Profile</h1>
+
+  <div class="bg-white p-6 shadow-md rounded-lg max-w-lg">
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Name</label>
+      <p class="text-lg font-semibold text-gray-900"><%= @user.name %></p>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Email</label>
+      <p class="text-lg font-semibold text-gray-500"><%= @user.email %></p>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Phone Number</label>
+      <p class="text-lg font-semibold text-gray-900"><%= @user.phone_number.presence || "Not provided" %></p>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-sm font-medium text-gray-700">Avatar</label>
+      <% if @user.avatar.attached? %>
+        <div class="mt-2">
+          <% if @user.avatar.content_type == "image/svg+xml" %>
+            <!-- Display SVG as-is -->
+            <%= image_tag @user.avatar, class: "w-24 h-24" %>
+          <% else %>
+            <!-- Process other image types -->
+            <%= image_tag @user.avatar.variant(resize_to_limit: [100, 100]).processed, class: "rounded-full shadow-md" %>
+          <% end %>
+        </div>
+      <% else %>
+        <% initials = @user.email[0].upcase %>
+        <div class="flex items-center justify-center rounded-full md:w-10 w-12 md:h-10 h-12 bg-primary-600 text-white font-bold text-lg">
+            <%= initials %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="mt-6 text-center">
+      <%= link_to "Edit Profile", edit_profile_path(@user), class: "bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition" %>
+    </div>
+  </div>
+</div>

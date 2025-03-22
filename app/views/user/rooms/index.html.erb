@@ -1,15 +1,31 @@
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-4">Rooms</h1>
 
+    <form method="get" action="<%= rooms_path %>" class="mb-4 flex gap-2">
+        <label>Start Date:</label>
+        <input type="date" name="start_date" value="<%= params[:start_date] %>" class="border p-2 rounded" />
+        
+        <label>End Date:</label>
+        <input type="date" name="end_date" value="<%= params[:end_date] %>" class="border p-2 rounded" />
+
+        <label>Start Time:</label>
+        <input type="time" name="start_time" value="<%= params[:start_time] %>" class="border p-2 rounded" />
+
+        <label>End Time:</label>
+        <input type="time" name="end_time" value="<%= params[:end_time] %>" class="border p-2 rounded" />
+
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Filter</button>
+    </form>
+
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg">
         <thead class="bg-gray-100">
             <tr class="border-b">
-            <th class="px-4 py-2 text-left">Name</th>
-            <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
-            <th class="px-4 py-2 text-left">Status</th>
-            <th class="px-4 py-2 text-left">QR Code</th>
-            <th class="px-4 py-2 text-left">Actions</th>
+                <th class="px-4 py-2 text-left">Name</th>
+                <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">QR Code</th>
+                <th class="px-4 py-2 text-left">Actions</th>
             </tr>
         </thead>
         <tbody>
@@ -20,9 +36,16 @@
                 </td>
                 <td class="px-4 py-2"><%= room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}" %> คน</td>
                 <td class="px-4 py-2">
+                    <% 
+                      booked = @reservations_in_range.where(
+                        room_id: room.id
+                      ).where(
+                        "start_time < ? AND end_time > ?", @end_time, @start_time
+                      ).exists?
+                    %>
                     <span class="px-2 py-1 rounded text-white 
-                        <%= room.available? ? 'bg-green-500' : room.booked? ? 'bg-yellow-500' : 'bg-red-500' %>">
-                        <%= room.status.capitalize %>
+                        <%= booked ? 'bg-red-500' : 'bg-green-500' %>">
+                        <%= booked ? "Booked" : "Available" %>
                     </span>
                 </td>
                 <td class="px-4 py-2">
@@ -49,3 +72,65 @@
         </table>
     </div>
 </div>
+
+<!--
+<div class="container mx-auto p-6">
+    <h1 class="text-2xl font-bold mb-4">Rooms</h1>
+
+    <form method="get" action="<%= rooms_path %>" class="mb-4 flex gap-2">
+        <input type="date" name="date" value="<%= params[:date] %>" class="border p-2 rounded" />
+        <input type="time" name="start_time" value="<%= params[:start_time] %>" class="border p-2 rounded" />
+        <input type="time" name="end_time" value="<%= params[:end_time] %>" class="border p-2 rounded" />
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Filter</button>
+    </form>
+
+    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
+        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
+        <thead class="bg-gray-100">
+            <tr class="border-b">
+                <th class="px-4 py-2 text-left">Name</th>
+                <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
+                <th class="px-4 py-2 text-left">Status</th>
+                <th class="px-4 py-2 text-left">QR Code</th>
+                <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% @rooms.each do |room| %>
+            <tr class="border-b hover:bg-gray-50">
+                <td class="px-4 py-2">
+                    <%= link_to room.name, room_path(room), class: "text-blue-600 hover:underline" %>
+                </td>
+                <td class="px-4 py-2"><%= room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}" %> คน</td>
+                <td class="px-4 py-2">
+                    <% booked = room.reservations.exists?(date: params[:date], start_time: params[:start_time]..params[:end_time]) %>
+                    <span class="px-2 py-1 rounded text-white 
+                        <%= booked ? 'bg-red-500' : 'bg-green-500' %>">
+                        <%= booked ? "Booked" : "Available" %>
+                    </span>
+                </td>
+                <td class="px-4 py-2">
+                    <% if room.qr_code.attached? %>
+                        <%= image_tag url_for(room.qr_code.variant(resize_to_limit: [50, 50]).processed), class: "rounded-lg shadow-md" %>
+                    <% else %>
+                        <span class="text-gray-500">No QR Code</span>
+                    <% end %>
+                </td>
+                <td class="px-4 py-2">
+                    <% if room.room_amenities.any? %>
+                    <ul>
+                        <% room.room_amenities.each do |amenity| %>
+                        <li><%= "#{amenity.amenity_name} (#{amenity.quantity})" %></li>
+                        <% end %>
+                    </ul>
+                    <% else %>
+                    <span class="text-gray-500">No Amenities</span>
+                    <% end %>
+                </td>
+            </tr>
+            <% end %>
+        </tbody>
+        </table>
+    </div>
+</div>
+-->

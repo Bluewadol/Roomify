@@ -1,2 +1,0 @@
-module Room::CheckInsHelper
-end

@@ -1,23 +1,22 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
+
   before_action :set_theme
   before_action :authenticate_user!, unless: :public_page?
+  before_action :set_user, if: :user_signed_in?
 
   protected
 
-  def after_sign_in_path_for(resource)
+  def after_sign_in_path_for(_resource)
     root_path
   end
 
-  def after_sign_up_path_for(resource)
+  def after_sign_up_path_for(_resource)
     root_path
   end
 
   def set_theme
-    if cookies[:theme].blank?
-      cookies[:theme] = "media" 
-    end
+    cookies[:theme] ||= "media"
   end
 
   private
@@ -26,4 +25,7 @@ class ApplicationController < ActionController::Base
     request.path == root_path
   end
 
+  def set_user
+    @user = current_user
+  end
 end

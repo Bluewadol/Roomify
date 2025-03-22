@@ -16,13 +16,15 @@
             <div class="md:flex-1 md:flex flex-wrap items-center justify-between lg:text-left text-center">
                 <nav role="Primary navigation">
                     <ul class="md:flex block items-center flex-wrap space-x-0 md:space-x-3 md:text-base text-lg md:leading-normal leading-relaxed space-y-1 md:space-y-0 sm:mb-0 mb-4 h-13">
-                        <li data-testid="nav-rooms-page">
-                            <%= nav_link_to "Room", rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/rooms')}" %>
-                        </li>
+                        <% if !request.path.start_with?('/admin') %>
+                            <li data-testid="nav-rooms-page">
+                                <%= nav_link_to "Room", rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/rooms')}" %>
+                            </li>
 
-                        <li data-testid="nav-reservations-page">
-                            <%= nav_link_to "Reservations", reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/reservations')}" %>
-                        </li>
+                            <li data-testid="nav-reservations-page">
+                                <%= nav_link_to "Reservations", reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/reservations')}" %>
+                            </li>
+                        <% end %>
                     </ul>
                 </nav>
 
@@ -127,8 +129,21 @@
                         </li> -->
 
                         <li class="md:mt-0 mt-4 flex flex-col items-center relative" data-controller="railsui-dropdown">
-                            <button class="group" type="button" data-action="click->railsui-dropdown#toggle click@window->railsui-dropdown#hide" data-testid="nav-avatar">
-                                <img class="rounded-full md:w-10 w-12 md:h-10 h-12 object-cover border-2 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out" src="https://randomuser.me/api/portraits/women/18.jpg" />
+                            <button class="group border rounded-full border-primary-100" type="button" data-action="click->railsui-dropdown#toggle click@window->railsui-dropdown#hide" data-testid="nav-avatar">
+                                <% if @user.avatar.attached? %>
+                                    <% if @user.avatar.content_type == "image/svg+xml" %>
+                                    <img class="rounded-full md:w-10 w-12 md:h-10 h-12 object-cover border-2 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out" 
+                                        src="<%= url_for(@user.avatar) %>" />
+                                    <% else %>
+                                    <img class="rounded-full md:w-10 w-12 md:h-10 h-12 object-cover border-2 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out" 
+                                        src="<%= url_for(@user.avatar.variant(resize_to_limit: [100, 100]).processed) %>" />
+                                    <% end %>
+                                <% else %>
+                                    <% initials = @user.email[0].upcase %>
+                                    <div class="flex items-center justify-center rounded-full md:w-10 w-12 md:h-10 h-12 bg-primary-600 text-white font-bold text-lg">
+                                        <%= initials %>
+                                    </div>
+                                <% end %>
                             </button>
 
                             <div class="hidden transition transform origin-to-right md:absolute right-0 top-10 bg-white rounded-lg md:shadow-xl md:shadow-slate-900/10 md:border border-slate-200 md:min-w-[200px] z-50 py-1 divide-y md:w-auto w-full md:text-sm dark:bg-slate-700 dark:shadow-slate-900/50 dark:border-slate-500/60 text-base font-medium text-slate-600 dark:text-slate-200 dark:divide-gray-600" data-railsui-dropdown-target="menu"
@@ -136,18 +151,11 @@
                                 data-transition-enter-to="opacity-100 scale-100"
                                 data-transition-leave-from="opacity-100 scale-100"
                                 data-transition-leave-to="opacity-0 scale-95">
-                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center" data-testid="nav-my-profile-btn">
-                                    <%= icon "cog-6-tooth", class: "flex-shrink-0 stroke-current size-5 text-slate-500 group-hover:text-primary-600 dark:group-hover:text-primary-400" %>
-                                    <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Profile</a>
-                                    <!--
-                                    <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Preferences</a>
-                                    <a href="#" class="px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block">Billing</a>
-                                    -->
-                                </div>
-                                <div role="none" class="pl-3 focus:text-primary-600 flex items-center" data-testid="nav-sign-out-btn">
-                                    <%= icon "arrow-right-on-rectangle", class: "flex-shrink-0 stroke-current size-5 text-slate-500 group-hover:text-primary-600 dark:group-hover:text-primary-400" %>
-                                    <%= button_to "Sign Out", destroy_user_session_path, method: :delete, class: "px-4 py-2 md:py-[.4rem] hover:text-primary-600 dark:hover:text-primary-400 block" %>
-                                </div>
+                                <% if current_user.has_role?(:admin) %>
+                                    <%= dropdown_item "cog-6-tooth", "Management", admin_rooms_path, data_testid: "nav-my-management-btn" %>
+                                <% end %>
+                                <%= dropdown_item "user-circle", "Profile", profile_index_path, data_testid: "nav-my-profile-btn" %>
+                                <%= dropdown_item "arrow-right-on-rectangle", "Sign Out", destroy_user_session_path, method: :delete, data_testid: "nav-sign-out-btn" %>
                             </div>
                         </li>
                     </ul>

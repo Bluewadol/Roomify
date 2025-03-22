@@ -3,7 +3,11 @@ class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
-  
+
+  has_one_attached :avatar
+  validates :name, presence: true, if: -> { name_changed? }
+  validates :phone_number, presence: true, uniqueness: true, if: -> { phone_number_changed? }
+
   has_many :reservations
   has_many :reservation_members
   has_many :joined_reservations, through: :reservation_members, source: :reservation
