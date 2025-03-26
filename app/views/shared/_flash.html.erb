@@ -1,0 +1,13 @@
+<% if notice || alert %>
+    <% flash_type = notice ? "notice" : "alert" %>
+    <% flash_message = notice || alert %>
+    <% flash_bg_color = notice ? "bg-primary-600" : "bg-rose-600" %>
+
+    <div data-controller="flash" id="flash-<%= flash_type %>" class="fixed top-4 left-1/2 transform -translate-x-1/2 <%= flash_bg_color %> text-white text-center p-4 rounded-md shadow-lg z-50 pr-6" role="alert" data-testid="flash-<%= flash_type %>">
+        <button type="button" data-action="click->flash#close" class="absolute -top-0.5 -right-0.5 flex items-center justify-center w-8 h-8" data-testid="flash-<%= flash_type %>-close">
+            <%= icon "x-mark", class: "size-5 text-white hover:text-gray-200" %>
+        </button>
+        <p><%= flash_message %></p>
+        <div data-flash-target="progress" class="h-1 bg-white mt-2 w-full"></div>
+    </div>
+<% end %>

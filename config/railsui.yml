@@ -11,22 +11,52 @@ colors:
     '400': "#3388d6"
     '500': "#0056a9"
     '600': "#004f98"
-    '700': "#004f98"
+    '700': "#004280"
     '800': "#003a77"
     '900': "#003066"
     '950': "#00234d"
-  secondary:
-    '50': "#f8fafc"
-    '100': "#f1f5f9"
-    '200': "#e2e8f0"
-    '300': "#cbd5e1"
-    '400': "#94a3b8"
-    '500': "#64748b"
-    '600': "#475569"
-    '700': "#334155"
-    '800': "#1e293b"
-    '900': "#0f172a"
-    '950': "#020617"
+  secondary: 
+    '50': "#fff3e0"
+    '100': "#ffe0b2"
+    '200': "#ffcc80"
+    '300': "#ffb74d"
+    '400': "#ffa726"
+    '500': "#ff8a00"
+    '600': "#f57c00"
+    '700': "#ef6c00"
+    '800': "#e65100"
+    '900': "#bf360c"
+    '950': "#8f2500"
+  gray: 
+    '50': "#f9fafb"
+    '100': "#f3f4f6"
+    '200': "#e5e7eb"
+    '300': "#d1d5db"
+    '400': "#9ca3af"
+    '500': "#6b7280"
+    '600': "#4b5563"
+    '700': "#374151"
+    '800': "#1f2937"
+    '900': "#111827"
+    '950': "#030712"
+  success:
+    main: "#1e7e34" # Green-700
+  danger:
+    main: "#be123c" # Rose-700 (คงเดิม)
+  warning:
+    main: "#d39e00" # Yellow-700
+  info:
+    main: "#117a8b" # Cyan-700
+  light:
+    main: "#dae0e5" # Gray-300 (เนื่องจาก Light ไม่มีระดับ 700 ที่เหมาะสม)
+  dark:
+    main: "#23272b" # Gray-800 (เพื่อให้ดูสมดุลกับเฉด 700 อื่น ๆ)
+  gradient-primary:
+    light: "linear-gradient(to bottom, #e6f0fa, #000000)"
+    dark: "linear-gradient(to bottom, #00234d, #ffffff)"
+  gradient-secondary:
+    light: "linear-gradient(to bottom, #fff3e0, #000000)"
+    dark: "linear-gradient(to bottom, #ff8a00, #ffffff)"
 pages:
 - about
 - pricing
@@ -45,5 +75,4 @@ pages:
 - billing
 - team
 - integrations
-body_classes: antialiased h-full bg-slate-50 dark:bg-slate-900 dark:text-slate-100
-  text-slate-800
+body_classes: antialiased h-full bg-slate-50 dark:bg-slate-900 dark:text-slate-100 text-slate-800
