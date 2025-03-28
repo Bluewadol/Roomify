@@ -1,5 +1,5 @@
 <div class="container mx-auto p-6" data-testid="room-list">
-    <h1 class="text-2xl font-bold mb-4">Rooms Management</h1>
+    <h1 class="text-2xl font-bold mb-4">Available Meeting Rooms</h1>
 
     <div class="mb-4">
         <%= link_to "Add New Room", new_admin_room_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
@@ -50,11 +50,7 @@
     </div>
 
     <h2 class="text-xl font-semibold mb-4">Reservations</h2>
-    <!--
-    <div class="mb-4">
-        <%= link_to "Add New Reservations", new_admin_reservation_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-    </div>
-    -->
+
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full bg-white border border-gray-300 rounded-lg">
             <thead class="bg-gray-100">

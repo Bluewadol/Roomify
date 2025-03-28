@@ -1,0 +1,22 @@
+<% heading ||= nil %>
+<% sub_heading ||= nil %>
+<% body ||= nil %>
+<% sub_body ||= nil %>
+
+<div data-testid="typography-container">
+    <% if heading.present? %>
+        <h1 class="text-2xl font-bold mb-2 text-gray-800 dark:text-gray-200" data-testid="typography-heading"><%= heading %></h1>
+    <% end %>
+
+    <% if sub_heading.present? %>
+        <h2 class="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200" data-testid="typography-sub-heading"><%= sub_heading %></h2>
+    <% end %>
+
+    <% if body.present? %>
+        <p class="text-base leading-relaxed text-gray-800 dark:text-gray-200" data-testid="typography-body"><%= body %></p>
+    <% end %>
+
+    <% if sub_body.present? %>
+        <p class="text-sm mt-1 text-gray-500 dark:text-gray-500" data-testid="typography-sub-body"><%= sub_body %></p>
+    <% end %>
+</div>

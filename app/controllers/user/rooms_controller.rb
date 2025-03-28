@@ -3,6 +3,7 @@ class User::RoomsController < ApplicationController
 
   def index
     @rooms = Room.includes(:reservations)
+    
 
     @start_date = params[:start_date].presence
     @end_date = params[:end_date].presence
@@ -25,6 +26,11 @@ class User::RoomsController < ApplicationController
       @reservations_in_range = @reservations_in_range.where("start_time <= ?", @start_time)
     elsif @end_time
       @reservations_in_range = @reservations_in_range.where("end_time >= ?", @end_time)
+    end
+
+    if params[:name].present?
+      trimmed_name = params[:name].strip.downcase
+      @rooms = @rooms.where("LOWER(name) LIKE ?", "%#{trimmed_name}%")
     end
   end
 
