@@ -5,7 +5,7 @@ class Room < ApplicationRecord
 
     has_many_attached :images
 
-    enum :status, { available: 0, booked: 1, unavailable: 2 }, default: :available
+    enum :status, { available: 0, unavailable: 1 }, default: :available
 
     has_many :reservations, dependent: :destroy
 
