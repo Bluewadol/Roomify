@@ -1,0 +1,41 @@
+<%= render "shared/table", columns: [
+        { 
+            header: "Room Name", 
+            field: ->(room) { 
+                ApplicationController.render(
+                partial: "shared/typography", 
+                locals: { sub_heading: room.name, sub_body: room.description }
+                ).html_safe
+            } 
+        },
+        {
+            header: "Capacity (people)", 
+            field: ->(room) { 
+                icon_html = icon('user-group', class: 'size-5 text-black') 
+                capacity_range = room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}"
+                content_tag(:span, "#{icon_html} #{capacity_range}".html_safe, class: "flex gap-2 text-sm")
+            }
+        },
+        { header: "Amenities", field: ->(room) { 
+            if room.room_amenities.any?
+                content_tag(:ul, class: "text-sm leading-relaxed text-gray-800 dark:text-gray-200") do
+                    room.room_amenities.map { |amenity| content_tag(:li, "#{amenity.amenity_name} (#{amenity.quantity})") }.join.html_safe
+                end
+            else
+                content_tag(:span, "-", class: "text-gray-500")
+            end
+        } },
+        { header: "Status", 
+            field: ->(room) { 
+                render partial: 'shared/status_badge', locals: { status: room.status }
+            } 
+        },
+        {
+            header: "Actions",
+            field: ->(room) { 
+                link_to "Booking", new_reservation_path(room), class: "btn btn-primary h-10"
+            }
+        }
+    ], 
+    rows: @rooms, 
+    path: ->(room) { room_path(room) } %>

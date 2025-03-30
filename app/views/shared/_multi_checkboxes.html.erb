@@ -1,0 +1,15 @@
+<div class="flex flex-col gap-3 rounded-md bg-white p-6 dark:bg-slate-800 dark:text-white border border-slate-300/70 dark:border-slate-600/70 md:w-[300px]">
+    <div class="flex justify-between w-full items-center">
+        <label for="<%= id %>-checkboxes" >
+            <%= render "shared/typography", sub_heading: label %>
+        </label>
+        <span class="text-sm text-gray-500 dark:text-gray-500">
+            <%= params[field]&.length || 0 %>
+        </span>
+    </div>
+    <div class="flex flex-col gap-2">
+        <% options.each do |option| %>
+            <%= render "shared/checkbox", form: form, field: "#{field}[]", value: option, label: option, checked: params[field]&.include?(option) %>
+        <% end %>
+    </div>
+</div>

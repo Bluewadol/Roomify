@@ -58,6 +58,7 @@
                 <th class="px-4 py-2 text-left">Room</th>
                 <th class="px-4 py-2 text-left">User</th>
                 <th class="px-4 py-2 text-left">Date</th>
+                <th class="px-4 py-2 text-left">Date</th>
                 <th class="px-4 py-2 text-left">Time</th>
                 <th class="px-4 py-2 text-left">Status</th>
                 <th class="px-4 py-2 text-left">Actions</th>
@@ -69,7 +70,8 @@
                 <tr class="border-b hover:bg-gray-50">
                     <td class="px-4 py-2"><%= room.name %></td>
                     <td class="px-4 py-2"><%= reservation.user.email %></td>
-                    <td class="px-4 py-2"><%= reservation.date.strftime('%B %d, %Y') %></td>
+                    <td class="px-4 py-2"><%= reservation.start_date.strftime('%B %d, %Y') %></td>
+                    <td class="px-4 py-2"><%= reservation.end_date.strftime('%B %d, %Y') %></td>
                     <td class="px-4 py-2"><%= reservation.start_time.strftime('%H:%M') %> - <%= reservation.end_time.strftime('%H:%M') %></td>
                     <td class="px-4 py-2">
                     <span class="px-2 py-1 rounded text-white 

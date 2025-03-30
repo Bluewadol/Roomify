@@ -10,6 +10,7 @@
             <tr>
                 <th class="py-2 px-4 border-b text-left">Room</th>
                 <th class="py-2 px-4 border-b text-left">Date</th>
+                <th class="py-2 px-4 border-b text-left">Date</th>
                 <th class="py-2 px-4 border-b text-left">Start Time</th>
                 <th class="py-2 px-4 border-b text-left">End Time</th>
                 <th class="py-2 px-4 border-b text-left">Status</th>
@@ -21,7 +22,8 @@
             <tr class="border-b hover:bg-gray-100">
                 <td class="py-2 px-4"><%= link_to reservation.room.name, reservation_path(reservation), class: "text-blue-600 hover:underline" %></td>
                 <!-- <td class="py-2 px-4"><%= reservation.room.name %></td> -->
-                <td class="py-2 px-4"><%= reservation.date.strftime("%Y-%m-%d") %></td>
+                <td class="py-2 px-4"><%= reservation.start_date.present? ? reservation.start_date.strftime("%Y-%m-%d") : "N/A" %></td>
+                <td class="py-2 px-4"><%= reservation.end_date.present? ? reservation.end_date.strftime("%Y-%m-%d") : "N/A" %></td>
                 <td class="py-2 px-4"><%= reservation.start_time.strftime("%H:%M") %></td>
                 <td class="py-2 px-4"><%= reservation.end_time.strftime("%H:%M") %></td>
                 <td class="py-2 px-4">

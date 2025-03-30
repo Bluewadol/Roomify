@@ -8,8 +8,13 @@
         </div>
 
         <div class="mb-4">
-            <%= label_tag :date, "Reservation Date" %>
-            <p><%= @reservation.date.strftime("%B %d, %Y") %></p>
+            <%= label_tag :start_date, "Reservation Date" %>
+            <p><%= @reservation.start_date.strftime("%B %d, %Y") %></p>
+        </div>
+
+        <div class="mb-4">
+            <%= label_tag :end_date, "Reservation Date" %>
+            <p><%= @reservation.end_date.strftime("%B %d, %Y") %></p>
         </div>
 
         <div class="mb-4 flex space-x-4">
@@ -40,7 +45,7 @@
             <%= link_to "Back", reservations_path, class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
             <%= link_to "Edit", edit_reservation_path(@reservation), class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
             <% if @reservation.pending? %>
-                <% reservation_datetime = @reservation.date.to_time.change({ hour: @reservation.start_time.hour, min: @reservation.start_time.min }) %>
+                <% reservation_datetime = @reservation.start_date.to_time.change({ hour: @reservation.start_time.hour, min: @reservation.start_time.min }) %>
                 <% reservation_datetime = reservation_datetime.in_time_zone('Asia/Bangkok') %>
                 <% time_window_start = reservation_datetime - 15.minutes %>
                 <% time_window_end = reservation_datetime + 15.minutes %>

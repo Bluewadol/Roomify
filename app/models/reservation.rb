@@ -5,6 +5,7 @@ class Reservation < ApplicationRecord
   has_many :members, through: :reservation_members, source: :user
   has_one :check_in, dependent: :destroy
 
+
   enum :status, { 
     pending: 0, 
     checked_in: 1, 
@@ -17,12 +18,15 @@ class Reservation < ApplicationRecord
   # Validations
   validates :user_id, presence: true
   validates :room_id, presence: true
-  validates :date, presence: true
+  validates :start_date, presence: true
+  validates :end_date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true
   validates :status, presence: true, inclusion: { in: statuses.keys }
+  validates :description, length: { maximum: 500 }, allow_blank: true
 
   validate :start_time_before_end_time
+  validate :start_date_before_end_date
   validate :room_availability
 
   private
@@ -31,12 +35,19 @@ class Reservation < ApplicationRecord
     if start_time.present? && end_time.present? && start_time >= end_time
       errors.add(:start_time, "must be before end time")
     end
+  end  
+
+  def start_date_before_end_date
+    if start_date.present? && end_date.present? && start_date > end_date
+      errors.add(:start_date, "must be before or the same as the end date")
+    end
   end
 
   def room_availability
-    return if room.nil? || date.nil? || start_time.nil? || end_time.nil?
+    return if room.nil? || start_date.nil? || end_date.nil? || start_time.nil? || end_time.nil?
 
-    overlapping_reservations = Reservation.where(room_id: room.id, date: date)
+    overlapping_reservations = Reservation.where(room_id: room.id)
+                                          .where('start_date BETWEEN ? AND ?', start_date, end_date)
                                           .where('start_time < ? AND end_time > ?', end_time, start_time)
 
     overlapping_reservations = overlapping_reservations.where.not(id: id) if persisted?

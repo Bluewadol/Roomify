@@ -6,16 +6,16 @@
     <div class="mb-4">
         <%= f.label :amenity_name, "Amenity Name", class: "block font-medium text-gray-700" %>
         <div class="relative">
-        <%= f.text_field :amenity_name, class: input_class(@amenity, :amenity_name, "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300"), placeholder: "Enter amenity name" %>
+        <%= f.text_field :amenity_name, class: input_class(@amenity, :amenity_name, extra_classes: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300"), placeholder: "Enter amenity name" %>
         <%= error_icon(@amenity, :amenity_name) %>
         <%= field_error_tag(@amenity, :amenity_name) %>
         </div>
     </div>
-
+    
     <div class="mb-4">
         <%= f.label :quantity, "Quantity", class: "block font-medium text-gray-700" %>
         <div class="relative">
-        <%= f.number_field :quantity, class: input_class(@amenity, :quantity, "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300"), placeholder: "Enter quantity" %>
+        <%= f.number_field :quantity, class: input_class(@amenity, :quantity, extra_classes: "w-full border-gray-300 rounded-md p-2 shadow-sm focus:ring focus:ring-blue-300"), placeholder: "Enter quantity" %>
         <%= error_icon(@amenity, :quantity) %>
         <%= field_error_tag(@amenity, :quantity) %>
         </div>

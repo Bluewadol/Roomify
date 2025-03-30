@@ -1,0 +1,7 @@
+<div class="flex items-center gap-2">
+  <input type="checkbox" name="<%= field %>" value="<%= value %>"
+         class="form-input-checkbox"
+         <%= "checked" if checked %>
+         onchange="this.form.submit()" />
+  <span class="text-gray-700 dark:text-white"><%= label %></span>
+</div>

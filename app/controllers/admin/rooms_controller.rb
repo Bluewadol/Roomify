@@ -13,6 +13,9 @@ class Admin::RoomsController < Admin::BaseController
 
     def create
         @room = Room.new(room_params)
+        @room.created_by = current_user
+        @room.updated_by = current_user
+
         if @room.save
             redirect_to admin_rooms_path, notice: "Room created successfully."
         else
@@ -23,6 +26,7 @@ class Admin::RoomsController < Admin::BaseController
     def edit; end
 
     def update
+        @room.updated_by = current_user
         if @room.update(room_params)
             redirect_to admin_rooms_path, notice: "Room updated successfully."
         else
@@ -43,6 +47,6 @@ class Admin::RoomsController < Admin::BaseController
     end
 
     def room_params
-        params.require(:room).permit(:name, :capacity_min, :capacity_max, images: [])
+        params.require(:room).permit(:name, :capacity_min, :capacity_max, :description, images: [])
     end
 end

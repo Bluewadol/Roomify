@@ -5,13 +5,17 @@ class Room < ApplicationRecord
 
     has_many_attached :images
 
-    enum :status, { available: 0, unavailable: 1 }, default: :available
+    enum :status, { available: 0, unavailable: 1, booked: 2 }, default: :available
 
     has_many :reservations, dependent: :destroy
+
+    belongs_to :created_by, class_name: "User"
+    belongs_to :updated_by, class_name: "User"
 
     validates :name, presence: true, uniqueness: true
     validates :capacity_min, presence: true, numericality: { only_integer: true, greater_than: 0 }
     validates :capacity_max, presence: true, numericality: { only_integer: true, greater_than: 0 }
+    validates :description, length: { maximum: 200 } 
     validate :validate_capacity_range
     # validates :qr_code, presence: true
     # validate :qr_code_must_be_image

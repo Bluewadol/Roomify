@@ -2,8 +2,10 @@
     <div class="relative flex items-center w-full">
         <%= icon "magnifying-glass", class: "absolute left-3 size-5 text-gray-500" %>
         <%= form.text_field field, value: params[field], class: "form-input h-10 p-2 pl-10 pr-10 rounded-lg w-full", data: { testid: "#{field}_input" } %>
-        <%= icon "x-mark", class: "absolute right-3 size-5 text-gray-500 cursor-pointer hover:text-gray-300", 
-            onclick: "document.querySelector('[data-testid=#{field}_input]').value = ''; this.closest('form').submit();" %>
+        <% if params[field].present? %>
+            <%= icon "x-mark", class: "absolute right-3 size-5 text-gray-500 cursor-pointer hover:text-gray-300", 
+                onclick: "document.querySelector('[data-testid=#{field}_input]').value = ''; this.closest('form').submit();" %>
+        <% end %>
     </div>
     <%= form.submit "Search", class: "btn btn-secondary", data: { testid: "#{field}_button" } %>
 </div>

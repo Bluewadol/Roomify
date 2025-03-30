@@ -1,76 +1,31 @@
 <div class="container mx-auto p-6">
     <%= render "shared/typography", heading: "Available Meeting Rooms" %>
-    <div class="flex gap-0 w-full flex-wrap">
-        <!-- Search Form -->
-        <%= form_with(url: rooms_path, method: :get, local: true, class: "p-0 md:pr-2 w-full md:w-1/3 flex-shrink-0") do |form| %>
-            <%= form.hidden_field :name, value: params[:name] %> 
-            <%= form.hidden_field :start_date, value: params[:start_date] %>
-            <%= form.hidden_field :end_date, value: params[:end_date] %>
-            <%= form.hidden_field :start_time, value: params[:start_time] %>
-            <%= form.hidden_field :end_time, value: params[:end_time] %>
-            <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>
-        <% end %>
+    <%= form_with(url: rooms_path, method: :get, local: true, class: "p-0 w-full flex flex-wrap") do |form| %>
+        <div class="flex gap-0 w-full flex-wrap">
 
-        <!-- Date Filter Form -->
-        <%= form_with(url: rooms_path, method: :get, local: true, class: "p-0 md:pr-2 md:pl-2 w-full md:w-1/3 flex-shrink-0") do |form| %>
-            <%= form.hidden_field :name, value: params[:name] %> 
-            <%= form.hidden_field :start_time, value: params[:start_time] %>
-            <%= form.hidden_field :end_time, value: params[:end_time] %>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date] %>
-                <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date] %>
+            <div class="p-0 md:pr-2 w-full md:w-1/3 flex-shrink-0">
+                <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>
             </div>
-        <% end %>
-
-        <!-- Time Filter Form -->
-        <%= form_with(url: rooms_path, method: :get, local: true, class: "p-0 md:pl-2 w-full md:w-1/3 flex-shrink-0") do |form| %>
-            <%= form.hidden_field :name, value: params[:name] %> 
-            <%= form.hidden_field :start_date, value: params[:start_date] %>
-            <%= form.hidden_field :end_date, value: params[:end_date] %>
-            
-            <div class="grid grid-cols-2 gap-4">
-                <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time] %>
-                <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time] %>
+            <div class="p-0 md:pr-2 md:pl-2 w-full md:w-1/3 flex-shrink-0">
+                <div class="grid grid-cols-2 gap-4">
+                    <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date] %>
+                    <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date] %>
+                </div>
             </div>
-        <% end %>
-    </div>
-    <%= render "shared/table", columns: [
-        { header: "Room Name", field: ->(room) { room.name } },
-        { header: "Capacity", field: ->(room) { "#{room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}"}" } },
-        { header: "Amenities", field: ->(room) { 
-            if room.room_amenities.any?
-            content_tag(:ul) do
-                room.room_amenities.map { |amenity| content_tag(:li, "#{amenity.amenity_name} (#{amenity.quantity})") }.join.html_safe
-            end
-            else
-            content_tag(:span, "-", class: "text-gray-500")
-            end
-        } },
-        { header: "Status", 
-            field: ->(room) { 
-            booked = @reservations_in_range.where(room_id: room.id)
-                                            .where("start_time < ? AND end_time > ?", @end_time, @start_time)
-                                            .exists?
-
-            status = if room.unavailable?
-                        "unavailable"
-                    elsif booked
-                        "booked"
-                    else
-                        "available"
-                    end
-
-            render partial: 'shared/status_badge', locals: { status: status }
-            } 
-        },
-        {
-            header: "Actions",
-            field: ->(room) { 
-                link_to "Booking", new_reservation_path(room), class: "btn btn-primary h-10"
-            }
-        }
-    ], 
-    rows: @rooms, 
-    path: ->(room) { room_path(room) } %>
+            <div class="p-0 md:pl-2 w-full md:w-1/3 flex-shrink-0">
+                <div class="grid grid-cols-2 gap-4">
+                    <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time] %>
+                    <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time] %>
+                </div>
+            </div>
+        </div>
+        <div class="flex gap-4 h-auto w-full">
+            <div class="flex flex-col gap-4 h-auto "> 
+                <%= render "shared/slider", field: "capacity", id: "capacity", label: "Capacity", maximum: @maximum_capacity, unit: "people" %>
+                <%= render "shared/multi_checkboxes", form: form, id: "amenities", label: "Amenities", field: "amenities", options: @amenities %>
+                <%= render "shared/multi_checkboxes", form: form, id: "room_status", label: "Room Status", field: "room_status", options: @room_status %>
+            </div>
+            <%= render "user/rooms/component/table", room: @room %>
+        </div>
+    <% end %>
 </div>

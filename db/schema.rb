@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_03_19_165605) do
+ActiveRecord::Schema[8.0].define(version: 2025_03_30_072755) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -64,12 +64,14 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_19_165605) do
   create_table "reservations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "room_id", null: false
-    t.date "date"
     t.time "start_time"
     t.time "end_time"
     t.integer "status", default: 0, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.date "start_date"
+    t.date "end_date"
+    t.text "description"
     t.index ["room_id"], name: "index_reservations_on_room_id"
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end
@@ -100,6 +102,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_19_165605) do
     t.datetime "updated_at", null: false
     t.integer "capacity_min", default: 1, null: false
     t.integer "capacity_max", default: 1, null: false
+    t.bigint "created_by_id", null: false
+    t.bigint "updated_by_id", null: false
+    t.string "description"
+    t.index ["created_by_id"], name: "index_rooms_on_created_by_id"
+    t.index ["updated_by_id"], name: "index_rooms_on_updated_by_id"
   end
 
   create_table "users", force: :cascade do |t|
@@ -133,4 +140,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_19_165605) do
   add_foreign_key "reservations", "rooms"
   add_foreign_key "reservations", "users"
   add_foreign_key "room_amenities", "rooms"
+  add_foreign_key "rooms", "users", column: "created_by_id"
+  add_foreign_key "rooms", "users", column: "updated_by_id"
 end

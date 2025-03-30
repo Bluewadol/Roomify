@@ -12,6 +12,15 @@
         <%= field_error_tag(@room, :name) %>
     </div>
 
+    <div class="mb-4">
+        <%= f.label :description, "Room Description", class: "block font-medium text-gray-700" %>
+        <div class="relative">
+        <%= f.text_field :description, class: input_class(@room, :description), placeholder: "Enter room description" %>
+        <%= error_icon(@room, :description) %>
+        <%= field_error_tag(@room, :description) %>
+        </div>
+    </div>
+
     <div class="mb-4 flex space-x-4">
         <div class="w-1/2">
             <%= f.label :capacity_min, "Minimum Capacity", class: "form-label" %>
