@@ -12,7 +12,7 @@
             id="<%= id %>-slider" 
             name="<%= field %>" 
             min="1" 
-            max="<%= maximum || 100 %>" 
+            max="<%= maximum || params[field] || 1 %>" 
             step="1" 
             class="accent-primary-500 bg-transparent rounded-lg cursor-pointer w-full" 
             value="<%= params[field] || 1 %>" 

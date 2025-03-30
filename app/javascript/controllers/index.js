@@ -3,10 +3,15 @@
 // ./bin/rails generate stimulus controllerName
 
 import { application } from "./application"
-
 import HelloController from "./hello_controller"
 import ImageUploadController from "./image_upload_controller";
+import FilterFormController from "./filter_form_controller"
+import ResetFilterController from "./reset_filter_controller"
+import FlashController from "./flash_controller"
 
 application.register("hello", HelloController)
 application.register("image-upload", ImageUploadController)
+application.register("flash", FlashController)
+application.register("filter-form", FilterFormController)
+application.register("reset-filter", ResetFilterController)
 import "./railsui"

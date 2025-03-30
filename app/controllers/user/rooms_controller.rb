@@ -3,6 +3,8 @@ class User::RoomsController < ApplicationController
 
   def index
     @rooms = Room.includes(:reservations, :room_amenities)
+    @maximum_capacity = @rooms&.maximum(:capacity_max) || 100
+    @amenities = RoomAmenity.distinct.pluck(:amenity_name)
 
     @start_date = params[:start_date].presence
     @end_date = params[:end_date].presence
@@ -78,9 +80,6 @@ class User::RoomsController < ApplicationController
         booked = @reservations_in_range.where(room_id: room.id).exists?
       end
     end
-    
-    @maximum_capacity = @rooms&.maximum(:capacity_max) || 100
-    @amenities = RoomAmenity.distinct.pluck(:amenity_name)
     @room_status = Room.statuses.keys 
   end
 
