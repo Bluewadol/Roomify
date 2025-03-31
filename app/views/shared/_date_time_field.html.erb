@@ -1,3 +1,10 @@
-<div class="">
-    <%= form.send(field_type, field, value: params[field], class: "form-input h-10 p-2 pl-4 pr-4 rounded-lg w-full mb-4", data: { testid: "#{field}_input" }, onchange: "this.form.submit()") %>
+<div class="flex flex-col gap-2">
+    <% if label.present? %>
+        <label for="<%= field %>" class="text-sm font-medium text-gray-700"><%= label %></label>
+    <% end %>
+
+    <%= form.send(field_type, field, value: value, id: field, 
+        class: "form-input h-10 p-2 pl-4 pr-4 rounded-lg w-full mb-4", 
+        data: { testid: "#{field}_input" }, 
+        onchange: "this.form.submit()") %>
 </div>

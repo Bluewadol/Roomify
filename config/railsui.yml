@@ -40,17 +40,17 @@ colors:
     '900': "#111827"
     '950': "#030712"
   success:
-    main: "#1e7e34" # Green-700
+    main: "#1e7e34"
   danger:
-    main: "#be123c" # Rose-700 (คงเดิม)
+    main: "#be123c"
   warning:
-    main: "#d39e00" # Yellow-700
+    main: "#d39e00"
   info:
-    main: "#117a8b" # Cyan-700
+    main: "#117a8b"
   light:
-    main: "#dae0e5" # Gray-300 (เนื่องจาก Light ไม่มีระดับ 700 ที่เหมาะสม)
+    main: "#dae0e5"
   dark:
-    main: "#23272b" # Gray-800 (เพื่อให้ดูสมดุลกับเฉด 700 อื่น ๆ)
+    main: "#23272b"
   gradient-primary:
     light: "linear-gradient(to bottom, #e6f0fa, #000000)"
     dark: "linear-gradient(to bottom, #00234d, #ffffff)"
