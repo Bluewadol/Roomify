@@ -83,11 +83,16 @@ class User::RoomsController < ApplicationController
     @room_status = Room.statuses.keys 
   end
 
-  def show; end
+  def show
+    @capacity_range = @room.capacity_min == @room.capacity_max ? @room.capacity_max : "#{@room.capacity_min} - #{@room.capacity_max}" 
+  end
 
   private
 
   def set_room
-    @room = Room.includes(:room_amenities).find(params[:id])
-  end
+    @room = Room.joins(:reservations)
+              .includes(:room_amenities)
+              .order('reservations.updated_at DESC')
+              .find(params[:id])
+  end  
 end

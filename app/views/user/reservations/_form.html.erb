@@ -6,7 +6,8 @@
         <div class="mb-4">
             <%= f.label :room_id, "Select Room", class: "form-label" %>
             <div class="relative">
-                <%= f.collection_select :room_id, Room.where.not(status: 'unavailable'), :id, :name, { prompt: "Choose a Room" }, class: input_class(@reservation, :room_id) %>
+                <%= f.collection_select :room_id, Room.where.not(status: 'unavailable'), :id, :name, 
+                    { prompt: "Choose a Room", selected: @room&.id }, class: input_class(@reservation, :room_id) %>
                 <%= error_icon(@reservation, :room_id) %>
             </div>
             <%= field_error_tag(@reservation, :room_id) %>
@@ -16,7 +17,9 @@
             <div class="w-1/2">
                 <%= f.label :start_date, "Reservation Start Date", class: "form-label" %>
                 <div class="relative">
-                    <%= f.date_field :start_date, class: input_class(@reservation, :start_date) %>
+                    <%= f.date_field :start_date, 
+                        class: input_class(@reservation, :start_date), 
+                        value: params[:start_date] || @reservation.start_date %>
                     <%= error_icon(@reservation, :start_date) %>
                 </div>
                 <%= field_error_tag(@reservation, :start_date) %>
@@ -25,7 +28,9 @@
             <div class="w-1/2">
                 <%= f.label :end_date, "Reservation End Date", class: "form-label" %>
                 <div class="relative">
-                    <%= f.date_field :end_date, class: input_class(@reservation, :end_date) %>
+                    <%= f.date_field :end_date, 
+                        class: input_class(@reservation, :end_date), 
+                        value: params[:end_date] || @reservation.end_date %>
                     <%= error_icon(@reservation, :end_date) %>
                 </div>
                 <%= field_error_tag(@reservation, :end_date) %>
@@ -36,7 +41,9 @@
             <div class="w-1/2">
                 <%= f.label :start_time, "Start Time", class: "form-label" %>
                 <div class="relative">
-                    <%= f.time_field :start_time, class: input_class(@reservation, :start_time) %>
+                    <%= f.time_field :start_time, 
+                        class: input_class(@reservation, :start_time), 
+                        value: params[:start_time] || @reservation.start_time %>
                     <%= error_icon(@reservation, :start_time) %>
                 </div>
                 <%= field_error_tag(@reservation, :start_time) %>
@@ -45,7 +52,9 @@
             <div class="w-1/2">
                 <%= f.label :end_time, "End Time", class: "form-label" %>
                 <div class="relative">
-                    <%= f.time_field :end_time, class: input_class(@reservation, :end_time) %>
+                    <%= f.time_field :end_time, 
+                        class: input_class(@reservation, :end_time), 
+                        value: params[:end_time] || @reservation.end_time %>
                     <%= error_icon(@reservation, :end_time) %>
                 </div>
                 <%= field_error_tag(@reservation, :end_time) %>

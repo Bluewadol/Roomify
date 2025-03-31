@@ -130,20 +130,7 @@
 
                         <li class="md:mt-0 mt-4 flex flex-col items-center relative" data-controller="railsui-dropdown">
                             <button class="group border rounded-full border-primary-100" type="button" data-action="click->railsui-dropdown#toggle click@window->railsui-dropdown#hide" data-testid="nav-avatar">
-                                <% if @user.avatar.attached? %>
-                                    <% if @user.avatar.content_type == "image/svg+xml" %>
-                                    <img class="rounded-full md:w-10 w-12 md:h-10 h-12 object-cover border-2 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out" 
-                                        src="<%= url_for(@user.avatar) %>" />
-                                    <% else %>
-                                    <img class="rounded-full md:w-10 w-12 md:h-10 h-12 object-cover border-2 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out" 
-                                        src="<%= url_for(@user.avatar.variant(resize_to_limit: [100, 100]).processed) %>" />
-                                    <% end %>
-                                <% else %>
-                                    <% initials = @user.email[0].upcase %>
-                                    <div class="flex items-center justify-center rounded-full md:w-10 w-12 md:h-10 h-12 bg-primary-600 text-white font-bold text-lg">
-                                        <%= initials %>
-                                    </div>
-                                <% end %>
+                                <%= avatar_tag(@user) %>
                             </button>
 
                             <div class="hidden transition transform origin-to-right md:absolute right-0 top-10 bg-white rounded-lg md:shadow-xl md:shadow-slate-900/10 md:border border-slate-200 md:min-w-[200px] z-50 py-1 divide-y md:w-auto w-full md:text-sm dark:bg-slate-700 dark:shadow-slate-900/50 dark:border-slate-500/60 text-base font-medium text-slate-600 dark:text-slate-200 dark:divide-gray-600" data-railsui-dropdown-target="menu"

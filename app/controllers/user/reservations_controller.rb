@@ -8,6 +8,7 @@ class User::ReservationsController < ApplicationController
   def show; end
 
   def new
+    @room = Room.find_by(id: params[:room_id]) if params[:room_id].present?
     @reservation = Reservation.new
   end
 

@@ -26,16 +26,15 @@
             end
         } },
         { header: "Status", 
-            field: ->(room) { 
-                render partial: 'shared/status_badge', locals: { status: room.status }
-            } 
+            field: ->(room) { status_badge(room.status) }
         },
         {
             header: "Actions",
             field: ->(room) { 
-                link_to "Booking", new_reservation_path(room), class: "btn btn-primary h-10"
+                link_to "Booking", new_reservation_path(room_id: room.id, start_date: params[:start_date], end_date: params[:end_date], start_time: params[:start_time], end_time: params[:end_time]), class: "btn btn-primary h-10", onclick: "event.stopPropagation();"
             }
         }
     ], 
     rows: @rooms, 
-    path: ->(room) { room_path(room) } %>
+    path: ->(room) { room_path(room, params.permit(:start_date, :end_date, :start_time, :end_time)) }
+    %>

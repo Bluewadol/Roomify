@@ -1,4 +1,11 @@
-<div class="bg-white shadow-md rounded-lg p-6">
+<div class="">
+    <div class="mb-4">
+        <% if @room.images.attached? %>
+            <%= render "shared/carousel", images: @room.images.map { |img| url_for(img) } , alt: "Room Image" %>
+        <% else %>
+            <p class="text-gray-500">No Room Images</p>
+        <% end %>
+    </div>
     <h2 class="text-xl font-semibold mb-4"><%= @room.name %></h2>
 
     <div class="mb-2">
@@ -40,23 +47,7 @@
         <% end %>
     </div>
 
-    <div class="mb-4">
-        <h3 class="text-lg font-semibold mb-2">Room Images</h3>
-        <% if @room.images.attached? %>
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                <% @room.images.each do |image| %>
-                    <div class="relative">
-                        <%= image_tag url_for(image.variant(resize_to_limit: [300, 300]).processed), class: "rounded-lg shadow-md w-full h-auto object-cover" %>
-                    </div>
-                <% end %>
-            </div>
-        <% else %>
-            <p class="text-gray-500">No Room Images</p>
-        <% end %>
-    </div>
-
     <div class="flex space-x-2">
         <%= link_to "Back", rooms_path, class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
     </div>
-
 </div>
