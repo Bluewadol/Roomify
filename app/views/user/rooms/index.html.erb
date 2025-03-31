@@ -1,5 +1,5 @@
 <div class="container mx-auto p-6">
-    <%= render "shared/typography", heading: "Available Meeting Rooms" %>
+    <%= render "shared/typography", heading: "Meeting Rooms" %>
     <%= form_with(url: rooms_path, method: :get, local: true, 
         class: "p-0 w-full flex flex-wrap", 
         data: { testid: "filter-user-list-room-form", controller: "reset-filter", "reset-filter-target": "form" }) do |form| %>

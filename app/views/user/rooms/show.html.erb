@@ -20,7 +20,7 @@
                         <%= render "shared/typography", sub_body: @room.description %>
                     </div>
                     <div class="flex gap-2 items-center text-sm text-gray-600 dark:text-gray-600">
-                        <%= icon('user-group', class: 'size-5 text-gray-800 dark:text-gray-800') %>
+                        <%= icon('user-group', class: 'size-5 text-gray-800 dark:text-gray-800', variant: :solid) %>
                         <span>Capacity: <%= @capacity_range %> People</span>
                         <% if @room.room_amenities.any? %>
                             <div class="text-sm leading-relaxed">
@@ -55,7 +55,7 @@
                 <% end %>
             </div>
         </div>
-        <div class="flex flex-col bg-white gap-4 rounded-lg p-4 shadow-md h-full">
+        <div class="flex flex-col bg-white gap-2 rounded-lg p-4 shadow-md h-full">
             <%= render "shared/typography", sub_heading: "Upcoming Bookings" %>
             <% @room.reservations.each do |reservation| %>
                 <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center">
@@ -64,14 +64,17 @@
                     </div>
                     <div class="flex flex-col px-4 flex-grow">
                         <%= render "shared/typography", sub_heading: reservation.user.name.present? ? reservation.user.name : reservation.user.email %>
-                        <span class="text-sm text-gray-500">
+                        <div class="flex text-sm text-gray-500 gap-2">
+                            <%= icon('calendar-days', class: 'size-5') %>
                             <% if reservation.start_date == reservation.end_date %>
                                 <%= format_datetime(reservation.start_date) %>
                             <% else %>
                                 <%= format_datetime(reservation.start_date) %> - <%= format_datetime(reservation.end_date) %>
                             <% end %>
-                            • <%= format_datetime(reservation.start_time) %> - <%= format_datetime(reservation.end_time) %>
-                        </span>
+                            <span>•</span>
+                            <%= icon('clock', class: 'size-5') %>
+                            <%= format_datetime(reservation.start_time) %> - <%= format_datetime(reservation.end_time) %>
+                        </div>
                     </div>
                     <div class="flex items-center text-sm text-gray-400 w-auto">
                         <span>In <%= time_elapsed(reservation.updated_at) %></span>
