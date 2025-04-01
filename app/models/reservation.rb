@@ -15,7 +15,8 @@ class Reservation < ApplicationRecord
     completed: 5
   }, default: :pending
 
-  # Validations
+  enum :reservation_type, { training: 0, conference: 1, workshop: 2, seminar: 3, meeting: 4, webinar: 5, private_event: 6 }, default: :meeting
+
   validates :user_id, presence: true
   validates :room_id, presence: true
   validates :start_date, presence: true

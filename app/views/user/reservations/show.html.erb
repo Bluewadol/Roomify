@@ -1,66 +1,45 @@
-<div class="container mx-auto p-6">
-    <div class="reservation-details">
-        <h1 class="text-xl font-semibold">Reservation Details</h1>
-
-        <div class="mb-4">
-            <%= label_tag :room_id, "Room" %>
-            <p><%= @reservation.room.name %></p>
+<div class="container mx-auto p-6 flex flex-col gap-2">
+    <div class="flex justify-between items-center">
+        <%= render "shared/typography", heading: "Reservation Details" %>
+        <div class="flex gap-4">
+            <%= btn_link_to "Edit", edit_reservation_path(@reservation), btn_class: "btn-white", icon_name: "pencil-square", variant: :solid %>
+            <%= render "user/reservations/component/check_in_btn", reservation: @reservation %>
         </div>
-
-        <div class="mb-4">
-            <%= label_tag :start_date, "Reservation Date" %>
-            <p><%= @reservation.start_date.strftime("%B %d, %Y") %></p>
+    </div>
+    <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
+        <div class="flex">
+            <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.id}" %>
         </div>
-
-        <div class="mb-4">
-            <%= label_tag :end_date, "Reservation Date" %>
-            <p><%= @reservation.end_date.strftime("%B %d, %Y") %></p>
-        </div>
-
-        <div class="mb-4 flex space-x-4">
-            <div class="w-1/2">
-                <%= label_tag :start_time, "Start Time" %>
-                <p><%= @reservation.start_time.strftime("%I:%M %p") %></p>
-            </div>
-
-            <div class="w-1/2">
-                <%= label_tag :end_time, "End Time" %>
-                <p><%= @reservation.end_time.strftime("%I:%M %p") %></p>
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <%= label_tag :reservation_members, "Members" %>
-            <ul>
-                <li><%= @reservation.user.email %></li>
-            </ul>
-            <ul>
-                <% @reservation.members.each do |user| %>
-                    <li><%= user.email %></li>
-                <% end %>
-            </ul>
-        </div>
-
-        <div class="flex space-x-2">
-            <%= link_to "Back", reservations_path, class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
-            <%= link_to "Edit", edit_reservation_path(@reservation), class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-            <% if @reservation.pending? %>
-                <% reservation_datetime = @reservation.start_date.to_time.change({ hour: @reservation.start_time.hour, min: @reservation.start_time.min }) %>
-                <% reservation_datetime = reservation_datetime.in_time_zone('Asia/Bangkok') %>
-                <% time_window_start = reservation_datetime - 15.minutes %>
-                <% time_window_end = reservation_datetime + 15.minutes %>
-
-                <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
-
-                <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
-                    <%= link_to "Check-In", new_reservation_check_in_path(@reservation), class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-                <% else %>
-                    <%= link_to "Check-In", "#", class: "bg-gray-400 text-gray-600 px-4 py-2 rounded-lg cursor-not-allowed", title: "Check-In available 15 minutes before or after the start time" %>
-                <% end %>
-
+        <%= render "shared/typography", sub_heading: "#{@reservation.room.name}" %>
+        <div class="flex gap-2 text-sm">
+            <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
+            <% if @reservation.start_date == @reservation.end_date %>
+                <%= format_datetime(@reservation.start_date) %>
             <% else %>
-                <span class="bg-gray-400 text-gray-600 px-4 py-2 rounded-lg cursor-not-allowed">Check-In</span>
+                <%= format_datetime(@reservation.start_date) %> - <%= format_datetime(@reservation.end_date) %>
             <% end %>
         </div>
+        <div class="flex gap-2 text-sm">
+            <%= icon('clock', class: 'size-5') %>
+            <%= format_datetime(@reservation.start_time) %> - <%= format_datetime(@reservation.end_time) %>
+        </div>
+        <div class="flex gap-2 text-sm items-center">
+            <%= icon('user', class: 'size-5') %>
+            <span>Reserved by : </span>
+            <span><%= avatar_tag(@reservation.user, size: 24)%></span>
+            <span><%= @reservation.user.name.present? ? @reservation.user.name : @reservation.user.email %></span>
+        </div>
+        <div class="flex gap-2 text-sm items-center">
+            <%= icon('user-group', class: 'size-5', variant: :solid) %>
+            <span>Member : </span>
+            <% @reservation.members.each do |member| %>
+                <span><%= avatar_tag(member, size: 24) %></span>
+                <span><%= member.name.present? ? member.name : member.email %></span>
+            <% end %>
+        </div>
+        <div class="flex flex-col text-sm">
+            <%= render "shared/typography", sub_heading: "Booking Purpose" %>
+            <p><%= @reservation.description %></p>
+        </div> 
     </div>
 </div>

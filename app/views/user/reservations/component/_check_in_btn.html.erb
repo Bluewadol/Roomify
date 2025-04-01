@@ -1,0 +1,20 @@
+<% if @reservation.pending? %>
+    <% reservation_datetime = @reservation.start_date.to_time.change({ hour: @reservation.start_time.hour, min: @reservation.start_time.min }) %>
+    <% reservation_datetime = reservation_datetime.in_time_zone('Asia/Bangkok') %>
+    <% time_window_start = reservation_datetime - 15.minutes %>
+    <% time_window_end = reservation_datetime + 15.minutes %>
+
+    <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
+
+    <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
+        <%= link_to "Check-In", new_reservation_check_in_path(@reservation), class: "btn btn-primary" %>
+    <% else %>
+        <%= link_to "Check-In", "#", 
+            class: "btn btn-transparent border border-gray-300 cursor-not-allowed shadow-sm text-gray-600",
+            title: "Check-In available 15 minutes before or after the start time",
+            style: "pointer-events: none;" %>
+    <% end %>
+
+<% else %>
+    <span class="bg-gray-400 text-gray-600 px-4 py-2 rounded-lg cursor-not-allowed">Check-In</span>
+<% end %>

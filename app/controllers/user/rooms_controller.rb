@@ -30,9 +30,15 @@ class User::RoomsController < ApplicationController
     
     if @start_time && @end_time
       if @start_time == @end_time
-        @reservations_in_range = @reservations_in_range.where("start_time <= ? AND end_time >= ?", @start_time, @start_time)
+        @reservations_in_range = @reservations_in_range.where(
+          "(start_time <= ? AND end_time >= ?)",
+          @start_time, @end_time
+        )
       else
-        @reservations_in_range = @reservations_in_range.where("start_time < ? AND end_time > ?", @end_time, @start_time)
+        @reservations_in_range = @reservations_in_range.where(
+          "(start_time >= ? AND start_time <= ? AND end_time >= ?) OR (start_time <= ? AND end_time >= ?)",
+          @start_time, @end_time, @end_time, @start_time, @start_time
+        )
       end
     elsif @start_time
       @reservations_in_range = @reservations_in_range.where("start_time >= ?", @start_time)
@@ -84,7 +90,58 @@ class User::RoomsController < ApplicationController
   end
 
   def show
-    @capacity_range = @room.capacity_min == @room.capacity_max ? @room.capacity_max : "#{@room.capacity_min} - #{@room.capacity_max}" 
+    @capacity_range = @room.capacity_min == @room.capacity_max ? @room.capacity_max : "#{@room.capacity_min} - #{@room.capacity_max}"
+    @start_date = params[:start_date].presence
+    @end_date = params[:end_date].presence
+    @start_time = params[:start_time].presence
+    @end_time = params[:end_time].presence
+  
+    @reservations_in_range = Reservation.where(room_id: @room.id)
+  
+    if @start_date && @end_date
+      @reservations_in_range = if @start_date == @end_date
+        @reservations_in_range.where(start_date: @start_date)
+      else
+        @reservations_in_range.where(start_date: @start_date..@end_date)
+      end
+    elsif @start_date
+      @reservations_in_range = @reservations_in_range.where("start_date >= ?", @start_date)
+    elsif @end_date
+      @reservations_in_range = @reservations_in_range.where("end_date <= ?", @end_date)
+    end
+  
+    if @start_time && @end_time
+      if @start_time == @end_time
+        @reservations_in_range = @reservations_in_range.where(
+          "(start_time <= ? AND end_time >= ?)",
+          @start_time, @end_time
+        )
+      else
+        @reservations_in_range = @reservations_in_range.where(
+          "(start_time >= ? AND start_time <= ? AND end_time >= ?) OR (start_time <= ? AND end_time >= ?) OR (start_time >= ? AND end_time <= ?)",
+          @start_time, @end_time, @end_time, @start_time, @start_time, @start_time, @end_time
+        )
+      end
+    elsif @start_time
+      @reservations_in_range = @reservations_in_range.where("start_time >= ?", @start_time)
+    elsif @end_time
+      @reservations_in_range = @reservations_in_range.where("end_time <= ?", @end_time)
+    end   
+  
+    def determine_room_status(room)
+      booked = @reservations_in_range.where(room_id: room.id).exists?
+      if room.unavailable?
+        :unavailable
+      elsif booked
+        :booked
+      else
+        :available
+      end
+    end
+  
+    status = determine_room_status(@room)
+    @room.assign_attributes(status: status)
+    @room_status = Room.statuses.keys
   end
 
   private
