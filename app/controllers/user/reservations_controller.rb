@@ -3,6 +3,13 @@ class User::ReservationsController < ApplicationController
 
   def index
     @reservations = current_user.reservations.includes(:room)
+    @upcoming_reservations = @reservations
+      .where(status: [:pending, :waiting_check_in])
+      .order(:start_date, :start_time)
+      
+    @past_reservations = @reservations
+      .where.not(status: [:pending, :waiting_check_in])
+      .order(:start_date, :start_time)
   end
 
   def show; end

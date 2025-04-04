@@ -11,7 +11,7 @@
         {
             header: "Capacity (people)", 
             field: ->(room) { 
-                icon_html = icon('user-group', class: 'size-5 text-black') 
+                icon_html = icon('user-group', class: 'size-5 text-black', variant: :solid) 
                 capacity_range = room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}"
                 content_tag(:span, "#{icon_html} #{capacity_range}".html_safe, class: "flex gap-2 text-sm")
             }
@@ -31,10 +31,20 @@
         {
             header: "Actions",
             field: ->(room) { 
-                link_to "Booking", new_reservation_path(room_id: room.id, start_date: params[:start_date], end_date: params[:end_date], start_time: params[:start_time], end_time: params[:end_time]), class: "btn btn-primary h-10", onclick: "event.stopPropagation();"
+                    btn_link_to "Booking", 
+                    new_reservation_path(
+                        room_id: room.id, 
+                        start_date: params[:start_date], 
+                        end_date: params[:end_date], 
+                        start_time: params[:start_time], 
+                        end_time: params[:end_time]
+                    ), 
+                    btn_class: "btn-primary inline-flex items-center gap-1 px-4 py-2 text-sm", 
+                    onclick: "event.stopPropagation();"
+
             }
         }
     ], 
     rows: @rooms, 
-    path: ->(room) { room_path(room, params.permit(:start_date, :end_date, :start_time, :end_time)) }
+    path: ->(room) { room_path(room.name, params.permit(:start_date, :end_date, :start_time, :end_time)) }
     %>

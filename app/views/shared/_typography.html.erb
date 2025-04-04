@@ -1,11 +1,16 @@
 <% heading ||= nil %>
+<% semi_heading ||= nil %>
 <% sub_heading ||= nil %>
 <% body ||= nil %>
 <% sub_body ||= nil %>
 
 <div data-testid="typography-container">
     <% if heading.present? %>
-        <h1 class="text-2xl font-bold mb-3 text-gray-800 dark:text-gray-200" data-testid="typography-heading"><%= heading %></h1>
+        <h1 class="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200" data-testid="typography-heading"><%= heading %></h1>
+    <% end %>
+
+    <% if semi_heading.present? %>
+        <h2 class="text-lg font-bold mb-2 text-gray-800 dark:text-gray-200" data-testid="typography-semi-heading"><%= semi_heading %></h2>
     <% end %>
 
     <% if sub_heading.present? %>

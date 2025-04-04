@@ -28,13 +28,13 @@
 
   <body class="bg-gray-100 dark:bg-gray-800 min-h-screen flex flex-col">
     <%= render "nav" %>
+    <%= render 'breadcrumb' %>
     <div class="flex flex-1">
       <div class="flex-1">
         <%= render "shared/flash" %>
         <%= yield %>
       </div>
     </div>
-
     <%= railsui_launcher if Rails.env.development? %>
   </body>
 </html>
