@@ -1,33 +1,40 @@
-
 <%= render "shared/table", 
     columns: [
-    { header: "Room", field: ->(reservation) { 
-        ApplicationController.render(
-                partial: "shared/typography",
-                locals: { sub_heading: reservation.room.name}
-                ).html_safe
-        }
-    },
-    { header: "Date", field: ->(reservation) {  
-        if reservation.start_date == reservation.end_date
-            format_datetime(reservation.start_date)
-        else
-            "#{format_datetime(reservation.start_date)} - #{format_datetime(reservation.end_date)}"
-        end
-        }
-    },
-    { header: "Time", field: ->(reservation) { "#{format_datetime(reservation.start_time)} - #{format_datetime(reservation.end_time)}" } },
-    { 
-        header: "Status", 
-        field: ->(reservation) {status_badge(reservation.status)}
-    },
-    { 
-        header: "Actions", 
-        field: ->(reservation) { 
-            btn_link_to("Edit", edit_reservation_path(reservation), btn_class: "btn-white inline-flex items-center gap-1 px-4 py-2  text-sm", icon_name: "pencil-square", variant: :solid)
-        } 
-    }
-    ],
-    rows: @reservations,
+        { header: "Room", field: ->(reservation) { 
+            ApplicationController.render(
+                    partial: "shared/typography",
+                    locals: { sub_heading: reservation.room.name}
+                    ).html_safe
+            }
+        },
+        { header: "Date", field: ->(reservation) {  
+            if reservation.start_date == reservation.end_date
+                format_datetime(reservation.start_date)
+            else
+                "#{format_datetime(reservation.start_date)} - #{format_datetime(reservation.end_date)}"
+            end
+            }
+        },
+        { header: "Time", field: ->(reservation) { "#{format_datetime(reservation.start_time)} - #{format_datetime(reservation.end_time)}" } },
+        { 
+            header: "Status", 
+            field: ->(reservation) {status_badge(reservation.status)}
+        },
+        (
+            if upcoming
+                { 
+                header: "Actions", 
+                field: ->(reservation) { 
+                    btn_link_to("Edit", edit_reservation_path(reservation), 
+                    btn_class: "btn-white inline-flex items-center gap-1 px-4 py-2 text-sm", 
+                    icon_name: "pencil-square", 
+                    variant: :solid
+                    )
+                } 
+                } 
+            end
+        )
+    ].compact,
+    rows: upcoming ? @upcoming_reservations : @past_reservations, 
     path: ->(reservation) { reservation_path(reservation) }
 %>
