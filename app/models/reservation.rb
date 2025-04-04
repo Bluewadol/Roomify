@@ -1,4 +1,8 @@
 class Reservation < ApplicationRecord
+  extend FriendlyId
+  
+  friendly_id :reservation_slug, use: :slugged
+
   belongs_to :user
   belongs_to :room
   has_many :reservation_members, dependent: :destroy
@@ -58,4 +62,9 @@ class Reservation < ApplicationRecord
       errors.add(:room_id, "is already reserved during the selected time")
     end
   end
+
+  def reservation_slug
+    "reservation-#{id}"
+  end
+  
 end

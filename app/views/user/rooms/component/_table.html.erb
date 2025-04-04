@@ -46,5 +46,7 @@
         }
     ], 
     rows: @rooms, 
-    path: ->(room) { room_path(room.name, params.permit(:start_date, :end_date, :start_time, :end_time)) }
-    %>
+    path: ->(room) {
+        room_path(room, params.permit(:start_date, :end_date, :start_time, :end_time))
+    }
+%>

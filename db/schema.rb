@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_01_151848) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_04_170710) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -52,6 +52,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_151848) do
     t.index ["user_id"], name: "index_check_ins_on_user_id"
   end
 
+  create_table "friendly_id_slugs", force: :cascade do |t|
+    t.string "slug", null: false
+    t.integer "sluggable_id", null: false
+    t.string "sluggable_type", limit: 50
+    t.string "scope"
+    t.datetime "created_at"
+    t.index ["slug", "sluggable_type", "scope"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type_and_scope", unique: true
+    t.index ["slug", "sluggable_type"], name: "index_friendly_id_slugs_on_slug_and_sluggable_type"
+    t.index ["sluggable_type", "sluggable_id"], name: "index_friendly_id_slugs_on_sluggable_type_and_sluggable_id"
+  end
+
   create_table "reservation_members", force: :cascade do |t|
     t.bigint "reservation_id", null: false
     t.bigint "user_id", null: false
@@ -73,7 +84,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_151848) do
     t.date "end_date"
     t.text "description"
     t.integer "reservation_type", default: 4, null: false
+    t.string "slug"
     t.index ["room_id"], name: "index_reservations_on_room_id"
+    t.index ["slug"], name: "index_reservations_on_slug", unique: true
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end
 
@@ -106,7 +119,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_01_151848) do
     t.bigint "created_by_id", null: false
     t.bigint "updated_by_id", null: false
     t.string "description"
+    t.string "slug"
     t.index ["created_by_id"], name: "index_rooms_on_created_by_id"
+    t.index ["slug"], name: "index_rooms_on_slug", unique: true
     t.index ["updated_by_id"], name: "index_rooms_on_updated_by_id"
   end
 

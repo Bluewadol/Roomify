@@ -1,4 +1,9 @@
-class Room < ApplicationRecord
+class Room < ApplicationRecord 
+    before_validation :normalize_name
+    extend FriendlyId
+    
+    friendly_id :name , use: :slugged
+
     has_many :room_amenities, dependent: :destroy
 
     has_one_attached :qr_code
@@ -77,6 +82,14 @@ class Room < ApplicationRecord
     def room_url
         Rails.application.routes.url_helpers.room_url(self, host: "http://127.0.0.1:3000/")
         # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
+    end
+
+    def should_generate_new_friendly_id?
+        name_changed? || super
+    end
+
+    def normalize_name
+        self.name = name.strip.gsub(/\s+/, ' ') if name.present?
     end
     
 end

@@ -25,9 +25,9 @@ Rails.application.routes.draw do
 
   devise_for :users
 
-  resources :rooms, only: [:index, :show], controller: 'user/rooms', param: :name
+  resources :rooms, only: [:index, :show], controller: 'user/rooms', param: :slug
 
-  resources :reservations, controller: 'user/reservations' do
+  resources :reservations, controller: 'user/reservations', param: :slug do
     resource :check_in, only: [:new, :create, :show], controller: 'user/check_ins'
   end  
 

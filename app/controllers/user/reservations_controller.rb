@@ -6,7 +6,7 @@ class User::ReservationsController < ApplicationController
     @upcoming_reservations = @reservations
       .where(status: [:pending, :waiting_check_in])
       .order(:start_date, :start_time)
-      
+
     @past_reservations = @reservations
       .where.not(status: [:pending, :waiting_check_in])
       .order(:start_date, :start_time)
@@ -49,7 +49,7 @@ class User::ReservationsController < ApplicationController
   private
 
   def set_reservation
-    @reservation = current_user.reservations.find(params[:id])
+    @reservation = current_user.reservations.find(params[:slug])
   end
 
   def reservation_params

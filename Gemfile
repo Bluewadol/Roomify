@@ -73,3 +73,6 @@ gem "devise", "~> 4.9"
 gem "rolify", "~> 6.0"
 
 gem 'rqrcode'
+
+gem 'friendly_id', '~> 5.4.0'
+

@@ -147,12 +147,12 @@ class User::RoomsController < ApplicationController
   private
 
   def set_room
-    @room = Room.left_joins(:reservations)
-              .includes(:room_amenities)
-              .order('reservations.updated_at DESC')
-              .find_by(name: params[:name])
-    if @room.nil?
-      redirect_to rooms_path, alert: "Room not found."
-    end
-  end  
+    @room = Room.friendly
+                .left_joins(:reservations)
+                .includes(:room_amenities)
+                .order('reservations.updated_at DESC')
+                .find(params[:slug])
+  rescue ActiveRecord::RecordNotFound
+    redirect_to rooms_path, alert: "Room not found."
+  end   
 end
