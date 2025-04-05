@@ -1,20 +1,31 @@
-<% if @reservation.pending? %>
-    <% reservation_datetime = @reservation.start_date.to_time.change({ hour: @reservation.start_time.hour, min: @reservation.start_time.min }) %>
-    <% reservation_datetime = reservation_datetime.in_time_zone('Asia/Bangkok') %>
+<% if reservation.pending? %>
+    <% reservation_datetime = reservation.start_date.to_time.change(hour: reservation.start_time.hour, min: reservation.start_time.min).in_time_zone('Asia/Bangkok') %>
     <% time_window_start = reservation_datetime - 15.minutes %>
     <% time_window_end = reservation_datetime + 15.minutes %>
 
     <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
 
     <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
-        <%= link_to "Check-In", new_reservation_check_in_path(@reservation), class: "btn btn-primary" %>
+        <%= btn_link_to "Check-In", new_reservation_check_in_path(reservation),
+            btn_class: "btn btn-primary h-10",
+            icon_name: "arrow-right-on-rectangle",
+            variant: :solid,
+            onclick: "event.stopPropagation();" %>
     <% else %>
-        <%= link_to "Check-In", "#", 
-            class: "btn btn-transparent border border-gray-300 cursor-not-allowed shadow-sm text-gray-600",
+        <%= btn_link_to "Check-In", "#",
+            btn_class: "btn btn-light h-10 border border-gray-300 cursor-not-allowed shadow-sm text-gray-600 inline-flex items-center text-sm",
+            icon_name: "arrow-right-on-rectangle",
+            variant: :solid,
             title: "Check-In available 15 minutes before or after the start time",
-            style: "pointer-events: none;" %>
+            html_options: { style: "pointer-events: none;" },
+            onclick: "event.stopPropagation();" %>
     <% end %>
-
 <% else %>
-    <span class="bg-gray-400 text-gray-600 px-4 py-2 rounded-lg cursor-not-allowed">Check-In</span>
+    <%= btn_link_to "Check-In", "#",
+        btn_class: "btn btn-light h-10 border border-gray-300 cursor-not-allowed shadow-sm text-gray-600 inline-flex items-center text-sm",
+        icon_name: "arrow-right-on-rectangle",
+        variant: :solid,
+        title: "Reservation is not pending",
+        html_options: { style: "pointer-events: none;" },
+        onclick: "event.stopPropagation();" %>
 <% end %>

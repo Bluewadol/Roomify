@@ -3,17 +3,12 @@ class User::ReservationsController < ApplicationController
 
   def index
     @reservations = current_user.reservations.includes(:room)
-    Rails.logger.debug "All Reservations: #{@reservations.to_json}"
-  
     @upcoming_reservations = @reservations
       .where(status: [:pending, :waiting_check_in])
       .order(:start_date, :start_time)
-    Rails.logger.debug "Upcoming Reservations: #{@upcoming_reservations.to_json}"
-  
     @past_reservations = @reservations
       .where.not(status: [:pending, :waiting_check_in])
       .order(:start_date, :start_time)
-    Rails.logger.debug "Past Reservations: #{@past_reservations.to_json}"
   end  
 
   def show; end
@@ -53,7 +48,9 @@ class User::ReservationsController < ApplicationController
   private
 
   def set_reservation
-    @reservation = current_user.reservations.find(params[:slug])
+    @reservation = current_user.reservations.friendly.find(params[:slug])
+    rescue ActiveRecord::RecordNotFound
+      redirect_to reservations_path, alert: "Reservation not found." 
   end
 
   def reservation_params

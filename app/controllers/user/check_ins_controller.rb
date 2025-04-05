@@ -38,7 +38,9 @@ class User::CheckInsController < ApplicationController
     private
 
     def set_reservation
-      @reservation = Reservation.find(params[:reservation_id])
+      @reservation = current_user.reservations.friendly.find(params[:slug])
+      rescue ActiveRecord::RecordNotFound
+        redirect_to request.referer, alert: "Reservation not found." 
     end
 
     def set_check_in

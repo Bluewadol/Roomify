@@ -1,7 +1,9 @@
 class Reservation < ApplicationRecord
   extend FriendlyId
   
-  friendly_id :reservation_slug, use: :slugged
+  friendly_id :slug, use: :slugged
+
+  after_create :set_custom_slug
 
   belongs_to :user
   belongs_to :room
@@ -62,9 +64,13 @@ class Reservation < ApplicationRecord
       errors.add(:room_id, "is already reserved during the selected time")
     end
   end
-
-  def reservation_slug
-    "reservation-#{id}"
-  end
   
+  def should_generate_new_friendly_id?
+    slug.blank?
+  end
+
+  def set_custom_slug
+    update_column(:slug, "reservation-#{id}")
+  end
+
 end

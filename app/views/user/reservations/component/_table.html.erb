@@ -20,20 +20,23 @@
             header: "Status", 
             field: ->(reservation) {status_badge(reservation.status)}
         },
-        (
-            if upcoming
-                { 
-                header: "Actions", 
-                field: ->(reservation) { 
-                    btn_link_to("Edit", edit_reservation_path(reservation), 
-                    btn_class: "btn-white inline-flex items-center gap-1 px-4 py-2 text-sm", 
-                    icon_name: "pencil-square", 
-                    variant: :solid
-                    )
-                } 
-                } 
-            end
-        )
+        (if upcoming
+            {
+                header: "Actions",
+                field: ->(reservation) {
+                    content = safe_join([
+                        render("user/reservations/component/check_in_btn", reservation: reservation),
+                        btn_link_to("Edit", edit_reservation_path(reservation),
+                            btn_class: "btn-white inline-flex items-center gap-1 px-4 py-2 text-sm",
+                            icon_name: "pencil-square",
+                            variant: :solid,
+                            onclick: "event.stopPropagation();"
+                        )
+                        ])
+                    tag.div(content, class: "flex justify-start items-center gap-2")
+                }
+            }
+        end)
     ].compact,
     rows: upcoming ? @upcoming_reservations : @past_reservations, 
     path: ->(reservation) { reservation_path(reservation) }
