@@ -67,7 +67,7 @@
     <div class="mb-4">
         <%= form.label :description, "Reservation Description", class: "form-label" %>
         <div class="relative">
-            <%= form.text_area :description, class: "form-input w-full h-24", placeholder: "Enter meeting purpose of...", data: { room_selector_target: "descriptionField" } %>
+            <%= form.text_area :description, class: "form-input w-full h-[42px]", placeholder: "Enter meeting purpose of...", data: { room_selector_target: "descriptionField" } %>
             <%= error_icon(@reservation, :description) %>
         </div>
         <%= field_error_tag(@reservation, :description) %>
