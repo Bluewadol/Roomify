@@ -10,6 +10,7 @@ import FilterFormController from "./filter_form_controller"
 import ResetFilterController from "./reset_filter_controller"
 import FlashController from "./flash_controller"
 import CarouselController from "./carousel_controller"
+import RoomSelectorController from "./room_selector_controller"
 
 application.register("hello", HelloController)
 application.register("image-upload", ImageUploadController)
@@ -17,4 +18,5 @@ application.register("flash", FlashController)
 application.register("filter-form", FilterFormController)
 application.register("reset-filter", ResetFilterController)
 application.register("carousel", CarouselController)
+application.register("room-selector", RoomSelectorController)
 

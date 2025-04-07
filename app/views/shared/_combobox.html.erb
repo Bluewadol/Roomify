@@ -1,0 +1,92 @@
+<div class="mb-4">
+    <% if label.present? %>
+        <label for="<%= field %>" class="form-label"><%= label %></label>
+    <% end %>
+    <div class="relative w-full"
+        data-controller="railsui-combobox"
+        data-action="click@window->railsui-combobox#handleOutsideClick"
+        data-railsui-combobox-active-class-value="bg-gray-900 text-white hover:bg-gray-950"
+        data-railsui-combobox-inactive-class-value="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 dark:hover:bg-gray-900 hover:bg-gray-50">
+
+        <!-- Hidden field bound to form -->
+        <%= form.hidden_field field, value: form.object.send(field).to_s || default_value, data: { railsui_combobox_target: "hiddenInput" } %>
+
+        <!-- Combobox button -->
+        <div
+            aria-expanded="false"
+            aria-controls="combobox-list"
+            aria-labelledby="combobox-label"
+            data-action="click->railsui-combobox#toggleDropdown keydown.enter->railsui-combobox#toggleDropdown"
+            data-railsui-combobox-target="box"
+            role="combobox"
+            tabindex="0"
+            class="form-input flex items-center justify-between pr-1.5 shadow-sm">
+            <span id="combobox-label" class="sr-only">Select option</span>
+            <span data-railsui-combobox-target="text">
+                <%= form.object.send(field).to_s.humanize || default_value.to_s.humanize %>
+            </span>
+            <%= icon "chevron-up-down", class: "stroke-gray-500 pointer-events-none size-5" %>
+        </div>
+
+        <!-- Dropdown list -->
+        <div
+            data-railsui-combobox-target="list"
+            class="absolute z-10 top-12 left-0 border border-gray-300/80 dark:border-gray-700/80 shadow-lg duration-200 origin-top hidden w-full rounded-md overflow-hidden"
+            role="listbox"
+            aria-labelledby="combobox-label"
+            data-transition-enter-from="opacity-0 scale-95"
+            data-transition-enter-to="opacity-100 scale-100"
+            data-transition-leave-from="opacity-100 scale-100"
+            data-transition-leave-to="opacity-0 scale-95"
+            data-action="keydown.esc->railsui-combobox#hideDropdown">
+
+            <!-- Optional: Search input -->
+            <div class="p-2 bg-white' <%= search_active ? '' : 'hidden' %>">
+                <label for="combobox-search" class="sr-only">Search</label>
+                <div class="relative">
+                    <input
+                        id="combobox-search"
+                        type="text"
+                        placeholder="Search..."
+                        autocomplete="off"
+                        aria-autocomplete="list"
+                        data-railsui-combobox-target="input"
+                        data-action="input->railsui-combobox#filter keydown->railsui-combobox#handleKeydown"
+                        class="form-input text-[15px] pl-8">
+                <%= icon "magnifying-glass", class: "stroke-gray-400 size-5 absolute top-[11px] left-2" %>
+                </div>
+            </div>
+
+            <!-- Dynamic Options -->
+            <ul role="presentation">
+                <% collection.each_with_index do |(label, value), index| %>
+                    <li
+                        id="option-<%= index + 1 %>"
+                        aria-selected="<%= form.object.send(field).to_s == value.to_s || default_value.to_s == value.to_s ? 'true' : 'false' %>"
+                        data-value="<%= value %>"
+                        data-action="click->railsui-combobox#selectOption keydown.enter->railsui-combobox#selectOption"
+                        data-railsui-combobox-target="option"
+                        class="px-3 py-1.5 cursor-pointer flex items-center justify-between"
+                        role="option"
+                        tabindex="0">
+                        <%= label %>
+                        <span data-railsui-combobox-target="checkmark" class="<%= (form.object.send(field).to_s == value.to_s || default_value.to_s == value.to_s) ? '' : 'hidden' %>" aria-hidden="true">
+                            <%= icon "check", class: "text-gray-100 size-4" %>
+                        </span>
+                    </li>
+                <% end %>
+            </ul>
+
+            <!-- No results -->
+            <div
+                data-railsui-combobox-target="noresults"
+                class="hidden px-4 py-2 text-gray-500"
+                aria-hidden="true">
+                No results found
+            </div>
+        </div>
+    </div>
+
+    <%= error_icon(form.object, field) %>
+    <%= field_error_tag(form.object, field) %>
+</div>

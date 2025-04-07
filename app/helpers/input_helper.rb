@@ -1,10 +1,10 @@
 module InputHelper
     def input_class(resource, field, extra_classes: "", has_icon_left: false)
-        base_classes = "form-input peer pr-10 #{extra_classes}"
+        base_classes = "form-input peer #{extra_classes}"
         base_classes += " pl-12" if has_icon_left
 
         if resource.errors[field].any?
-            base_classes += " border-rose-700 text-rose-700 ring-red-50 dark:border-red-400 dark:ring-red-50/10"
+            base_classes += " border-rose-700 text-rose-700 pr-8 ring-red-50 dark:border-red-400 dark:ring-red-50/10"
         else
             base_classes += " invalid:border-rose-700 invalid:text-red-700 invalid:ring-red-50 dark:invalid:ring-red-50/10"
         end
@@ -15,7 +15,7 @@ module InputHelper
     def error_icon(resource, field)
         return unless resource.errors[field].any?
 
-        content_tag(:span, class: "absolute right-3 top-3 text-red-700") do
+        content_tag(:span, class: "absolute right-3 top-[11px] text-red-700") do
             icon("exclamation-circle", class: "size-5 stroke-current")
         end
     end

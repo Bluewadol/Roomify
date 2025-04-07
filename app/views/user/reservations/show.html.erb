@@ -8,7 +8,7 @@
     </div>
     <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
         <div class="flex">
-            <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.id}" %>
+            <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.id} (#{@reservation.reservation_type})" %>
         </div>
         <%= render "shared/typography", sub_heading: "#{@reservation.room.name}" %>
         <div class="flex gap-2 text-sm">
@@ -37,9 +37,11 @@
                 <span><%= member.name.present? ? member.name : member.email %></span>
             <% end %>
         </div>
-        <div class="flex flex-col text-sm">
-            <%= render "shared/typography", sub_heading: "Booking Purpose" %>
-            <p><%= @reservation.description %></p>
-        </div> 
+        <% if @reservation.description.present? %>
+            <div class="flex flex-col text-sm">
+                <%= render "shared/typography", sub_heading: "Booking Purpose" %>
+                <p><%= @reservation.description %></p>
+            </div>
+        <% end %>
     </div>
 </div>

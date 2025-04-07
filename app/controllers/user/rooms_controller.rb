@@ -60,17 +60,6 @@ class User::RoomsController < ApplicationController
                      .where(room_amenities: { amenity_name: @selected_amenities })
     end    
     
-    def determine_room_status(room)
-      booked = @reservations_in_range.where(room_id: room.id).exists?
-      if room.unavailable?
-        :unavailable
-      elsif booked
-        :booked
-      else
-        :available
-      end
-    end
-    
     @rooms = @rooms.map do |room|
       status = determine_room_status(room)
       room.assign_attributes(status: status)
@@ -128,17 +117,6 @@ class User::RoomsController < ApplicationController
       @reservations_in_range = @reservations_in_range.where("end_time <= ?", @end_time)
     end   
   
-    def determine_room_status(room)
-      booked = @reservations_in_range.where(room_id: room.id).exists?
-      if room.unavailable?
-        :unavailable
-      elsif booked
-        :booked
-      else
-        :available
-      end
-    end
-  
     status = determine_room_status(@room)
     @room.assign_attributes(status: status)
     @room_status = Room.statuses.keys
@@ -155,4 +133,15 @@ class User::RoomsController < ApplicationController
   rescue ActiveRecord::RecordNotFound
     redirect_to rooms_path, alert: "Room not found."
   end   
+
+  def determine_room_status(room)
+    booked = @reservations_in_range.where(room_id: room.id).exists?
+    if room.unavailable?
+      :unavailable
+    elsif booked
+      :booked
+    else
+      :available
+    end
+  end
 end

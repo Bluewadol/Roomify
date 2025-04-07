@@ -1,5 +1,4 @@
 module ApplicationHelper
-  include InputHelper
   def spacer(amount = 16)
     render "rui/shared/email_spacer", amount: amount
   end

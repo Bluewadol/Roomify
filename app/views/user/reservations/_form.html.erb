@@ -1,84 +1,7 @@
 <div class="form-group">
     <%= form_with(model: @reservation, url: @reservation.persisted? ? reservation_path(@reservation) : reservations_path, method: @reservation.persisted? ? :patch : :post, local: true) do |f| %>
-
         <%= error_messages(@reservation) if @reservation.errors.any? %>
-
-        <div class="mb-4">
-            <%= f.label :room_id, "Select Room", class: "form-label" %>
-            <div class="relative">
-                <%= f.collection_select :room_id, Room.where.not(status: 'unavailable'), :id, :name, 
-                    { prompt: "Choose a Room", selected: @room&.id }, class: input_class(@reservation, :room_id) %>
-                <%= error_icon(@reservation, :room_id) %>
-            </div>
-            <%= field_error_tag(@reservation, :room_id) %>
-        </div>
-
-        <div class="mb-4">
-            <%= f.label :description, "Description", class: "form-label" %>
-            <div class="relative">
-                <%= f.text_area :description, class: "form-textarea w-full h-24" %>
-                <%= error_icon(@reservation, :description) %>
-            </div>
-            <%= field_error_tag(@reservation, :description) %>
-        </div>
-
-        <div class="mb-4 flex space-x-4">
-            <div class="w-1/2">
-                <%= f.label :start_date, "Reservation Start Date", class: "form-label" %>
-                <div class="relative">
-                    <%= f.date_field :start_date, 
-                        class: input_class(@reservation, :start_date), 
-                        value: params[:start_date] || @reservation.start_date %>
-                    <%= error_icon(@reservation, :start_date) %>
-                </div>
-                <%= field_error_tag(@reservation, :start_date) %>
-            </div>
-
-            <div class="w-1/2">
-                <%= f.label :end_date, "Reservation End Date", class: "form-label" %>
-                <div class="relative">
-                    <%= f.date_field :end_date, 
-                        class: input_class(@reservation, :end_date), 
-                        value: params[:end_date] || @reservation.end_date %>
-                    <%= error_icon(@reservation, :end_date) %>
-                </div>
-                <%= field_error_tag(@reservation, :end_date) %>
-            </div>
-        </div>
-
-        <div class="mb-4 flex space-x-4">
-            <div class="w-1/2">
-                <%= f.label :start_time, "Start Time", class: "form-label" %>
-                <div class="relative">
-                    <%= f.time_field :start_time, 
-                        class: input_class(@reservation, :start_time), 
-                        value: params[:start_time] || @reservation.start_time %>
-                    <%= error_icon(@reservation, :start_time) %>
-                </div>
-                <%= field_error_tag(@reservation, :start_time) %>
-            </div>
-
-            <div class="w-1/2">
-                <%= f.label :end_time, "End Time", class: "form-label" %>
-                <div class="relative">
-                    <%= f.time_field :end_time, 
-                        class: input_class(@reservation, :end_time), 
-                        value: params[:end_time] || @reservation.end_time %>
-                    <%= error_icon(@reservation, :end_time) %>
-                </div>
-                <%= field_error_tag(@reservation, :end_time) %>
-            </div>
-        </div>
-
-        <div class="mb-4">
-            <%= f.label :reservation_type, "Reservation Type", class: "form-label" %>
-            <div class="relative">
-                <%= f.select :reservation_type, Reservation.reservation_types.keys.map { |type| [type.humanize, type] }, 
-                    { prompt: "Choose Reservation Type" }, class: "form-select w-full" %>
-                <%= error_icon(@reservation, :reservation_type) %>
-            </div>
-            <%= field_error_tag(@reservation, :reservation_type) %>
-        </div>
+        
 
         <div class="mb-4" data-controller="reservation-members">
             <%= f.label :reservation_members, "Add Members", class: "form-label" %>
@@ -96,4 +19,27 @@
         </div>
 
     <% end %>
+</div>
+<%= form_with(url: new_reservation_path, method: :get, local: true) do |filter_form| %>
+    <div class="w-full md:w-1/2 flex-shrink-0">
+        <%= render "shared/search_input", form: filter_form, field: :name, value: params[:name], placeholder: "Search room by name..." %>
+    </div>
+<% end %>
+<div class="form-group flex flex-col gap-4">
+    <%= form_with(model: @reservation, url: @reservation.persisted? ? reservation_path(@reservation) : reservations_path, method: @reservation.persisted? ? :patch : :post, local: true, data: { controller: "room-selector" }) do |form| %>
+        <div class="flex w-full gap-4 flex-wrap lg:flex-nowrap">
+            <div class="w-2/3 flex flex-col gap-4">
+                <%= render "user/reservations/component/inputs", form: form%>
+                <div class="flex flex-col bg-white gap-2 w-full h-auto rounded-lg border p-4 shadow-md">
+                    <div class="flex justify-between items-center">
+                        <%= render "shared/typography", sub_heading: "Available Rooms" %>
+                    </div>
+                    <div class="flex flex-col">
+                        <%= render "user/reservations/component/room_list", rooms: @rooms%>
+                    </div>
+                </div>
+            </div>
+            <%= render "user/reservations/component/booking_summary", form: form%>
+        </div>
+    <% end %> 
 </div>

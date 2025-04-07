@@ -22,7 +22,7 @@ class Reservation < ApplicationRecord
 }, default: :pending
 
 
-  enum :reservation_type, { training: 0, conference: 1, workshop: 2, seminar: 3, meeting: 4, webinar: 5, private_event: 6 }, default: :meeting
+  enum :reservation_type, { meeting: 0, conference: 1, workshop: 2, seminar: 3, training: 4, webinar: 5, private_event: 6 }, default: :meeting
 
   validates :user_id, presence: true
   validates :room_id, presence: true
@@ -64,7 +64,7 @@ class Reservation < ApplicationRecord
       errors.add(:room_id, "is already reserved during the selected time")
     end
   end
-  
+
   def should_generate_new_friendly_id?
     slug.blank?
   end
