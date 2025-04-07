@@ -3,12 +3,13 @@ import { Controller } from "@hotwired/stimulus";
 export default class extends Controller {
     static targets = [
         "roomIdField", "roomBox", "bookingSummary",
-        "startDateField", "endDateField",
-        "startTimeField", "endTimeField",
-        "descriptionField"
-    ];
+        "startDateField", "endDateField", "startTimeField", "endTimeField",
+        "startDateFilter", "endDateFilter", "startTimeFilter", "endTimeFilter", "roomIdFilter",
+        "descriptionField", "filterForm"
+    ];      
 
     connect() {
+        this.isSubmitting = false;
         const roomIdFromParams = new URLSearchParams(window.location.search).get('room_id');
 
         if (roomIdFromParams) {
@@ -21,17 +22,44 @@ export default class extends Controller {
         }
 
         // bind input listeners
-        this.startDateFieldTarget.addEventListener("input", () => this.updateBookingSummary());
-        this.endDateFieldTarget.addEventListener("input", () => this.updateBookingSummary());
-        this.startTimeFieldTarget.addEventListener("input", () => this.updateBookingSummary());
-        this.endTimeFieldTarget.addEventListener("input", () => this.updateBookingSummary());
-        this.descriptionFieldTarget.addEventListener("input", () => this.updateBookingSummary());
+        if (this.hasStartDateFieldTarget) {
+            this.startDateFieldTarget.addEventListener("input", () => {
+                this.updateBookingSummary();
+                this.syncToFilterForm();
+            });
+        }
+        
+        if (this.hasEndDateFieldTarget) {
+            this.endDateFieldTarget.addEventListener("input", () => {
+                this.updateBookingSummary();
+                this.syncToFilterForm();
+            });
+        }
+    
+        if (this.hasStartTimeFieldTarget) {
+            this.startTimeFieldTarget.addEventListener("input", () => {
+                this.updateBookingSummary();
+                this.syncToFilterForm();
+            });
+        }
+    
+        if (this.hasEndTimeFieldTarget) {
+            this.endTimeFieldTarget.addEventListener("input", () => {
+                this.updateBookingSummary();
+                this.syncToFilterForm();
+            });
+        }
+        
+        if (this.hasDescriptionFieldTarget) {
+            this.descriptionFieldTarget.addEventListener("input", () => {
+                this.updateBookingSummary();
+            });
+        }
     }
 
     select(event) {
         const roomId = event.currentTarget.getAttribute("data-room-id");
         this.roomIdFieldTarget.value = roomId;
-        const currentPath = window.location.pathname;
         const newUrl = new URL(window.location);
         newUrl.searchParams.set('room_id', roomId);
 
@@ -132,4 +160,40 @@ export default class extends Controller {
         });
         window.history.pushState({}, '', url);
     }
+
+    syncFilterFormValuesOnly() {
+        if (this.hasStartDateFieldTarget && this.hasStartDateFilterTarget) {
+            this.startDateFilterTarget.value = this.startDateFieldTarget.value;
+        }
+        if (this.hasEndDateFieldTarget && this.hasEndDateFilterTarget) {
+            this.endDateFilterTarget.value = this.endDateFieldTarget.value;
+        }
+        if (this.hasStartTimeFieldTarget && this.hasStartTimeFilterTarget) {
+            this.startTimeFilterTarget.value = this.startTimeFieldTarget.value;
+        }
+        if (this.hasEndTimeFieldTarget && this.hasEndTimeFilterTarget) {
+            this.endTimeFilterTarget.value = this.endTimeFieldTarget.value;
+        }
+        if (this.hasRoomIdFieldTarget && this.hasRoomIdFilterTarget) {
+            this.roomIdFilterTarget.value = this.roomIdFieldTarget.value;
+        }
+    }
+    
+    submitFilterForm() {
+        if (this.hasFilterFormTarget) {
+            this.filterFormTarget.requestSubmit();
+        }
+    }
+    
+    syncToFilterForm() {
+        if (this.isSubmitting) return; 
+
+        this.isSubmitting = true; 
+        this.syncFilterFormValuesOnly();
+        this.submitFilterForm();
+        clearTimeout(this.submitTimeout);
+        setTimeout(() => {
+            this.isSubmitting = false;
+        }, 300);
+    }    
 }
