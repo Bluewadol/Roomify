@@ -5,3 +5,4 @@
 @import "railsui/forms";
 @import "railsui/navigation";
 @import "tailwindcss/utilities";
+@import "tom-select/dist/css/tom-select.css";

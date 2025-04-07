@@ -41,13 +41,14 @@
                 <%= @reservation.description %>
             </span>
         </div>
-        <div class="mb-4" data-controller="reservation-members">
-            <%= form.label :reservation_members, "Invite Members", class: "form-label" %>
-            <div id="reservation-members-container">
-                <div class="relative mb-2" data-reservation-members-target="field">
-                    <%= form.collection_select :member_ids, User.where.not(id: current_user.id), :id, :email, { prompt: "Select Members" }, class: "form-control", multiple: true, name: "reservation[member_ids][]" %>
-                </div>
-            </div>
+        <div class="mb-4" data-controller="multi-select">
+            <%= form.label :member_ids, "Invite Members", class: "form-label" %>
+            <%= form.collection_select :member_ids, User.where.not(id: current_user.id), :id, :email,
+                { prompt: "Select Members" },
+                class: "contacts",
+                multiple: true,
+                name: "reservation[member_ids][]",
+                data: { multi_select_target: "select" } %>
         </div>
     </div>
     <%= form.submit @reservation.persisted? ? "Update Reservation" : "Create Reservation", class: "btn btn-primary" %>
