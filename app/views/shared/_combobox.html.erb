@@ -9,7 +9,7 @@
         data-railsui-combobox-inactive-class-value="bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 dark:hover:bg-gray-900 hover:bg-gray-50">
 
         <!-- Hidden field bound to form -->
-        <%= form.hidden_field field, value: form.object.send(field).to_s || default_value, data: { railsui_combobox_target: "hiddenInput" } %>
+        <%= form.hidden_field field, value: form.object.send(field).to_s.downcase || default_value, data: { railsui_combobox_target: "hiddenInput" } %>
 
         <!-- Combobox button -->
         <div
@@ -23,7 +23,7 @@
             class="form-input flex items-center justify-between pr-1.5 shadow-sm">
             <span id="combobox-label" class="sr-only">Select option</span>
             <span data-railsui-combobox-target="text">
-                <%= form.object.send(field).to_s.humanize || default_value.to_s.humanize %>
+                <%= form.object.send(field).to_s.downcase || default_value.to_s.downcase %>
             </span>
             <%= icon "chevron-up-down", class: "stroke-gray-500 pointer-events-none size-5" %>
         </div>
@@ -88,5 +88,5 @@
     </div>
 
     <%= error_icon(form.object, field) %>
-    <%= field_error_tag(form.object, field) %>
+    <%= field_error_tag(form.object, field) %> 
 </div>

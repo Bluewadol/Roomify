@@ -57,23 +57,79 @@ export default class extends Controller {
     updateBookingSummary() {
         const selectedRoom = this.roomBoxTargets.find(room => room.classList.contains("bg-blue-200"));
         const roomName = selectedRoom?.dataset.roomName || "No Room Selected";
-
+    
         this.setText("selected-room-name", roomName);
-        this.setText("selected-start-date", this.startDateFieldTarget.value);
-        if (this.endDateFieldTarget.value && this.startDateFieldTarget.value !== this.endDateFieldTarget.value) {
+
+        const startDate = this.formatDateTime(this.startDateFieldTarget.value);
+        const endDate = this.formatDateTime(this.endDateFieldTarget.value);
+    
+        if (startDate) {
+            this.setText("selected-start-date", startDate);
+        }
+        if (endDate && this.startDateFieldTarget.value !== this.endDateFieldTarget.value) {
             this.setText("dash-date", "-");
-            this.setText("selected-end-date", this.endDateFieldTarget.value);
+            this.setText("selected-end-date", endDate);
         } else {
             this.setText("selected-end-date", ""); 
             this.setText("dash-date", "");
         }
-        this.setText("selected-start-time", this.startTimeFieldTarget.value);
-        if (this.startTimeFieldTarget.value || this.endTimeFieldTarget.value) {
+        const startTime = this.formatDateTime(this.startTimeFieldTarget.value);
+        const endTime = this.formatDateTime(this.endTimeFieldTarget.value);
+    
+        if (startTime) {
+            this.setText("selected-start-time", startTime);
+        }
+        if (endTime) {
+            this.setText("selected-end-time", endTime);
+        }
+    
+        if (startTime || endTime) {
             this.setText("dash-time", "-");
         } else {
             this.setText("dash-time", "");
         }
-        this.setText("selected-end-time", this.endTimeFieldTarget.value);
+
+        this.updateUrlParams({
+            start_date: this.startDateFieldTarget.value,
+            end_date: this.endDateFieldTarget.value,
+            start_time: this.startTimeFieldTarget.value,
+            end_time: this.endTimeFieldTarget.value,
+        });
+    
         this.setText("selected-description", this.descriptionFieldTarget.value);
-    } 
+    }
+    formatDateTime(dateOrTime) {
+        if (!dateOrTime) return '';
+    
+        const date = new Date(dateOrTime);
+        
+        if (date instanceof Date && !isNaN(date)) {
+            return date.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
+        } 
+        
+        const time = new Date(dateOrTime);
+
+        if (!isNaN(time)) {
+            if (time instanceof Date) {
+                return time.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
+            }
+            const options = { hour: '2-digit', minute: '2-digit', hour12: true };
+            const formattedTime = time.toLocaleTimeString('en-US', options);
+            return formattedTime;
+        }
+
+        return dateOrTime.toString();
+    }
+
+    updateUrlParams(params) {
+        const url = new URL(window.location);
+        Object.keys(params).forEach((key) => {
+            if (params[key]) {
+                url.searchParams.set(key, params[key]);
+            } else {
+                url.searchParams.delete(key);
+            }
+        });
+        window.history.pushState({}, '', url);
+    }
 }

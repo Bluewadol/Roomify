@@ -8,27 +8,29 @@
         <div class="mb-2 flex justify-between">
             <strong>Date:</strong>
             <div class="text-sm text-gray-500 dark:text-gray-500">
-                <span id="selected-start-date">
-                    <%= format_datetime(@reservation.start_date) %>
+                <span id="selected-start-date" data-start-date="<%= format_datetime(@reservation.start_date) %>">
+                <%= format_datetime(@reservation.start_date) if @reservation.start_date.present? %>
                 </span>
-                <span id="dash-date"></span>
-                <span id="selected-end-date">
-                    <%= format_datetime(@reservation.end_date) %>
+                <span id="dash-date">-</span>
+                <span id="selected-end-date" data-end-date="<%= format_datetime(@reservation.end_date) %>">
+                <%= format_datetime(@reservation.end_date) if @reservation.end_date.present? %>
                 </span>
             </div>
         </div>
+
         <div class="mb-2 flex justify-between">
             <strong>Time:</strong>
             <div class="text-sm text-gray-500 dark:text-gray-500">
-                <span id="selected-start-time">
-                    <%= @reservation.start_time.present? ? format_datetime(@reservation.start_time) : "" %>
+                <span id="selected-start-time" data-start-time="<%= format_datetime(@reservation.start_time) %>">
+                <%= format_datetime(@reservation.start_time) if @reservation.start_time.present? %>
                 </span>
-                <span id="dash-time"></span>
-                <span id="selected-end-time">
-                    <%= @reservation.end_time.present? ? format_datetime(@reservation.end_time) : "" %>
+                <span id="dash-time">-</span>
+                <span id="selected-end-time" data-end-time="<%= format_datetime(@reservation.end_time) %>">
+                <%= format_datetime(@reservation.end_time) if @reservation.end_time.present? %>
                 </span>
             </div>
         </div>
+
         <div class="mb-2 flex flex-wrap gap-1">
             <strong>Description:</strong>
             <span
