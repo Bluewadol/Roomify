@@ -5,30 +5,26 @@ const REGEX_EMAIL = '([a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&\'*+/=?^_`{
                     '(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?)';
 
 const formatName = function(item) {
-    return ((item.first || '') + ' ' + (item.last || '')).trim();
+    return ((item.name || '')).trim();
 };
 
 export default class extends Controller {
-    static targets = ["select"]; 
+    static targets = ["select"];
 
     connect() {
         this.selectTargets.forEach((element) => {
-            new TomSelect(element, {
+            const select = new TomSelect(element, {
                 persist: false,
                 create: true,
                 maxItems: null,
-                valueField: 'email',
+                maxOptions: 10,
+                valueField: 'id',
                 labelField: 'name',
-                searchField: ['first', 'last', 'email'],
+                searchField: ['name', 'email'],
+                placeholder: "Select members",
                 sortField: [
-                    {field: 'first', direction: 'asc'},
-                    {field: 'last', direction: 'asc'}
-                ],
-                options: [
-                    {email: 'nikola@tesla.com', first: 'Nikola', last: 'Tesla'},
-                    {email: 'brian@thirdroute.com', first: 'Brian', last: 'Reavis'},
-                    {email: 'someone@gmail.com'},
-                    {email: 'example@gmail.com'},
+                    { field: 'name', direction: 'asc' },
+                    { field: 'email', direction: 'asc' }
                 ],
                 render: {
                     item: function(item, escape) {
@@ -40,18 +36,24 @@ export default class extends Controller {
                     },
                     option: function(item, escape) {
                         var name = formatName(item);
-                        var label = name || item.email;
-                        var caption = name ? item.email : null;
+                        var label = name || item.email; 
+                        var caption = name != '' ? item.email : null;
                         return '<div>' +
                             '<span class="label">' + escape(label) + '</span>' +
-                            (caption ? '<span class="caption">' + escape(caption) + '</span>' : '') +
+                            (caption ? '<span class="captio">' + escape(caption) + '</span>' : '') +
                         '</div>';
                     }
                 },
                 createFilter: function(input) {
-                    var regexpA = new RegExp('^' + REGEX_EMAIL + '$', 'i');
-                    var regexpB = new RegExp('^([^<]*)\<' + REGEX_EMAIL + '\>$', 'i');
+                    const regexpA = new RegExp('^' + REGEX_EMAIL + '$', 'i');
+                    const regexpB = new RegExp('^([^<]*)\<' + REGEX_EMAIL + '\>$', 'i');
                     return regexpA.test(input) || regexpB.test(input);
+                },
+                onInitialize() {
+                    const input = this.control_input;
+                    if (input) {
+                        input.classList.add("form-control");
+                    }
                 },
                 create: function(input) {
                     if ((new RegExp('^' + REGEX_EMAIL + '$', 'i')).test(input)) {
@@ -60,21 +62,26 @@ export default class extends Controller {
                     var match = input.match(new RegExp('^([^<]*)\<' + REGEX_EMAIL + '\>$', 'i'));
                     if (match) {
                         var name = match[1].trim();
-                        var pos_space = name.indexOf(' ');
-                        var first = name.substring(0, pos_space);
-                        var last = name.substring(pos_space + 1);
 
                         return {
                             email: match[2],
-                            first: first,
-                            last: last
+                            name: name
                         };
                     }
-                    alert('Invalid email address.');
+                    alert("Invalid email address.");
                     return false;
                 },
-                plugins:  ['dropdown_input', 'clear_button', 'remove_button'],
+                plugins: ['dropdown_input', 'clear_button', 'remove_button'],
             });
-        });
+            select.on("change", () => {
+                const selectedValues = select.getValue();
+                localStorage.setItem("selectedMembers", JSON.stringify(selectedValues));
+            });
+    
+            const savedMembers = JSON.parse(localStorage.getItem("selectedMembers"));
+            if (savedMembers) {
+                select.setValue(savedMembers);
+            }
+    });
     }
 }

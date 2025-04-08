@@ -3,6 +3,44 @@
     font-size: 16px;
 }
 
+.ts-control .items-placeholder{
+    font-size: 16px;
+}
+
+.plugin-clear_button:not(.disabled):hover.has-items .clear-button {
+    font-size: 1.25rem; 
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;    
+    background-color: #f3f4f6; 
+    cursor: pointer;
+}
+
+.plugin-clear_button .clear-button {
+    font-size: 1.25rem; 
+    width: 20px;
+    height: 20px;
+    padding-bottom: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 9999px;    
+    background-color: #f3f4f6; 
+    cursor: pointer;
+}
+
+.ts-control .clear-button:hover {
+    background-color: #e5e7eb;
+}
+
+.ts-control .clear-button {
+    height: 20px;
+    width: 20px;
+}
+
 .ts-dropdown.multi {
     border-radius: 8px;
 }
@@ -49,4 +87,4 @@
 } 
 .ts-dropdown .dropdown-input-wrap {
     border: 0;
-}
+}  

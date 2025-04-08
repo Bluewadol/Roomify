@@ -24,37 +24,45 @@ export default class extends Controller {
         // bind input listeners
         if (this.hasStartDateFieldTarget) {
             this.startDateFieldTarget.addEventListener("input", () => {
-                this.updateBookingSummary();
                 this.syncToFilterForm();
+                this.updateBookingSummary();
             });
         }
         
         if (this.hasEndDateFieldTarget) {
             this.endDateFieldTarget.addEventListener("input", () => {
-                this.updateBookingSummary();
                 this.syncToFilterForm();
+                this.updateBookingSummary();
             });
         }
     
         if (this.hasStartTimeFieldTarget) {
             this.startTimeFieldTarget.addEventListener("input", () => {
-                this.updateBookingSummary();
                 this.syncToFilterForm();
+                this.updateBookingSummary();
             });
         }
     
         if (this.hasEndTimeFieldTarget) {
             this.endTimeFieldTarget.addEventListener("input", () => {
-                this.updateBookingSummary();
                 this.syncToFilterForm();
+                this.updateBookingSummary();
             });
         }
-        
+
+        const savedDescription = localStorage.getItem("reservation_description");
+        if (this.hasDescriptionFieldTarget && savedDescription) {
+            this.descriptionFieldTarget.value = savedDescription;
+            this.updateBookingSummary();
+        }
+
         if (this.hasDescriptionFieldTarget) {
             this.descriptionFieldTarget.addEventListener("input", () => {
                 this.updateBookingSummary();
+                localStorage.setItem("reservation_description", this.descriptionFieldTarget.value);
             });
         }
+        this.updateBookingSummary();
     }
 
     select(event) {

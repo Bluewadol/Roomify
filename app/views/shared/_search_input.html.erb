@@ -5,7 +5,7 @@
         <%= form.text_field field,
             value: params[field],
             placeholder: (defined?(placeholder) ? placeholder : "Search..."),
-            class: "form-input h-10 p-2 pl-10 pr-28 rounded-[10px] w-full",
+            class: "form-input h-10 p-2 pl-10 pr-28  rounded-md w-full",
             data: { testid: "#{field}_input" } %>
 
         <% if params[field].present? %>
@@ -13,6 +13,6 @@
             onclick: "document.querySelector('[data-testid=#{field}_input]').value = ''; this.closest('form').submit();" %>
         <% end %>
 
-        <%= form.submit "Search", class: "btn btn-secondary absolute right-0 top-0 px-4 py-2 h-full  rounded-r-[10px] rounded-l-none shadow-sm text-white dark:bg-slate-700 dark:text-slate-100", data: { testid: "#{field}_button" } %>
+        <%= form.submit "Search", class: "btn btn-secondary absolute right-0 top-0 px-4 py-2 h-full rounded-md rounded-l-none shadow-sm text-white dark:bg-slate-700 dark:text-slate-100", data: { testid: "#{field}_button" } %>
     </div>
 </div>

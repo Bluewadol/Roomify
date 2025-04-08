@@ -2,11 +2,7 @@
     <%= render "shared/typography", sub_heading: "Booking Summary" %>
     <div class="flex flex-col" data-room-selector-target="bookingSummary">
         <div class="mb-2 flex justify-between">
-            <strong>Room:</strong>
-            <span id="selected-room-name" class="text-sm text-gray-500 dark:text-gray-500" ><%= @room ? @room.name : 'Please select room' %></span>
-        </div>
-        <div class="mb-2 flex justify-between">
-            <strong>Date:</strong>
+            <%= render "shared/typography", body: "Date" %>
             <div class="text-sm text-gray-500 dark:text-gray-500">
                 <span id="selected-start-date" data-start-date="<%= format_datetime(@reservation.start_date) %>">
                 <%= format_datetime(@reservation.start_date) if @reservation.start_date.present? %>
@@ -19,7 +15,7 @@
         </div>
 
         <div class="mb-2 flex justify-between">
-            <strong>Time:</strong>
+            <%= render "shared/typography", body: "Time" %>
             <div class="text-sm text-gray-500 dark:text-gray-500">
                 <span id="selected-start-time" data-start-time="<%= format_datetime(@reservation.start_time) %>">
                 <%= format_datetime(@reservation.start_time) if @reservation.start_time.present? %>
@@ -31,25 +27,36 @@
             </div>
         </div>
 
+        <div class="mb-2 flex justify-between">
+            <%= render "shared/typography", body: "Room" %>
+            <span id="selected-room-name" class="text-sm text-gray-500 dark:text-gray-500" ><%= @room ? @room.name : 'Please select room' %></span>
+        </div>
+
         <div class="mb-2 flex flex-wrap gap-1">
-            <strong>Description:</strong>
+            <%= render "shared/typography", body: "Description" %>
             <span
                 id="selected-description"
-                class="break-all whitespace-pre-line"
+                class="break-all whitespace-pre-line text-sm text-gray-500 dark:text-gray-500"
                 style="word-break: break-word; overflow-wrap: break-word;"
                 >
                 <%= @reservation.description %>
             </span>
         </div>
+        <hr class="border-t border-gray-300 my-2">
         <div class="mb-4" data-controller="multi-select">
             <%= form.label :member_ids, "Invite Members", class: "form-label" %>
-            <%= form.collection_select :member_ids, User.where.not(id: current_user.id), :id, :email,
-                { prompt: "Select Members" },
-                class: "contacts",
-                multiple: true,
-                name: "reservation[member_ids][]",
-                data: { multi_select_target: "select" } %>
+            <select name="reservation[member_ids][]" multiple class="contacts form-control" data-multi-select-target="select">
+                <% User.where.not(id: current_user.id).each do |user| %>
+                    <option value="<%= user.id %>"
+                            data-data='<%= {
+                            id: user.id,
+                            email: user.email,
+                            name: user.name
+                            }.to_json %>'>
+                    <%= user.name %> (<%= user.email %>)
+                    </option>
+                <% end %>
+            </select>
         </div>
-    </div>
     <%= form.submit @reservation.persisted? ? "Update Reservation" : "Create Reservation", class: "btn btn-primary" %>
 </div>
