@@ -1,16 +1,25 @@
-<h2>Forgot your password?</h2>
-
-<%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
-  <%= render "devise/shared/error_messages", resource: resource %>
-
-  <div class="field">
-    <%= f.label :email %><br />
-    <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
+<!-- app/views/devise/passwords/new.html.erb -->
+<% content_for :masthead do %>
+  <div class="text-center">
+    <h1 class="md:h3 h4 my-3">Forgot your password?</h1>
+    <p class="mb-6 text-slate-700 dark:text-slate-200">Reset it in an instant</p>
   </div>
+  <%= render "rui/shared/error_messages", resource: resource %>
+<% end %>
 
-  <div class="actions">
-    <%= f.submit "Send me reset password instructions" %>
-  </div>
+<%= render "devise/auth_layout" do %>
+  <%= form_for(resource, as: resource_name, url: password_path(resource_name), html: { method: :post }) do |f| %>
+    <div class="form-group">
+      <%= f.label :email, class: "form-label" %>
+      <div class="relative">
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", class: input_class(resource, :email, has_icon_left: true), data: { testid: "email-input" } %>
+        <%= icon "envelope", class: "size-5 absolute left-3 top-3 text-slate-300 peer-focus:text-primary-500/80 opacity-100 transition dark:peer-focus:text-primary-400", data: { testid: "email-icon" } %>
+        <%= error_icon(resource, :email) %>
+      </div>
+      <%= field_error_tag(resource, :email) %>
+    </div>
+    <%= f.submit "Send me reset password instructions", class: "btn btn-primary w-full" %>
+  <% end %>
 <% end %>
 
 <!--

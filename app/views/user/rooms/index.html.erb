@@ -22,12 +22,12 @@
                 <%# </div>
             </div>
         </div> %> 
-        <div class="flex gap-4 h-auto w-full">
+        <div class="flex gap-4 w-full h-full items-stretch">
             <div class="flex flex-col gap-4 h-auto "> 
                 <div class="flex flex-col rounded-md bg-white p-6 pb-2 dark:bg-slate-800 dark:text-white shadow-md md:w-[300px]">
                     <div class="flex flex-col gap-2">
-                        <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date], label: "Start date" %>
-                        <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date], label: "End date" %>
+                        <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date] || Date.today, label: "Start date" %>
+                        <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date] || Date.today, label: "End date" %>
                     </div>
 
                     <div class="flex flex-col gap-2">
@@ -42,7 +42,9 @@
                     <button type="button" data-action="reset-filter#reset" class="btn btn-black">Reset Filters</button>
                 </div>
             </div>
-            <%= render "user/rooms/component/table", room: @room %>
+            <div class="flex flex-col rounded-md gap-2 bg-white px-6 pb-6 pt-2 dark:bg-slate-800 dark:text-white shadow-md w-full h-full">
+                <%= render "user/rooms/component/table", room: @room %>
+            </div>
         </div>
     <% end %>
 </div>

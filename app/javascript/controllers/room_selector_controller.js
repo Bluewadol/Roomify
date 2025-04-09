@@ -51,11 +51,19 @@ export default class extends Controller {
         }
 
         const savedDescription = localStorage.getItem("reservation_description");
-        if (this.hasDescriptionFieldTarget && savedDescription) {
-            this.descriptionFieldTarget.value = savedDescription;
-            this.updateBookingSummary();
-        }
 
+        if (this.hasDescriptionFieldTarget && !this.descriptionFieldTarget.value && savedDescription) {
+            const savedData = JSON.parse(savedDescription);
+            const now = new Date().getTime();
+        
+            if (savedData.expiresAt > now) {
+                this.descriptionFieldTarget.value = savedData.value;
+                this.updateBookingSummary();
+            } else {
+                localStorage.removeItem("reservation_description");
+            }
+        }
+        
         if (this.hasDescriptionFieldTarget) {
             this.descriptionFieldTarget.addEventListener("input", () => {
                 this.updateBookingSummary();
@@ -71,7 +79,7 @@ export default class extends Controller {
             
                 localStorage.setItem("reservation_description", JSON.stringify(data));
             });
-        }
+        }        
 
         this.updateBookingSummary();
     }
@@ -103,7 +111,7 @@ export default class extends Controller {
     
     updateBookingSummary() {
         const selectedRoom = this.roomBoxTargets.find(room => room.classList.contains("bg-blue-200"));
-        const roomName = selectedRoom?.dataset.roomName || "No Room Selected";
+        const roomName = selectedRoom?.dataset.roomName || "Please select room";
     
         this.setText("selected-room-name", roomName);
 

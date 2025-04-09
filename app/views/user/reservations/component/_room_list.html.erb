@@ -1,4 +1,4 @@
- <% rooms.each do |room| %>
+<% @rooms.to_a.each do |room| %>
     <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center room-box hover:bg-gray-50 cursor-pointer"
         data-room-selector-target="roomBox"
         data-room-id="<%= room.id %>"

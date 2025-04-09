@@ -32,9 +32,14 @@ class User::ReservationsController < ApplicationController
     end
   end  
 
-  def edit; end
-
+  def edit
+    set_rooms(@reservation.id)
+    @room_select = Room.find_by(id: params[:room_id])
+    @reservation.room_id = @room_select.id if @room_select
+  end
+  
   def update
+    set_rooms(@reservation.id)
     if @reservation.update(reservation_params)
       @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
       redirect_to @reservation, notice: "Reservation was successfully updated."
@@ -60,17 +65,25 @@ class User::ReservationsController < ApplicationController
     params.require(:reservation).permit(:room_id, :start_date, :end_date, :start_time, :end_time, :description, :reservation_type, member_ids: [])
   end  
 
-  def set_rooms
-    @room = Room.find_by(id: params[:room_id]) if params[:room_id].present?
-    @rooms = Room.includes(:reservations, :room_amenities)
+  def set_rooms(current_reservation_id = nil)
+    if params[:room_id].present?
+      @room = Room.find_by(id: params[:room_id])
+    elsif current_reservation_id.present?
+      @room = @reservation.room
+    end
 
+    @rooms = Room.includes(:reservations, :room_amenities)
+  
     @start_date = params[:start_date].presence
     @end_date = params[:end_date].presence
     @start_time = params[:start_time].presence
     @end_time = params[:end_time].presence
 
+    Rails.logger.debug("Start Date: #{@start_date}, End Date: #{@end_date}, Start Time: #{@start_time}, End Time: #{@end_time}")
+  
     @reservations_in_range = Reservation.all
-
+    @reservations_in_range = @reservations_in_range.where.not(id: current_reservation_id) if current_reservation_id.present?
+  
     if @start_date && @end_date
       @reservations_in_range = if @start_date == @end_date
         @reservations_in_range.where(start_date: @start_date)
@@ -82,7 +95,7 @@ class User::ReservationsController < ApplicationController
     elsif @end_date
       @reservations_in_range = @reservations_in_range.where("end_date <= ?", @end_date)
     end
-    
+  
     if @start_time && @end_time
       if @start_time == @end_time
         @reservations_in_range = @reservations_in_range.where(
@@ -99,13 +112,13 @@ class User::ReservationsController < ApplicationController
       @reservations_in_range = @reservations_in_range.where("start_time >= ?", @start_time)
     elsif @end_time
       @reservations_in_range = @reservations_in_range.where("end_time <= ?", @end_time)
-    end    
-
+    end
+  
     if params[:name].present?
       trimmed_name = params[:name].strip.downcase
       @rooms = @rooms.where("LOWER(name) LIKE ?", "%#{trimmed_name}%")
-    end    
-
+    end
+  
     def determine_room_status(room)
       booked = @reservations_in_range.where(room_id: room.id).exists?
       if room.unavailable?
@@ -116,12 +129,18 @@ class User::ReservationsController < ApplicationController
         :available
       end
     end
-    
+  
     @rooms = @rooms.map do |room|
       status = determine_room_status(room)
       room.define_singleton_method(:status) { status }
       room
-    end.select { |room| room.status == :available }    
-  end
+    end.select do |room|
+      if current_reservation_id && room.id == Reservation.find(current_reservation_id).room_id
+        true
+      else
+        room.status == :available
+      end
+    end
+  end  
 
 end

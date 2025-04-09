@@ -2,14 +2,14 @@
     <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Roomify</h1>
     <p class="text-lg text-gray-600 dark:text-gray-300 mt-2">The best platform for managing your meeting rooms.</p>
     
-    <div class="mt-6 flex space-x-4">
-        <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary" %>
-        <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
-        
-        <% if user_signed_in? %>
-            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-danger" %>
-            <%= link_to "View Rooms", rooms_path, class: "btn btn-outline-primary" %>
-            <%= link_to "My Reservations", reservations_path, class: "btn btn-outline-secondary" %>
+    <div class="mt-6 flex space-x-4">        
+        <% if !user_signed_in? %>
+            <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary" %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
+        <% else %>
+            <%= link_to "View Rooms", rooms_path, class: "btn btn-white" %>
+            <%= link_to "My Reservations", reservations_path, class: "btn btn-white" %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-transparent" %>
         <% end %>
     </div>
 </div>

@@ -5,11 +5,11 @@
             <%= render "shared/typography", body: "Date" %>
             <div class="text-sm text-gray-500 dark:text-gray-500">
                 <span id="selected-start-date" data-start-date="<%= format_datetime(@reservation.start_date) %>">
-                <%= format_datetime(@reservation.start_date) if @reservation.start_date.present? %>
+                    <%= format_datetime(@reservation.start_date) if @reservation.start_date.present? %>
                 </span>
                 <span id="dash-date">-</span>
                 <span id="selected-end-date" data-end-date="<%= format_datetime(@reservation.end_date) %>">
-                <%= format_datetime(@reservation.end_date) if @reservation.end_date.present? %>
+                    <%= format_datetime(@reservation.end_date) if @reservation.end_date.present? %>
                 </span>
             </div>
         </div>
@@ -18,11 +18,11 @@
             <%= render "shared/typography", body: "Time" %>
             <div class="text-sm text-gray-500 dark:text-gray-500">
                 <span id="selected-start-time" data-start-time="<%= format_datetime(@reservation.start_time) %>">
-                <%= format_datetime(@reservation.start_time) if @reservation.start_time.present? %>
+                    <%= format_datetime(@reservation.start_time) if @reservation.start_time.present? %>
                 </span>
                 <span id="dash-time">-</span>
                 <span id="selected-end-time" data-end-time="<%= format_datetime(@reservation.end_time) %>">
-                <%= format_datetime(@reservation.end_time) if @reservation.end_time.present? %>
+                    <%= format_datetime(@reservation.end_time) if @reservation.end_time.present? %>
                 </span>
             </div>
         </div>
@@ -32,7 +32,7 @@
             <span id="selected-room-name" class="text-sm text-gray-500 dark:text-gray-500" ><%= @room ? @room.name : 'Please select room' %></span>
         </div>
 
-        <div class="mb-2 flex flex-wrap gap-1">
+        <div class="mb-2 flex flex-col flex-wrap gap-1">
             <%= render "shared/typography", body: "Description" %>
             <span
                 id="selected-description"
