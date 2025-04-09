@@ -75,8 +75,17 @@ export default class extends Controller {
             });
             select.on("change", () => {
                 const selectedValues = select.getValue();
-                localStorage.setItem("selectedMembers", JSON.stringify(selectedValues));
+                const now = new Date().getTime();
+                const expiresIn30Min = now + 30 * 60 * 1000;
+            
+                const data = {
+                    value: selectedValues,
+                    expiresAt: expiresIn30Min
+                };
+            
+                localStorage.setItem("selectedMembers", JSON.stringify(data));
             });
+            
     
             const savedMembers = JSON.parse(localStorage.getItem("selectedMembers"));
             if (savedMembers) {

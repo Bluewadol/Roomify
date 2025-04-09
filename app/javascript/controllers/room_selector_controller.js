@@ -59,9 +59,20 @@ export default class extends Controller {
         if (this.hasDescriptionFieldTarget) {
             this.descriptionFieldTarget.addEventListener("input", () => {
                 this.updateBookingSummary();
-                localStorage.setItem("reservation_description", this.descriptionFieldTarget.value);
+            
+                const value = this.descriptionFieldTarget.value;
+                const now = new Date().getTime();
+                const expiresAt = now + 30 * 60 * 1000;
+            
+                const data = {
+                    value: value,
+                    expiresAt: expiresAt
+                };
+            
+                localStorage.setItem("reservation_description", JSON.stringify(data));
             });
         }
+
         this.updateBookingSummary();
     }
 
