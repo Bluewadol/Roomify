@@ -7,13 +7,13 @@
 
     <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
         <%= btn_link_to "Check-In", new_reservation_check_in_path(reservation),
-            btn_class: "btn btn-primary h-10",
+            btn_class: "btn btn-primary inline-flex items-center gap-1 px-4 py-2 text-sm",
             icon_name: "arrow-right-on-rectangle",
             variant: :solid,
             onclick: "event.stopPropagation();" %>
     <% else %>
         <%= btn_link_to "Check-In", "#",
-            btn_class: "btn btn-light h-10 border border-gray-300 cursor-not-allowed shadow-sm text-gray-600 inline-flex items-center text-sm",
+            btn_class: "btn btn-light inline-flex items-center gap-1 px-4 py-2 text-sm border border-gray-300 cursor-not-allowed shadow-sm text-gray-600",
             icon_name: "arrow-right-on-rectangle",
             variant: :solid,
             title: "Check-In available 15 minutes before or after the start time",
@@ -22,7 +22,7 @@
     <% end %>
 <% else %>
     <%= btn_link_to "Check-In", "#",
-        btn_class: "btn btn-light h-10 border border-gray-300 cursor-not-allowed shadow-sm text-gray-600 inline-flex items-center text-sm",
+        btn_class: "btn btn-light inline-flex items-center gap-1 px-4 py-2 text-sm border border-gray-300 cursor-not-allowed shadow-sm text-gray-600",
         icon_name: "arrow-right-on-rectangle",
         variant: :solid,
         title: "Reservation is not pending",

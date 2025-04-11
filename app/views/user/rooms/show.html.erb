@@ -57,30 +57,30 @@
         <div class="flex flex-col bg-white gap-2 rounded-lg p-4 shadow-md h-full">
             <%= render "shared/typography", sub_heading: "Upcoming Bookings" %>
             <% if @room.reservations.any? %>
-            <% @room.reservations.each do |reservation| %>
-                <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center">
-                    <div class="w-auto">
-                        <%= avatar_tag(reservation.user) %>
-                    </div>
-                    <div class="flex flex-col px-4 flex-grow">
-                        <%= render "shared/typography", sub_heading: reservation.user.name.present? ? reservation.user.name : reservation.user.email %>
-                        <div class="flex text-sm text-gray-500 gap-2">
-                        <%= icon('calendar-days', class: 'size-5') %>
-                        <% if reservation.start_date == reservation.end_date %>
-                            <%= format_datetime(reservation.start_date) %>
-                        <% else %>
-                            <%= format_datetime(reservation.start_date) %> - <%= format_datetime(reservation.end_date) %>
-                        <% end %>
-                        <span>•</span>
-                        <%= icon('clock', class: 'size-5') %>
-                        <%= format_datetime(reservation.start_time) %> - <%= format_datetime(reservation.end_time) %>
+                <% @room.reservations.order(updated_at: :desc).each do |reservation| %>
+                    <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center">
+                        <div class="w-auto">
+                            <%= avatar_tag(reservation.user) %>
+                        </div>
+                        <div class="flex flex-col px-4 flex-grow">
+                            <%= render "shared/typography", sub_heading: reservation.user.name.present? ? reservation.user.name : reservation.user.email %>
+                            <div class="flex text-sm text-gray-500 gap-2">
+                            <%= icon('calendar-days', class: 'size-5') %>
+                            <% if reservation.start_date == reservation.end_date %>
+                                <%= format_datetime(reservation.start_date) %>
+                            <% else %>
+                                <%= format_datetime(reservation.start_date) %> - <%= format_datetime(reservation.end_date) %>
+                            <% end %>
+                            <span>•</span>
+                            <%= icon('clock', class: 'size-5') %>
+                            <%= format_datetime(reservation.start_time) %> - <%= format_datetime(reservation.end_time) %>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-400 w-auto">
+                            <span>In <%= time_elapsed(reservation.updated_at) %></span>
                         </div>
                     </div>
-                    <div class="flex items-center text-sm text-gray-400 w-auto">
-                        <span>In <%= time_elapsed(reservation.updated_at) %></span>
-                    </div>
-                </div>
-            <% end %>
+                <% end %>
             <% else %>
                 <div class="flex justify-center items-center text-gray-500 text-sm p-4">
                     No upcoming bookings.

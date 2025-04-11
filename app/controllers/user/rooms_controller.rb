@@ -120,16 +120,19 @@ class User::RoomsController < ApplicationController
     status = determine_room_status(@room)
     @room.assign_attributes(status: status)
     @room_status = Room.statuses.keys
+    
+    # No need to sort reservations here as we're doing it in the view
   end
 
   private
 
   def set_room
     @room = Room.friendly
-                .left_joins(:reservations)
                 .includes(:room_amenities)
-                .order('reservations.updated_at DESC')
                 .find(params[:slug])
+                
+    # Load reservations separately with proper sorting
+    @room.reservations = Reservation.where(room_id: @room.id).order(updated_at: :desc)
   rescue ActiveRecord::RecordNotFound
     redirect_to rooms_path, alert: "Room not found."
   end   

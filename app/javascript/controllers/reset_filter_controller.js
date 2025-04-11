@@ -6,14 +6,30 @@ export default class extends Controller {
   connect() {
     // เรียก updateUrlParams เมื่อฟอร์มถูกโหลด
     console.log("Stimulus controller connected");
-    this.updateUrlParams();
+    
+    // Check if start_date and end_date are not set in URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if (!urlParams.has('start_date') && !urlParams.has('end_date')) {
+      // Set default dates to today
+      const today = new Date().toISOString().split('T')[0];
+      
+      if (this.hasStartDateFieldTarget) {
+        this.startDateFieldTarget.value = today;
+      }
+      if (this.hasEndDateFieldTarget) {
+        this.endDateFieldTarget.value = today;
+      }
+      
+      // Submit the form
+      this.formTarget.submit();
+    } else {
+      this.updateUrlParams();
+    }
   }
 
   updateUrlParams() {
     const newUrl = new URL(window.location);
-    console.log("Input changed");
 
-    // ตรวจสอบว่า start_date ถูกเลือกหรือไม่
     if (this.hasStartDateFieldTarget) {
       const startDateValue = this.startDateFieldTarget.value;
       if (startDateValue) {
@@ -23,7 +39,6 @@ export default class extends Controller {
       }
     }
 
-    // ตรวจสอบว่า end_date ถูกเลือกหรือไม่
     if (this.hasEndDateFieldTarget) {
       const endDateValue = this.endDateFieldTarget.value;
       if (endDateValue) {
@@ -38,11 +53,9 @@ export default class extends Controller {
   }
 
   handleInputChange(event) {
-    // อัปเดต URL ทุกครั้งที่ฟอร์มเปลี่ยนแปลง
     this.updateUrlParams();
     console.log("Input handleInputChange");
 
-    // ทำการ submit ฟอร์มเมื่อค่ามีการเปลี่ยนแปลง
     this.formTarget.submit();
   }
 
@@ -54,7 +67,6 @@ export default class extends Controller {
 
     const form = this.formTarget;
 
-    // รีเซ็ตค่าในฟอร์ม
     form.querySelectorAll("input, select, textarea").forEach((field) => {
       if (field.type === "checkbox" || field.type === "radio") {
         field.checked = false;

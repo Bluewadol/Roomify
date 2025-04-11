@@ -5,10 +5,10 @@ class User::ReservationsController < ApplicationController
     @reservations = current_user.reservations.includes(:room)
     @upcoming_reservations = @reservations
       .where(status: [:pending, :waiting_check_in])
-      .order(:start_date, :start_time)
+      .order(start_date: :desc, start_time: :desc)
     @past_reservations = @reservations
       .where.not(status: [:pending, :waiting_check_in])
-      .order(:start_date, :start_time)
+      .order(start_date: :desc, start_time: :desc)
   end  
 
   def show; end
