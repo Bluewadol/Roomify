@@ -1,5 +1,5 @@
 class User::CheckInsController < ApplicationController
-    before_action :set_reservation
+    before_action :set_reservation, only: [:new, :create]
     before_action :set_check_in, only: [:show, :edit, :update, :destroy]
 
     def new
@@ -37,10 +37,10 @@ class User::CheckInsController < ApplicationController
 
     private
 
-    def set_reservation
-      @reservation = current_user.reservations.friendly.find(params[:slug])
-      rescue ActiveRecord::RecordNotFound
-        redirect_to request.referer, alert: "Reservation not found." 
+    def set_reservation 
+      @reservation = current_user.reservations.friendly.find(params[:reservation_slug])
+    rescue ActiveRecord::RecordNotFound => e
+      redirect_to request.referer, alert: "Reservation not found." 
     end
 
     def set_check_in

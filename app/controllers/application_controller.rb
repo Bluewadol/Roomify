@@ -16,7 +16,7 @@ class ApplicationController < ActionController::Base
   end
 
   def set_theme
-    cookies[:theme] ||= "media"
+    cookies[:theme] = "light"
   end
 
   private
