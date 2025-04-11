@@ -20,7 +20,7 @@
             <div class="relative">
                 <%= form.date_field :start_date, 
                     class: input_class(@reservation, :start_date), 
-                    value: params[:start_date] || @reservation.start_date,
+                    value: params[:start_date] || @reservation.start_date || Date.today,
                     data: { room_selector_target: "startDateField" } %>
                 <%= error_icon(@reservation, :start_date) %>
             </div>
@@ -32,7 +32,7 @@
             <div class="relative">
                 <%= form.date_field :end_date, 
                     class: input_class(@reservation, :end_date), 
-                    value: params[:end_date] || @reservation.end_date,
+                    value: params[:end_date] || @reservation.end_date || Date.today,
                     data: { room_selector_target: "endDateField" } %>
                 <%= error_icon(@reservation, :end_date) %>
             </div>

@@ -79,8 +79,8 @@ export default class extends Controller {
                 const expiresIn30Min = now + 30 * 60 * 1000;
             
                 const data = {
-                    value: selectedValues,
-                    expiresAt: expiresIn30Min
+                value: selectedValues,
+                expiresAt: expiresIn30Min
                 };
             
                 localStorage.setItem("selectedMembers", JSON.stringify(data));

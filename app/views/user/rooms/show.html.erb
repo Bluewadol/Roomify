@@ -10,7 +10,6 @@
                         <p class="text-gray-500">image</p>
                     <% end %>
                 </div>
-
                 <div class="flex flex-col bg-white gap-4 w-full h-auto rounded-lg border p-4 shadow-md">
                     <div class="flex flex-col">
                         <div class="flex justify-between pb-2" >
@@ -38,8 +37,8 @@
                     <div class="flex flex-col h-full">
                         <div class="w-full flex-shrink-0">
                             <div class="grid grid-cols-2 gap-4">
-                                <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date], label: "Start Date" %>
-                                <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date], label: "End Date" %>
+                                <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date]|| Date.today, label: "Start Date" %>
+                                <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date]|| Date.today, label: "End Date" %>
                             </div>
                         </div>
                         <div class="w-full flex-shrink-0">

@@ -2,22 +2,22 @@
 // Run that command whenever you add a new controller or create them with
 // ./bin/rails generate stimulus controllerName
 
-import { application } from "./application"
-import "./railsui"
+import { application } from "./application";
+import "./railsui";
 import HelloController from "./hello_controller"
 import ImageUploadController from "./image_upload_controller";
-import FilterFormController from "./filter_form_controller"
-import ResetFilterController from "./reset_filter_controller"
-import FlashController from "./flash_controller"
-import CarouselController from "./carousel_controller"
-import RoomSelectorController from "./room_selector_controller"
-import MultiSelectController from "./multi_select_controller"
+import FilterFormController from "./filter_form_controller";
+import ResetFilterController from "./reset_filter_controller";
+import FlashController from "./flash_controller";
+import CarouselController from "./carousel_controller";
+import RoomSelectorController from "./room_selector_controller";
+import MultiSelectController from "./multi_select_controller";
 
-application.register("hello", HelloController)
-application.register("image-upload", ImageUploadController)
-application.register("flash", FlashController)
-application.register("filter-form", FilterFormController)
-application.register("reset-filter", ResetFilterController)
-application.register("carousel", CarouselController)
-application.register("room-selector", RoomSelectorController)
-application.register("multi-select", MultiSelectController)
+application.register("hello", HelloController);
+application.register("image-upload", ImageUploadController);
+application.register("flash", FlashController);
+application.register("filter-form", FilterFormController);
+application.register("reset-filter", ResetFilterController);
+application.register("carousel", CarouselController);
+application.register("room-selector", RoomSelectorController);
+application.register("multi-select", MultiSelectController);

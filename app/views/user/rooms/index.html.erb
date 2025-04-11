@@ -1,10 +1,10 @@
-<div class="container mx-auto p-6">
+<div class="container mx-auto p-6" data-controller="reset-filter">
     <%= form_with(url: rooms_path, method: :get, local: true, 
         class: "p-0 w-full flex flex-wrap", 
-        data: { testid: "filter-user-list-room-form", controller: "reset-filter", "reset-filter-target": "form" }) do |form| %>
-        <div class="flex gap-4 h-14 w-full flex-wrap justify-between items-center">
+        data: { testid: "filter-user-list-room-form", reset_filter_target: "form" }) do |form| %>
+        <div class="flex justify-between items-center flex-wrap w-full">
             <%= render "shared/typography", heading: "Meeting Rooms" %>
-            <div class="w-full md:w-1/2 flex-shrink-0">
+            <div class="w-full md:w-2/3 flex-shrink-0">
                     <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>
             </div>
         </div>
@@ -26,8 +26,8 @@
             <div class="flex flex-col gap-4 h-auto "> 
                 <div class="flex flex-col rounded-md bg-white p-6 pb-2 dark:bg-slate-800 dark:text-white shadow-md md:w-[300px]">
                     <div class="flex flex-col gap-2">
-                        <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date] || Date.today, label: "Start date" %>
-                        <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date] || Date.today, label: "End date" %>
+                        <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date].presence || Date.today, label: "Start date", data: { reset_filter_target:"startDateField" } %>
+                        <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date].presence || Date.today, label: "End date", data: { reset_filter_target:"endDateField" } %>
                     </div>
 
                     <div class="flex flex-col gap-2">
