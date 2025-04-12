@@ -1,5 +1,7 @@
 module AvatarHelper
     def avatar_tag(user, size: 40)
+        return content_tag(:div, "?", class: "rounded-full bg-gray-300 text-white font-bold flex items-center justify-center", style: "width: #{size}px; height: #{size}px; font-size: #{size / 2}px;") unless user
+        
         style = "width: #{size}px; height: #{size}px; font-size: #{size / 2}px;"
         image_classes = "rounded-full object-cover border-2 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out"
         outer_style = "width: #{size}px; height: #{size}px;"

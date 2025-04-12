@@ -15,7 +15,7 @@
             end
             }
         },
-        { header: "Time", field: ->(reservation) { "#{format_datetime(reservation.start_time)} - #{format_datetime(reservation.end_time)}" } },
+        { header: "Time", field: ->(reservation) { "#{format_datetime(reservation.start_time, time_only: true)} - #{format_datetime(reservation.end_time, time_only: true)}" } },
         { 
             header: "Status", 
             field: ->(reservation) {status_badge(reservation.status)}

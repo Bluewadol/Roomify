@@ -28,7 +28,7 @@ Rails.application.routes.draw do
   resources :rooms, only: [:index, :show], controller: 'user/rooms', param: :slug
 
   resources :reservations, controller: 'user/reservations', param: :slug do
-    resource :check_in, only: [:new, :create, :show], controller: 'user/check_ins'
+    resource :check_in, only: [:new, :create,], controller: 'user/check_ins'
   end  
 
   namespace :admin do

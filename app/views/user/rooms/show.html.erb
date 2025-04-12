@@ -3,9 +3,11 @@
     <div class="flex flex-col gap-4">
         <div class="flex w-full gap-4 flex-wrap lg:flex-nowrap">
             <div class="w-full lg:w-2/3 flex flex-col gap-4">
-                <div class="rounded-lg bg-primary-950 h-[24rem] overflow-hidden w-full shadow-md">
+                <div class="rounded-lg bg-primary-950 h-[24rem] overflow-hidden w-full shadow-md relative">
                     <% if @room.images.attached? %>
-                        <%= render "shared/carousel", images: @room.images.map { |img| url_for(img) }, alt: "Room Image" %>
+                        <div class="h-full">
+                            <%= render "shared/carousel", images: @room.images.map { |img| url_for(img) }, alt: "Room Image" %>
+                        </div>
                     <% else %>
                         <p class="text-gray-500">image</p>
                     <% end %>

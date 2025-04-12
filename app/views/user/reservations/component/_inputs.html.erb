@@ -67,7 +67,14 @@
     <div class="mb-4">
         <%= form.label :description, "Reservation Description", class: "form-label" %>
         <div class="relative">
-            <%= form.text_area :description, class: "form-input w-full h-[42px]", placeholder: "Enter meeting purpose of...", data: { room_selector_target: "descriptionField" } %>
+            <%= form.text_area :description, 
+                class: "form-input w-full min-h-[42px] resize-none overflow-hidden", 
+                placeholder: "Enter meeting purpose of...", 
+                data: { 
+                    room_selector_target: "descriptionField",
+                    controller: "auto-height",
+                    action: "input->auto-height#adjustHeight"
+                } %>
             <%= error_icon(@reservation, :description) %>
         </div>
         <%= field_error_tag(@reservation, :description) %>

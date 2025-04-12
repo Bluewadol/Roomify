@@ -12,12 +12,16 @@ import FlashController from "./flash_controller";
 import CarouselController from "./carousel_controller";
 import RoomSelectorController from "./room_selector_controller";
 import MultiSelectController from "./multi_select_controller";
+import AutoHeightController from "./auto_height_controller";
+import DescriptionToggleController from "./description_toggle_controller";
 
 application.register("hello", HelloController);
 application.register("image-upload", ImageUploadController);
-application.register("flash", FlashController);
 application.register("filter-form", FilterFormController);
 application.register("reset-filter", ResetFilterController);
+application.register("flash", FlashController);
 application.register("carousel", CarouselController);
 application.register("room-selector", RoomSelectorController);
 application.register("multi-select", MultiSelectController);
+application.register("auto-height", AutoHeightController);
+application.register("description-toggle", DescriptionToggleController);

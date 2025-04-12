@@ -2,7 +2,11 @@ class User::ReservationsController < ApplicationController
   before_action :set_reservation, only: %i[show edit update destroy]
 
   def index
-    @reservations = current_user.reservations.includes(:room)
+    # Get reservations created by the current user or where the current user is a member
+    @reservations = Reservation.includes(:room)
+      .where('user_id = ? OR id IN (SELECT reservation_id FROM reservation_members WHERE user_id = ?)', 
+             current_user.id, current_user.id)
+    
     @upcoming_reservations = @reservations
       .where(status: [:pending, :waiting_check_in])
       .order(start_date: :desc, start_time: :desc)
@@ -22,6 +26,7 @@ class User::ReservationsController < ApplicationController
 
   def create
     @reservation = current_user.reservations.build(reservation_params)
+    @reservation.updated_by = current_user
     set_rooms()
   
     if @reservation.save
@@ -33,32 +38,53 @@ class User::ReservationsController < ApplicationController
   end  
 
   def edit
-    set_rooms(@reservation.id)
-    @room_select = Room.find_by(id: params[:room_id])
-    @reservation.room_id = @room_select.id if @room_select
+    # Only the owner can edit a reservation
+    if @reservation.user_id == current_user.id
+      set_rooms(@reservation.id)
+      @room_select = Room.find_by(id: params[:room_id])
+      @reservation.room_id = @room_select.id if @room_select
+    else
+      redirect_to reservation_path(@reservation), alert: "You don't have permission to edit this reservation."
+    end
   end
   
   def update
-    set_rooms(@reservation.id)
-    if @reservation.update(reservation_params)
-      @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
-      redirect_to @reservation, notice: "Reservation was successfully updated."
+    # Only the owner can update a reservation
+    if @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
+      set_rooms(@reservation.id)
+      @reservation.updated_by = current_user
+      if @reservation.update(reservation_params)
+        @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
+        redirect_to @reservation, notice: "Reservation was successfully updated."
+      else
+        render :edit, status: :unprocessable_entity
+      end
     else
-      render :edit, status: :unprocessable_entity
+      redirect_to reservation_path(@reservation), alert: "You don't have permission to update this reservation."
     end
   end
 
   def destroy
-    @reservation.destroy
-    redirect_to reservations_path, notice: "Reservation was successfully deleted."
+    # Only the owner can delete a reservation
+    if @reservation.user_id == current_user.id
+      @reservation.destroy
+      redirect_to reservations_path, notice: "Reservation was successfully deleted."
+    else
+      redirect_to reservation_path(@reservation), alert: "You don't have permission to delete this reservation."
+    end
   end
 
   private
 
   def set_reservation
-    @reservation = current_user.reservations.friendly.find(params[:slug])
-    rescue ActiveRecord::RecordNotFound
-      redirect_to reservations_path, alert: "Reservation not found." 
+    @reservation = Reservation.friendly.find(params[:slug])
+    
+    # Check if the current user is the owner or a member of the reservation
+    unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
+      redirect_to reservations_path, alert: "You don't have permission to access this reservation."
+    end
+  rescue ActiveRecord::RecordNotFound
+    redirect_to reservations_path, alert: "Reservation not found." 
   end
 
   def reservation_params

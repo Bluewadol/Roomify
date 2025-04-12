@@ -1,6 +1,6 @@
 class User::CheckInsController < ApplicationController
     before_action :set_reservation, only: [:new, :create]
-    before_action :set_check_in, only: [:show, :edit, :update, :destroy]
+    before_action :validate_reservation_status, only: [:new, :create]
 
     def new
       @check_in = CheckIn.new(reservation_id: @reservation.id)
@@ -9,7 +9,9 @@ class User::CheckInsController < ApplicationController
     def create
       @check_in = @reservation.build_check_in(check_in_params)
       if @check_in.save
-        @reservation.update(status: :checked_in)
+        @reservation.status = :checked_in
+        @reservation.updated_by = current_user
+        @reservation.save
         redirect_to reservation_path(@reservation), notice: 'Check-in successful.'
       else
         render :new, status: :unprocessable_entity
@@ -19,32 +21,25 @@ class User::CheckInsController < ApplicationController
     def show
     end
 
-    def edit
-    end
-
-    def update
-      if @check_in.update(check_in_params)
-        redirect_to room_check_in_path(@check_in), notice: "Check-in was successfully updated."
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    end
-
-    def destroy
-      @check_in.destroy
-      redirect_to room_check_ins_path, notice: "Check-in was successfully destroyed."
-    end
+  
 
     private
 
     def set_reservation 
-      @reservation = current_user.reservations.friendly.find(params[:reservation_slug])
+      @reservation = Reservation.friendly.find(params[:reservation_slug])
+      
+      # Check if the current user is the owner or a member of the reservation
+      unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
+        redirect_to request.referer, alert: "You don't have permission to check in to this reservation."
+      end
     rescue ActiveRecord::RecordNotFound => e
       redirect_to request.referer, alert: "Reservation not found." 
     end
 
-    def set_check_in
-      @check_in = @reservation.check_in
+    def validate_reservation_status
+      unless @reservation.pending? || @reservation.waiting_check_in?
+        redirect_to reservation_path(@reservation), alert: "Cannot check in."
+      end
     end
 
     def check_in_params

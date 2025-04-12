@@ -1,4 +1,4 @@
-<header class="relative bg-white dark:bg-slate-900 py-1" data-controller="nav">
+<header class="relative bg-white dark:bg-slate-900" data-controller="nav">
     <div class="container mx-auto px-4">
         <div class="md:flex items-center flex-wrap md:space-x-2">
             <div class="md:block flex items-center justify-between">
@@ -20,7 +20,6 @@
                             <li data-testid="nav-rooms-page">
                                 <%= nav_link_to "Room", rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/rooms')}" %>
                             </li>
-
                             <li data-testid="nav-reservations-page">
                                 <%= nav_link_to "Reservations", reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/reservations')}" %>
                             </li>

@@ -1,60 +1,74 @@
 <div class="container mx-auto p-6 flex flex-col gap-2">
     <div class="flex justify-between items-center">
         <%= render "shared/typography", heading: "Reservation Details" %>
+        <% if @reservation.pending? || @reservation.waiting_check_in? %>
         <div class="flex gap-4">
-            <%= btn_link_to "Edit", edit_reservation_path(@reservation, 
-                room_id: @reservation.room_id, 
-                start_date: @reservation.start_date,
-                end_date: @reservation.end_date,
-                start_time: @reservation.start_time&.strftime("%H:%M"),
-                end_time: @reservation.end_time&.strftime("%H:%M")
-                ), 
-                btn_class: "btn-white", icon_name: "pencil-square", variant: :solid 
-            %>
-
+                <%= btn_link_to "Edit", edit_reservation_path(@reservation, 
+                    room_id: @reservation.room_id, 
+                    start_date: @reservation.start_date,
+                    end_date: @reservation.end_date,
+                    start_time: @reservation.start_time&.strftime("%H:%M"),
+                    end_time: @reservation.end_time&.strftime("%H:%M")
+                    ), 
+                    btn_class: "btn-white", icon_name: "pencil-square", variant: :solid 
+                %>
             <%= render "user/reservations/component/check_in_btn", reservation: @reservation %>
         </div>
+         <% end %>
     </div>
     <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
         <div class="flex justify-between">
             <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.id} (#{@reservation.reservation_type})" %>
-            <%= render "shared/typography", sub_body: "update at : #{format_datetime(@reservation.updated_at)}" %>
+            <div class="flex gap-2 text-sm items-center text-gray-500">
+                <%= render "shared/typography", sub_body: "update at : #{format_datetime(@reservation.updated_at)}" %>
+                <span>by : </span>
+                <span><%= avatar_tag(@reservation.updated_by, size: 26)%></span>
+                <span><%= @reservation.updated_by ? (@reservation.updated_by.name.present? ? @reservation.updated_by.name : @reservation.updated_by.email) : "Unknown" %></span>
+            </div>
         </div>
         <div class="flex justify-between">
             <%= render "shared/typography", sub_heading: "#{@reservation.room.name}" %>
             <%= status_badge(@reservation.status) %>
         </div>
-        <div class="flex gap-2 text-sm">
-            <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
-            <% if @reservation.start_date == @reservation.end_date %>
-                <%= format_datetime(@reservation.start_date) %>
-            <% else %>
-                <%= format_datetime(@reservation.start_date) %> - <%= format_datetime(@reservation.end_date) %>
-            <% end %>
-        </div>
-        <div class="flex gap-2 text-sm">
-            <%= icon('clock', class: 'size-5') %>
-            <%= format_datetime(@reservation.start_time, time_only: true) %> - <%= format_datetime(@reservation.end_time, time_only: true) %>
-        </div>
-        <div class="flex gap-2 text-sm items-center">
-            <%= icon('user', class: 'size-5') %>
-            <span>Reserved by : </span>
-            <span><%= avatar_tag(@reservation.user, size: 26)%></span>
-            <span><%= @reservation.user.name.present? ? @reservation.user.name : @reservation.user.email %></span>
-        </div>
-        <div class="flex gap-2 text-sm items-center">
-            <%= icon('user-group', class: 'size-5', variant: :solid) %>
-            <span>Member : </span>
-            <% @reservation.members.each do |member| %>
-                <span><%= avatar_tag(member, size: 26) %></span>
-                <span><%= member.name.present? ? member.name : member.email %></span>
-            <% end %>
-        </div>
-        <% if @reservation.description.present? %>
-            <div class="flex flex-col text-sm">
-                <%= render "shared/typography", sub_heading: "Booking Purpose" %>
-                <p><%= @reservation.description %></p>
+        <div class="flex justify-between">
+            <div class="flex flex-col gap-2 justify-start <%= @reservation.description.present? ? 'w-full lg:w-1/2' : 'w-full' %>">
+                <div class="flex gap-2 text-sm">
+                    <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
+                    <% if @reservation.start_date == @reservation.end_date %>
+                        <%= format_datetime(@reservation.start_date) %>
+                    <% else %>
+                        <%= format_datetime(@reservation.start_date) %> - <%= format_datetime(@reservation.end_date) %>
+                    <% end %>
+                </div>
+                <div class="flex gap-2 text-sm">
+                    <%= icon('clock', class: 'size-5') %>
+                    <%= format_datetime(@reservation.start_time, time_only: true) %> - <%= format_datetime(@reservation.end_time, time_only: true) %>
+                </div>
+                <div class="flex gap-2 text-sm items-center">
+                    <%= icon('user', class: 'size-5') %>
+                    <span>Reserved by : </span>
+                    <span><%= avatar_tag(@reservation.user, size: 26)%></span>
+                    <span><%= @reservation.user.name.present? ? @reservation.user.name : @reservation.user.email %></span>
+                </div>
+                <div class="flex gap-2 text-sm items-center">
+                    <%= icon('user-group', class: 'size-5', variant: :solid) %>
+                    <span>Member : </span>
+                    <% if @reservation.members.present? %>
+                        <% @reservation.members.each do |member| %>
+                            <span><%= avatar_tag(member, size: 26) %></span>
+                            <span><%= member.name.present? ? member.name : member.email %></span>
+                        <% end %>
+                    <% else %>
+                        <span class="text-gray-500">No member</span>
+                    <% end %>
+                </div>
             </div>
-        <% end %>
+            <% if @reservation.description.present? %>
+                <div class="flex flex-col text-sm w-full lg:w-1/2">
+                    <%= render "shared/typography", sub_heading: "Booking Purpose" %>
+                    <p class="whitespace-pre-wrap"><%= @reservation.description %></p>
+                </div>
+            <% end %>
+        </div>
     </div>
 </div>

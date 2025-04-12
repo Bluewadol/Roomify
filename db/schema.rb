@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_04_170710) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_12_104641) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -85,8 +85,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_170710) do
     t.text "description"
     t.integer "reservation_type", default: 4, null: false
     t.string "slug"
+    t.bigint "updated_by_id"
     t.index ["room_id"], name: "index_reservations_on_room_id"
     t.index ["slug"], name: "index_reservations_on_slug", unique: true
+    t.index ["updated_by_id"], name: "index_reservations_on_updated_by_id"
     t.index ["user_id"], name: "index_reservations_on_user_id"
   end
 
@@ -155,6 +157,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_04_170710) do
   add_foreign_key "reservation_members", "users"
   add_foreign_key "reservations", "rooms"
   add_foreign_key "reservations", "users"
+  add_foreign_key "reservations", "users", column: "updated_by_id"
   add_foreign_key "room_amenities", "rooms"
   add_foreign_key "rooms", "users", column: "created_by_id"
   add_foreign_key "rooms", "users", column: "updated_by_id"

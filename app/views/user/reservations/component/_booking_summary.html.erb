@@ -34,13 +34,21 @@
 
         <div class="mb-2 flex flex-col flex-wrap gap-1">
             <%= render "shared/typography", body: "Description" %>
-            <span
-                id="selected-description"
-                class="break-all whitespace-pre-line text-sm text-gray-500 dark:text-gray-500"
-                style="word-break: break-word; overflow-wrap: break-word;"
-                >
-                <%= @reservation.description %>
-            </span>
+            <div class="relative" data-controller="description-toggle">
+                <div
+                    id="selected-description"
+                    class="break-all whitespace-pre-line text-sm text-gray-500 dark:text-gray-500 description-content"
+                    style="word-break: break-word; overflow-wrap: break-word; max-height: 3em; overflow: hidden;"
+                    >
+                    <%= @reservation.description %>
+                </div>
+                <div 
+                    class="text-primary-600 text-xs mt-1 hover:underline focus:outline-none description-toggle-btn cursor-pointer"
+                    data-action="click->description-toggle#toggle"
+                    data-description-toggle-target="toggleButton">
+                    See All
+                </div>
+            </div>
         </div>
         <hr class="border-t border-gray-300 my-2">
         <div class="mb-4" data-controller="multi-select">

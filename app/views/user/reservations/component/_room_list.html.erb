@@ -1,32 +1,38 @@
-<% @rooms.to_a.each do |room| %>
-    <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center room-box hover:bg-gray-50 cursor-pointer"
-        data-room-selector-target="roomBox"
-        data-room-id="<%= room.id %>"
-        data-room-name="<%= room.name %>"
-        data-action="click->room-selector#select">
-        <div class="flex gap-4 flex-grow">
-            <% if room.images.attached? %>
-                <%= image_tag url_for(room.images[0].variant(resize_to_fill: [96, 80]).processed), class: "rounded-lg shadow-md" %>
-            <% else %>
-                <div class="bg-gray-300 h-20 w-24 flex items-center justify-center rounded-lg shadow-md">
-                    <%= icon('rectangle-group', class: 'size-5 text-black', variant: :solid) %> 
-                </div>
-            <% end %>
-            <div class="text-sm text-gray-500 dark:text-gray-500">
-                <%= render "shared/typography", sub_heading: room.name  %>
-                <div class="room-capacity mb-2">
-                    <span>Capacity:</span> <%= room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}" %> people
-                </div>
-                <div class="flex gap-2">
-                    <% room.room_amenities.each do |amenity| %>
-                        <span><%= amenity.amenity_name %> (<%= amenity.quantity %>)</span>
-                    <% end %>
+<% if @rooms.present? %>
+    <% @rooms.to_a.each do |room| %>
+        <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center room-box hover:bg-gray-50 cursor-pointer"
+            data-room-selector-target="roomBox"
+            data-room-id="<%= room.id %>"
+            data-room-name="<%= room.name %>"
+            data-action="click->room-selector#select">
+            <div class="flex gap-4 flex-grow">
+                <% if room.images.attached? %>
+                    <%= image_tag url_for(room.images[0].variant(resize_to_fill: [96, 80]).processed), class: "rounded-lg shadow-md" %>
+                <% else %>
+                    <div class="bg-gray-300 h-20 w-24 flex items-center justify-center rounded-lg shadow-md">
+                        <%= icon('rectangle-group', class: 'size-5 text-black', variant: :solid) %> 
+                    </div>
+                <% end %>
+                <div class="text-sm text-gray-500 dark:text-gray-500">
+                    <%= render "shared/typography", sub_heading: room.name  %>
+                    <div class="room-capacity mb-2">
+                        <span>Capacity:</span> <%= room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}" %> people
+                    </div>
+                    <div class="flex gap-2">
+                        <% room.room_amenities.each do |amenity| %>
+                            <span><%= amenity.amenity_name %> (<%= amenity.quantity %>)</span>
+                        <% end %>
+                    </div>
                 </div>
             </div>
+            <div class="flex flex-col relative justify-start items-center w-auto h-full">
+                <%= status_badge(room.status) %>
+                <%= link_to "detail", room_path(room), class: "absolute bottom-0 right-1 w-full text-right text-sm text-gray-500 dark:text-gray-500 hover:underline cursor-pointer", onclick: "event.stopPropagation();" %>
+            </div>
         </div>
-        <div class="flex flex-col relative justify-start items-center w-auto h-full">
-            <%= status_badge(room.status) %>
-            <%= link_to "detail", room_path(room), class: "absolute bottom-0 right-1 w-full text-right text-sm text-gray-500 dark:text-gray-500 hover:underline cursor-pointer", onclick: "event.stopPropagation();" %>
-        </div>
+    <% end %>
+<% else %>
+    <div class="flex justify-center items-center h-full">
+        <%= render "shared/typography", sub_body: "No room available" %>
     </div>
 <% end %>

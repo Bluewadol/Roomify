@@ -6,16 +6,17 @@ class Reservation < ApplicationRecord
   after_create :set_custom_slug
 
   belongs_to :user
+  belongs_to :updated_by, class_name: 'User', optional: true
+
   belongs_to :room
   has_many :reservation_members, dependent: :destroy
   has_many :members, through: :reservation_members, source: :user
   has_one :check_in, dependent: :destroy
 
-
   enum :status, {
   pending: 0,
-  checked_in: 1,
-  waiting_check_in: 2,
+  waiting_check_in: 1,
+  checked_in: 2,
   canceled: 3,
   expired: 4,
   completed: 5
