@@ -7,21 +7,5 @@
 
     <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
         <%= render "user/reservations/component/check_in_modal", reservation: reservation %>
-    <% else %>
-        <%= btn_link_to "Check-In", "#",
-            btn_class: "btn btn-light inline-flex items-center text-sm border border-gray-300 cursor-not-allowed shadow-sm text-gray-600",
-            icon_name: "arrow-right-on-rectangle",
-            variant: :solid,
-            title: "Check-In available 15 minutes before or after the start time",
-            html_options: { style: "pointer-events: none;" },
-            onclick: "event.stopPropagation();" %>
     <% end %>
-<% else %>
-    <%= btn_link_to "Check-In", "#",
-        btn_class: "btn btn-light inline-flex items-center text-sm border border-gray-300 cursor-not-allowed shadow-sm text-gray-600",
-        icon_name: "arrow-right-on-rectangle",
-        variant: :solid,
-        title: "Reservation is not pending",
-        html_options: { style: "pointer-events: none;" },
-        onclick: "event.stopPropagation();" %>
 <% end %>

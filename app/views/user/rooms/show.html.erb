@@ -3,91 +3,11 @@
     <div class="flex flex-col gap-4">
         <div class="flex w-full gap-4 flex-wrap lg:flex-nowrap">
             <div class="w-full lg:w-2/3 flex flex-col gap-4">
-                <div class="rounded-lg bg-primary-950 h-[24rem] overflow-hidden w-full shadow-md relative">
-                    <% if @room.images.attached? %>
-                        <div class="h-full">
-                            <%= render "shared/carousel", images: @room.images.map { |img| url_for(img) }, alt: "Room Image" %>
-                        </div>
-                    <% else %>
-                        <p class="text-gray-500">image</p>
-                    <% end %>
-                </div>
-                <div class="flex flex-col bg-white gap-4 w-full h-auto rounded-lg border p-4 shadow-md">
-                    <div class="flex flex-col">
-                        <div class="flex justify-between pb-2" >
-                            <%= render "shared/typography", sub_heading: @room.name %>
-                            <%= status_badge( @room.status) %>
-                        </div>
-                        <%= render "shared/typography", sub_body: @room.description %>
-                    </div>
-                    <div class="flex gap-2 items-center text-sm text-gray-600 dark:text-gray-600">
-                        <%= icon('user-group', class: 'size-5 text-gray-800 dark:text-gray-800', variant: :solid) %>
-                        <span>Capacity: <%= @capacity_range %> People</span>
-                        <% if @room.room_amenities.any? %>
-                            <div class="text-sm leading-relaxed">
-                                <% @room.room_amenities.each do |amenity| %>
-                                    <%= amenity.amenity_name %> (<%= amenity.quantity %>)
-                                <% end %>
-                            </div>
-                        <% end %>
-                    </div>   
-                </div>
+                <%= render "user/rooms/component/carousel" %>
+                <%= render "user/rooms/component/room_detail" %>
             </div>
-            <div class="w-full lg:w-1/3 flex flex-col bg-white gap-4 rounded-lg p-4 shadow-md h-full">
-                <%= render "shared/typography", sub_heading: "Book This Room" %>
-                <%= form_with url: room_path(@room), method: :get, local: true do |form| %>
-                    <div class="flex flex-col h-full">
-                        <div class="w-full flex-shrink-0">
-                            <div class="grid grid-cols-2 gap-4">
-                                <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date]|| Date.today, label: "Start Date" %>
-                                <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date]|| Date.today, label: "End Date" %>
-                            </div>
-                        </div>
-                        <div class="w-full flex-shrink-0">
-                            <div class="grid grid-cols-2 gap-4">
-                                <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time], label: "Start Time" %>
-                                <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time], label: "End Time" %>
-                            </div>
-                        </div>
-                        <div class="flex-grow">
-                            <%= link_to 'Book Now', new_reservation_path(room_id: @room.id, start_date: params[:start_date], end_date: params[:end_date], start_time: params[:start_time], end_time: params[:end_time]), class: 'btn btn-primary w-full' %>
-                        </div>
-                    </div>
-                <% end %>
-            </div>
+            <%= render "user/rooms/component/booking_room" %>
         </div>
-        <div class="flex flex-col bg-white gap-2 rounded-lg p-4 shadow-md h-full">
-            <%= render "shared/typography", sub_heading: "Upcoming Bookings" %>
-            <% if @room.reservations.any? %>
-                <% @room.reservations.order(updated_at: :desc).each do |reservation| %>
-                    <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center">
-                        <div class="w-auto">
-                            <%= avatar_tag(reservation.user) %>
-                        </div>
-                        <div class="flex flex-col px-4 flex-grow">
-                            <%= render "shared/typography", sub_heading: reservation.user.name.present? ? reservation.user.name : reservation.user.email %>
-                            <div class="flex text-sm text-gray-500 gap-2">
-                            <%= icon('calendar-days', class: 'size-5') %>
-                            <% if reservation.start_date == reservation.end_date %>
-                                <%= format_datetime(reservation.start_date) %>
-                            <% else %>
-                                <%= format_datetime(reservation.start_date) %> - <%= format_datetime(reservation.end_date) %>
-                            <% end %>
-                            <span>•</span>
-                            <%= icon('clock', class: 'size-5') %>
-                            <%= format_datetime(reservation.start_time) %> - <%= format_datetime(reservation.end_time) %>
-                            </div>
-                        </div>
-                        <div class="flex items-center text-sm text-gray-400 w-auto">
-                            <span>In <%= time_elapsed(reservation.updated_at) %></span>
-                        </div>
-                    </div>
-                <% end %>
-            <% else %>
-                <div class="flex justify-center items-center text-gray-500 text-sm p-4">
-                    No upcoming bookings.
-                </div>
-            <% end %>
-        </div>
+        <%= render "user/rooms/component/up_coming_reservation" %>
     </div>
 </div>

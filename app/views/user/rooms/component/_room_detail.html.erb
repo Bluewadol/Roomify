@@ -1,0 +1,20 @@
+<div class="flex flex-col bg-white gap-4 w-full h-auto rounded-lg border p-4 shadow-md">
+    <div class="flex flex-col">
+        <div class="flex justify-between pb-2" >
+            <%= render "shared/typography", sub_heading: @room.name %>
+            <%= status_badge( @room.status) %>
+        </div>
+        <%= render "shared/typography", sub_body: @room.description %>
+    </div>
+    <div class="flex gap-2 items-center text-sm text-gray-600 dark:text-gray-600">
+        <%= icon('user-group', class: 'size-5 text-gray-800 dark:text-gray-800', variant: :solid) %>
+        <span>Capacity: <%= @capacity_range %> People</span>
+        <% if @room.room_amenities.any? %>
+            <div class="text-sm leading-relaxed">
+                <% @room.room_amenities.each do |amenity| %>
+                    <%= amenity.amenity_name %> (<%= amenity.quantity %>)
+                <% end %>
+            </div>
+        <% end %>
+    </div>   
+</div>

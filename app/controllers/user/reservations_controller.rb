@@ -38,34 +38,47 @@ class User::ReservationsController < ApplicationController
   end  
 
   def edit
-    # Only the owner can edit a reservation
-    if @reservation.user_id == current_user.id
-      set_rooms(@reservation.id)
-      @room_select = Room.find_by(id: params[:room_id])
-      @reservation.room_id = @room_select.id if @room_select
-    else
+    # Check if the user has permission to edit this reservation
+    unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
       redirect_to reservation_path(@reservation), alert: "You don't have permission to edit this reservation."
+      return
     end
+    
+    # Check if the reservation status allows editing
+    unless @reservation.pending? || @reservation.waiting_check_in?
+      redirect_to reservation_path(@reservation), alert: "This reservation cannot be edited."
+      return
+    end
+    
+    set_rooms(@reservation.id)
+    @room_select = Room.find_by(id: params[:room_id])
+    @reservation.room_id = @room_select.id if @room_select
   end
   
   def update
-    # Only the owner can update a reservation
-    if @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
-      set_rooms(@reservation.id)
-      @reservation.updated_by = current_user
-      if @reservation.update(reservation_params)
-        @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
-        redirect_to @reservation, notice: "Reservation was successfully updated."
-      else
-        render :edit, status: :unprocessable_entity
-      end
-    else
+    # Check if the user has permission to update this reservation
+    unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
       redirect_to reservation_path(@reservation), alert: "You don't have permission to update this reservation."
+      return
+    end
+    
+    # Check if the reservation status allows updating
+    unless @reservation.pending? || @reservation.waiting_check_in?
+      redirect_to reservation_path(@reservation), alert: "This reservation cannot be updated because it's no longer in pending or waiting check-in status."
+      return
+    end
+    
+    set_rooms(@reservation.id)
+    @reservation.updated_by = current_user
+    if @reservation.update(reservation_params)
+      @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
+      redirect_to @reservation, notice: "Reservation was successfully updated."
+    else
+      render :edit, status: :unprocessable_entity
     end
   end
 
   def destroy
-    # Only the owner can delete a reservation
     if @reservation.user_id == current_user.id
       @reservation.destroy
       redirect_to reservations_path, notice: "Reservation was successfully deleted."
@@ -79,10 +92,8 @@ class User::ReservationsController < ApplicationController
   def set_reservation
     @reservation = Reservation.friendly.find(params[:slug])
     
-    # Check if the current user is the owner or a member of the reservation
-    unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
-      redirect_to reservations_path, alert: "You don't have permission to access this reservation."
-    end
+    # No need to check permissions for viewing - all users can view
+    # The edit/update/destroy actions will handle their own permissions
   rescue ActiveRecord::RecordNotFound
     redirect_to reservations_path, alert: "Reservation not found." 
   end
@@ -104,8 +115,6 @@ class User::ReservationsController < ApplicationController
     @end_date = params[:end_date].presence
     @start_time = params[:start_time].presence
     @end_time = params[:end_time].presence
-
-    Rails.logger.debug("Start Date: #{@start_date}, End Date: #{@end_date}, Start Time: #{@start_time}, End Time: #{@end_time}")
   
     @reservations_in_range = Reservation.all
     @reservations_in_range = @reservations_in_range.where.not(id: current_reservation_id) if current_reservation_id.present?
