@@ -73,24 +73,42 @@ export default class extends Controller {
                 },
                 plugins: ['dropdown_input', 'clear_button', 'remove_button'],
             });
+            
             select.on("change", () => {
                 const selectedValues = select.getValue();
                 const now = new Date().getTime();
                 const expiresIn30Min = now + 30 * 60 * 1000;
             
                 const data = {
-                value: selectedValues,
-                expiresAt: expiresIn30Min
+                    value: selectedValues,
+                    expiresAt: expiresIn30Min
                 };
             
-                localStorage.setItem("selectedMembers", JSON.stringify(data));
+                localStorage.setItem("reservation_members", JSON.stringify(data));
             });
             
-    
-            const savedMembers = JSON.parse(localStorage.getItem("selectedMembers"));
-            if (savedMembers) {
-                select.setValue(savedMembers);
+            const isReservationForm = window.location.pathname.match(/\/reservations\/(new|\d+\/edit)/);
+            const savedMembers = localStorage.getItem("reservation_members");
+            
+            if (savedMembers && isReservationForm) {
+                const savedData = JSON.parse(savedMembers);
+                const now = new Date().getTime();
+                
+                if (savedData.expiresAt > now) {
+                    select.setValue(savedData.value);
+                } else {
+                    localStorage.removeItem("reservation_members");
+                }
             }
-    });
+        });
+    }
+
+    disconnect() {
+        const isReservationForm = window.location.pathname.match(/\/reservations\/(new|\d+\/edit)/);
+        const isReservationList = window.location.pathname === '/reservations';
+        
+        if (!isReservationForm && !isReservationList) {
+            localStorage.removeItem("reservation_members");
+        }
     }
 }

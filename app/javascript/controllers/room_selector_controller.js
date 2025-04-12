@@ -50,9 +50,11 @@ export default class extends Controller {
             });
         }
 
+        // Check if we're on a new or edit reservation page
+        const isReservationForm = window.location.pathname.match(/\/reservations\/(new|\d+\/edit)/);
         const savedDescription = localStorage.getItem("reservation_description");
 
-        if (this.hasDescriptionFieldTarget && !this.descriptionFieldTarget.value && savedDescription) {
+        if (this.hasDescriptionFieldTarget && !this.descriptionFieldTarget.value && savedDescription && isReservationForm) {
             const savedData = JSON.parse(savedDescription);
             const now = new Date().getTime();
         
@@ -70,7 +72,7 @@ export default class extends Controller {
             
                 const value = this.descriptionFieldTarget.value;
                 const now = new Date().getTime();
-                const expiresAt = now + 30 * 60 * 1000;
+                const expiresAt = now + 30 * 60 * 1000; // 30 minutes
             
                 const data = {
                     value: value,
@@ -82,6 +84,15 @@ export default class extends Controller {
         }        
 
         this.updateBookingSummary();
+    }
+
+    disconnect() {
+        const isReservationForm = window.location.pathname.match(/\/reservations\/(new|\d+\/edit)/);
+        const isReservationList = window.location.pathname === '/reservations';
+        
+        if (!isReservationForm && !isReservationList) {
+            localStorage.removeItem("reservation_description");
+        }
     }
 
     select(event) {

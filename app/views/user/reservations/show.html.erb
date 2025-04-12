@@ -20,7 +20,10 @@
             <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.id} (#{@reservation.reservation_type})" %>
             <%= render "shared/typography", sub_body: "update at : #{format_datetime(@reservation.updated_at)}" %>
         </div>
-        <%= render "shared/typography", sub_heading: "#{@reservation.room.name}" %>
+        <div class="flex justify-between">
+            <%= render "shared/typography", sub_heading: "#{@reservation.room.name}" %>
+            <%= status_badge(@reservation.status) %>
+        </div>
         <div class="flex gap-2 text-sm">
             <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
             <% if @reservation.start_date == @reservation.end_date %>
