@@ -21,7 +21,6 @@ export default class extends Controller {
   setupObserver() {
     // Create a MutationObserver to watch for changes to the description content
     this.observer = new MutationObserver(() => {
-      console.log("Content changed, rechecking height");
       this.checkHeight();
     });
     
@@ -52,17 +51,11 @@ export default class extends Controller {
     const lineHeight = parseInt(window.getComputedStyle(this.descriptionElement).lineHeight) || 20;
     const maxHeight = lineHeight * 3; // 3 lines
     
-    console.log("Content height:", this.descriptionElement.scrollHeight);
-    console.log("Max height:", maxHeight);
-    console.log("Has content:", hasContent);
-    
     if (hasContent && this.descriptionElement.scrollHeight > maxHeight) {
-      console.log("Content is long, showing toggle button");
       // Apply max height and show toggle button
       this.collapseContent();
       this.toggleButtonTarget.classList.remove('hidden');
     } else {
-      console.log("Content is short or empty, hiding toggle button");
       // Content is short or empty, hide toggle button
       this.descriptionElement.style.maxHeight = 'none';
       this.descriptionElement.style.overflow = 'visible';
@@ -72,7 +65,6 @@ export default class extends Controller {
 
   toggle(event) {
     event.preventDefault();
-    console.log("Toggle clicked, current state:", this.isExpanded);
     
     if (this.isExpanded) {
       this.collapseContent();
@@ -86,7 +78,6 @@ export default class extends Controller {
     this.descriptionElement.style.overflow = 'visible';
     this.toggleButtonTarget.innerHTML = 'Hide';
     this.isExpanded = true;
-    console.log("Content expanded");
   }
   
   collapseContent() {
@@ -95,6 +86,5 @@ export default class extends Controller {
     this.descriptionElement.style.overflow = 'hidden';
     this.toggleButtonTarget.innerHTML = 'See All';
     this.isExpanded = false;
-    console.log("Content collapsed");
   }
 } 
