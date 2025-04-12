@@ -16,8 +16,9 @@
         </div>
     </div>
     <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
-        <div class="flex">
+        <div class="flex justify-between">
             <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.id} (#{@reservation.reservation_type})" %>
+            <%= render "shared/typography", sub_body: "update at : #{format_datetime(@reservation.updated_at)}" %>
         </div>
         <%= render "shared/typography", sub_heading: "#{@reservation.room.name}" %>
         <div class="flex gap-2 text-sm">
@@ -30,19 +31,19 @@
         </div>
         <div class="flex gap-2 text-sm">
             <%= icon('clock', class: 'size-5') %>
-            <%= format_datetime(@reservation.start_time) %> - <%= format_datetime(@reservation.end_time) %>
+            <%= format_datetime(@reservation.start_time, time_only: true) %> - <%= format_datetime(@reservation.end_time, time_only: true) %>
         </div>
         <div class="flex gap-2 text-sm items-center">
             <%= icon('user', class: 'size-5') %>
             <span>Reserved by : </span>
-            <span><%= avatar_tag(@reservation.user, size: 24)%></span>
+            <span><%= avatar_tag(@reservation.user, size: 26)%></span>
             <span><%= @reservation.user.name.present? ? @reservation.user.name : @reservation.user.email %></span>
         </div>
         <div class="flex gap-2 text-sm items-center">
             <%= icon('user-group', class: 'size-5', variant: :solid) %>
             <span>Member : </span>
             <% @reservation.members.each do |member| %>
-                <span><%= avatar_tag(member, size: 24) %></span>
+                <span><%= avatar_tag(member, size: 26) %></span>
                 <span><%= member.name.present? ? member.name : member.email %></span>
             <% end %>
         </div>

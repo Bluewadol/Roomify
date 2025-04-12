@@ -1,5 +1,5 @@
 module FormatDateTimeHelper
-    def format_datetime(date_or_time)
+    def format_datetime(date_or_time, time_only: false)
         if date_or_time.nil?
             return ""
         end
@@ -7,7 +7,17 @@ module FormatDateTimeHelper
         if date_or_time.is_a?(Date)
             date_or_time.strftime("%d %b %Y")
         elsif date_or_time.is_a?(Time)
-            date_or_time.strftime("%I:%M %p")
+            if time_only
+                date_or_time.strftime("%I:%M %p")
+            else
+                date_or_time.strftime("%d %b %Y %I:%M %p")
+            end
+        elsif date_or_time.is_a?(DateTime)
+            if time_only
+                date_or_time.strftime("%I:%M %p")
+            else
+                date_or_time.strftime("%d %b %Y %I:%M %p")
+            end
         else
             date_or_time.to_s
         end        
