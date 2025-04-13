@@ -27,7 +27,7 @@
                             <% end %>
                             <span>•</span>
                             <%= icon('clock', class: 'size-5') %>
-                            <%= format_datetime(reservation.start_time) %> - <%= format_datetime(reservation.end_time) %>
+                            <%= format_datetime(reservation.start_time, time_only: true) %> - <%= format_datetime(reservation.end_time, time_only: true) %>
                         </div>
                         <span>In <%= time_elapsed(reservation.updated_at) %></span>
                     </div>

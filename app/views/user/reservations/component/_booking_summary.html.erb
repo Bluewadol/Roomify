@@ -17,12 +17,12 @@
         <div class="mb-2 flex justify-between">
             <%= render "shared/typography", body: "Time" %>
             <div class="text-sm text-gray-500 dark:text-gray-500">
-                <span id="selected-start-time" data-start-time="<%= format_datetime(@reservation.start_time) %>">
-                    <%= format_datetime(@reservation.start_time) if @reservation.start_time.present? %>
+                <span id="selected-start-time" data-start-time="<%= format_datetime(@reservation.start_time, time_only: true) %>">
+                    <%= format_datetime(@reservation.start_time, time_only: true) if @reservation.start_time.present? %>
                 </span>
                 <span id="dash-time">-</span>
-                <span id="selected-end-time" data-end-time="<%= format_datetime(@reservation.end_time) %>">
-                    <%= format_datetime(@reservation.end_time) if @reservation.end_time.present? %>
+                <span id="selected-end-time" data-end-time="<%= format_datetime(@reservation.end_time, time_only: true) %>">
+                    <%= format_datetime(@reservation.end_time, time_only: true) if @reservation.end_time.present? %>
                 </span>
             </div>
         </div>

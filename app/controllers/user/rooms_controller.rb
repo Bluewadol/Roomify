@@ -75,6 +75,16 @@ class User::RoomsController < ApplicationController
         booked = @reservations_in_range.where(room_id: room.id).exists?
       end
     end
+
+    # Sort rooms by status: available -> booked -> unavailable
+    @rooms = @rooms.sort_by do |room|
+      case room.status
+      when 'available' then 0
+      when 'booked' then 1
+      when 'unavailable' then 2
+      end
+    end
+
     @room_status = Room.statuses.keys 
   end
 
@@ -121,7 +131,6 @@ class User::RoomsController < ApplicationController
     @room.assign_attributes(status: status)
     @room_status = Room.statuses.keys
     
-    # No need to sort reservations here as we're doing it in the view
   end
 
   private

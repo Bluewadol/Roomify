@@ -31,6 +31,32 @@ class Room < ApplicationRecord
 
     after_create :generate_qr_code
 
+    def current_reservation
+        current_time = Time.current.in_time_zone('Asia/Bangkok')
+        Rails.logger.info("Current time: #{current_time}")
+        current_date = current_time.to_date
+        current_time_str = current_time.strftime("%H:%M")
+
+        reservations
+            .where('start_date <= ? AND end_date >= ?', current_date, current_date)
+            .where('start_time <= ? AND end_time > ?', current_time_str, current_time_str)
+            .where.not(status: [:canceled, :expired, :completed])
+            .first
+    end
+
+    def next_reservation
+        current_time = Time.current.in_time_zone('Asia/Bangkok')
+        Rails.logger.info("Current time: #{current_time}")
+        current_date = current_time.to_date
+        current_time_str = current_time.strftime("%H:%M")
+
+        reservations
+            .where('(start_date > ?) OR (end_date > ?) OR  (start_date = ? AND start_time > ?)', current_date, current_date, current_date, current_time_str)
+            .where.not(status: [:canceled, :expired])
+            .order(start_date: :asc, start_time: :asc)
+            .first
+    end
+
     private
 
     def capacity_range

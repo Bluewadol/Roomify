@@ -1,15 +1,15 @@
 module StatusBadgeHelper
     def status_badge(status)
         status_classes = {
-            "booked" => "bg-red-500 text-white",
-            "available" => "bg-green-500 text-white",
-            "unavailable" => "bg-gray-300 text-black",
-            "pending" => "bg-yellow-500 text-white", 
-            "checked_in" => "bg-blue-500 text-white", 
-            "waiting_check_in" => "bg-orange-500 text-white",
-            "canceled" => "bg-red-500 text-white",
-            "expired" => "bg-gray-500 text-white",
-            "completed" => "bg-green-500 text-white"
+            "booked" => "bg-red-100 text-red-800",
+            "available" => "bg-green-100 text-green-800",
+            "unavailable" => "bg-gray-100 text-black",
+            "pending" => "bg-yellow-100 text-yellow-800", 
+            "checked_in" => "bg-blue-100 text-blue-800", 
+            "waiting_check_in" => "bg-orange-100 text-orange-800",
+            "canceled" => "bg-gray-300 bg-gray-800",
+            "expired" => "bg-gray-100 bg-gray-800",
+            "completed" => "bg-green-100 text-green-800"
         }
         
         content_tag :span, status.capitalize, class: "#{status_classes[status] || 'bg-gray-500 text-white'} text-sm px-2 py-1 rounded-2xl h-7"

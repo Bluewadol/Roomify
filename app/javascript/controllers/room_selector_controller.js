@@ -173,6 +173,15 @@ export default class extends Controller {
             return date.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
         } 
         
+        // Check if the input is a time string (HH:MM format)
+        if (typeof dateOrTime === 'string' && /^\d{2}:\d{2}$/.test(dateOrTime)) {
+            const [hours, minutes] = dateOrTime.split(':');
+            const hour = parseInt(hours);
+            const ampm = hour >= 12 ? 'PM' : 'AM';
+            const hour12 = hour % 12 || 12;
+            return `${hour12}:${minutes} ${ampm}`;
+        }
+
         const time = new Date(dateOrTime);
 
         if (!isNaN(time)) {
