@@ -4,18 +4,18 @@
         <div class="flex flex-col h-full">
             <div class="w-full flex-shrink-0">
                 <div class="grid grid-cols-2 gap-4">
-                    <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date]|| Date.today, label: "Start Date" %>
-                    <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date]|| Date.today, label: "End Date" %>
+                    <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date].present? ? params[:start_date] : Date.today, label: "Start Date" %>
+                    <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date].present? ? params[:end_date] : Date.today, label: "End Date" %>
                 </div>
             </div>
             <div class="w-full flex-shrink-0">
                 <div class="grid grid-cols-2 gap-4">
-                    <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time], label: "Start Time" %>
+                    <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time].present? ? params[:start_time] : Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M"), label: "Start Time" %>
                     <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time], label: "End Time" %>
                 </div>
             </div>
             <div class="flex-grow">
-                <%= link_to 'Book Now', new_reservation_path(room_id: @room.id, start_date: params[:start_date], end_date: params[:end_date], start_time: params[:start_time], end_time: params[:end_time]), class: 'btn btn-primary w-full' %>
+                <%= link_to 'Book Now', new_reservation_path(room_id: @room.id, start_date: params[:start_date].present? ? params[:start_date] : Date.today, end_date: params[:end_date].present? ? params[:end_date] : Date.today, start_time: params[:start_time], end_time: params[:end_time]), class: 'btn btn-primary w-full' %>
             </div>
         </div>
     <% end %>

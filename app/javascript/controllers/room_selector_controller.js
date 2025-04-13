@@ -12,6 +12,32 @@ export default class extends Controller {
         this.isSubmitting = false;
         const roomIdFromParams = new URLSearchParams(window.location.search).get('room_id');
 
+        // Set today's date and current time in Bangkok timezone if not already set or if empty
+        if (this.hasStartDateFieldTarget && (!this.startDateFieldTarget.value || this.startDateFieldTarget.value.trim() === '')) {
+            const today = new Date();
+            this.startDateFieldTarget.value = today.toISOString().split('T')[0];
+        }
+        if (this.hasEndDateFieldTarget && (!this.endDateFieldTarget.value || this.endDateFieldTarget.value.trim() === '')) {
+            const today = new Date();
+            this.endDateFieldTarget.value = today.toISOString().split('T')[0];
+        }
+        if (this.hasStartTimeFieldTarget && (!this.startTimeFieldTarget.value || this.startTimeFieldTarget.value.trim() === '')) {
+            // Get current time in Bangkok timezone
+            const now = new Date();
+            const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+            const hours = bangkokTime.getHours().toString().padStart(2, '0');
+            const minutes = bangkokTime.getMinutes().toString().padStart(2, '0');
+            this.startTimeFieldTarget.value = `${hours}:${minutes}`;
+        }
+        if (this.hasEndTimeFieldTarget && (!this.endTimeFieldTarget.value || this.endTimeFieldTarget.value.trim() === '')) {
+            // Get current time in Bangkok timezone
+            const now = new Date();
+            const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
+            const hours = bangkokTime.getHours().toString().padStart(2, '0');
+            const minutes = bangkokTime.getMinutes().toString().padStart(2, '0');
+            this.endTimeFieldTarget.value = `${hours}:${minutes}`;
+        }
+
         if (roomIdFromParams) {
             const roomElement = document.querySelector(`[data-room-id="${roomIdFromParams}"]`);
 
