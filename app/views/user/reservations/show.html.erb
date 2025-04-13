@@ -18,7 +18,7 @@
     </div>
     <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
         <div class="flex justify-between">
-            <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.id} (#{@reservation.reservation_type})" %>
+            <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.slug} (#{@reservation.reservation_type})" %>
             <div class="flex gap-2 text-sm items-center text-gray-500">
                 <%= render "shared/typography", sub_body: "update at : #{format_datetime(@reservation.updated_at)}" %>
                 <span>by : </span>

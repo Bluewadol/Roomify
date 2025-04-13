@@ -1,23 +1,30 @@
 <div class="w-full flex flex-col bg-white gap-4 rounded-lg p-4 shadow-md min-h-fit">
    
-    <% if @room.current_reservation.present? %>
+    <% if @current_reservation.present? %>
         <div class="flex flex-col gap-2 h-full">
             <div class="flex items-center justify-between gap-2">
                 <%= render "shared/typography", sub_heading: "Now Status" %>
                 <%= status_badge(@room.status) %>
             </div>
             <div class="flex flex-col gap-1.5 bg-red-50 p-3 rounded-lg">
+                <div class="flex justify-between text-sm items-center flex-wrap gap-2">
+                    <span class="flex items-center gap-1"> 
+                        <span class="font-medium">Reservation ID : </span> 
+                        <%= @current_reservation.slug %>
+                    </span>
+                    <%= status_badge(@current_reservation.status) %>
+                </div>
                 <div class="flex gap-2 text-sm items-center">
                     <%= icon('user', class: 'size-5') %>
                     <span>Reserved by : </span>
-                    <span><%= avatar_tag(@room.current_reservation.user, size: 26)%></span>
-                    <span><%= @room.current_reservation.user.name.present? ? @room.current_reservation.user.name : @room.current_reservation.user.email %></span>
+                    <span><%= avatar_tag(@current_reservation.user, size: 26)%></span>
+                    <span><%= @current_reservation.user.name.present? ? @current_reservation.user.name : @current_reservation.user.email %></span>
                 </div>
                 <div class="flex gap-2 text-sm items-center">
                     <%= icon('user-group', class: 'size-5', variant: :solid) %>
                     <span>Member : </span>
-                    <% if @room.current_reservation.members.present? %>
-                        <% @room.current_reservation.members.each do |member| %>
+                    <% if @current_reservation.members.present? %>
+                        <% @current_reservation.members.each do |member| %>
                             <span><%= avatar_tag(member, size: 26) %></span>
                             <span><%= member.name.present? ? member.name : member.email %></span>
                         <% end %>
@@ -27,23 +34,22 @@
                 </div>
                 <div class="flex gap-2 text-sm">
                     <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
-                    <% if @room.current_reservation.start_date == @room.current_reservation.end_date %>
-                        <%= format_datetime(@room.current_reservation.start_date) %>
+                    <% if @current_reservation.start_date == @current_reservation.end_date %>
+                        <%= format_datetime(@current_reservation.start_date) %>
                     <% else %>
-                        <%= format_datetime(@room.current_reservation.start_date) %> - <%= format_datetime(@room.current_reservation.end_date) %>
+                        <%= format_datetime(@current_reservation.start_date) %> - <%= format_datetime(@current_reservation.end_date) %>
                     <% end %>
                 </div>
                 <div class="flex gap-2 text-sm">
                     <%= icon('clock', class: 'size-5') %>
-                    <%= format_datetime(@room.current_reservation.start_time, time_only: true) %> - <%= format_datetime(@room.current_reservation.end_time, time_only: true) %>
+                    <%= format_datetime(@current_reservation.start_time, time_only: true) %> - <%= format_datetime(@current_reservation.end_time, time_only: true) %>
                 </div>
                 <hr class="w-full">
-                <div class="flex gap-2 text-sm items-center text-gray-500 flex-wrap">
-                    <%= render "shared/typography", sub_body: "update at : #{@room.current_reservation.updated_at.strftime("%d %b %Y %H:%M")}" %>
-                    <div class="flex gap-2 text-sm">
-                        <span>by : </span>
-                        <span><%= avatar_tag(@room.current_reservation.updated_by, size: 26)%></span>
-                        <span><%= @room.current_reservation.updated_by ? (@room.current_reservation.updated_by.name.present? ? @room.current_reservation.updated_by.name : @room.current_reservation.updated_by.email) : "Unknown" %></span>
+                <div class="flex gap-2 text-sm items-center justify-between text-gray-500 flex-wrap">
+                    <%= render "shared/typography", sub_body: "update at : #{format_datetime(@current_reservation.updated_at)}" %>
+                    <div class="flex gap-2 text-sm items-center">
+                        <span><%= avatar_tag(@current_reservation.updated_by, size: 26)%></span>
+                        <span><%= @current_reservation.updated_by ? (@current_reservation.updated_by.name.present? ? @current_reservation.updated_by.name : @current_reservation.updated_by.email) : "Unknown" %></span>
                     </div>
                 </div>
             </div>
@@ -56,14 +62,69 @@
             </div>
             <% if @room.next_reservation.present? %>
                 <div class="flex flex-col items-start justify-start gap-2 bg-emerald-50 p-3 rounded-lg text-sm text-gray-700">        
-                    <span class="font-medium">Available until:</span> 
-                    <div class="flex items-center gap-1">
-                        <%= icon('clock', class: 'size-5') %>
-                        <span class="font-medium">Now</span> to <%= format_datetime(@room.next_reservation.start_time, time_only: true) %>
+                    <div class="flex flex-row lg:flex-wrap items-start gap-2 justify-start w-full">
+                        <span class="font-medium">Available until:</span> 
+                        <div class="flex items-center gap-2 justify-between w-full">
+                            <div class="flex items-center gap-1">
+                                <%= icon('clock', class: 'size-5') %>
+                                <span class="font-medium">Now</span> to <%= format_datetime(@room.next_reservation.start_time, time_only: true) %>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <%= icon('calendar-days', class: 'size-5') %>
+                                <% next_date = next_available_date(@room.next_reservation, @start_date, @end_date, @start_time, @end_time) %>
+                                <% if next_date.present? %>
+                                    <%= format_datetime(next_date) %>
+                                <% else %>
+                                    <%= format_datetime(Date.current) %>
+                                <% end %>
+                            </div>
+                        </div>
+                     </div>
+                      <hr class="w-full">
+                    <div class="flex justify-between text-sm items-center flex-wrap gap-2 w-full">
+                        <span class="flex items-center gap-1"> 
+                            <span class="font-medium">Reservation ID : </span> 
+                            <%= @room.next_reservation.slug %>
+                        </span>
+                        <%= status_badge(@room.next_reservation.status) %>
                     </div>
-                    <div class="flex items-center gap-1">
-                        <%= icon('calendar-days', class: 'size-5') %>
-                        <%= Time.current.in_time_zone('Asia/Bangkok').to_date.strftime("%d %b %Y") %>
+                    <div class="flex gap-2 text-sm items-center">
+                        <%= icon('user', class: 'size-5') %>
+                        <span>Reserved by : </span>
+                        <span><%= avatar_tag(@room.next_reservation.user, size: 26)%></span>
+                        <span><%= @room.next_reservation.user.name.present? ? @room.next_reservation.user.name : @room.next_reservation.user.email %></span>
+                    </div>
+                    <div class="flex gap-2 text-sm items-center">
+                        <%= icon('user-group', class: 'size-5', variant: :solid) %>
+                        <span>Member : </span>
+                        <% if @room.next_reservation.members.present? %>
+                            <% @room.next_reservation.members.each do |member| %>
+                                <span><%= avatar_tag(member, size: 26) %></span>
+                                <span><%= member.name.present? ? member.name : member.email %></span>
+                            <% end %>
+                        <% else %>
+                            <span class="text-gray-500">No member</span>
+                        <% end %>
+                    </div>
+                    <div class="flex gap-2 text-sm">
+                        <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
+                        <% if @room.next_reservation.start_date == @room.next_reservation.end_date %>
+                            <%= format_datetime(@room.next_reservation.start_date) %>
+                        <% else %>
+                            <%= format_datetime(@room.next_reservation.start_date) %> - <%= format_datetime(@room.next_reservation.end_date) %>
+                        <% end %>
+                    </div>
+                    <div class="flex gap-2 text-sm">
+                        <%= icon('clock', class: 'size-5') %>
+                        <%= format_datetime(@room.next_reservation.start_time, time_only: true) %> - <%= format_datetime(@room.next_reservation.end_time, time_only: true) %>
+                    </div>
+                    <hr class="w-full">
+                    <div class="flex gap-2 text-sm items-center justify-between text-gray-500 flex-wrap w-full">
+                        <%= render "shared/typography", sub_body: "update at : #{ format_datetime(@room.next_reservation.updated_at)}" %>
+                        <div class="flex gap-2 text-sm items-center">
+                            <span><%= avatar_tag(@room.next_reservation.updated_by, size: 26)%></span>
+                            <span><%= @room.next_reservation.updated_by ? (@room.next_reservation.updated_by.name.present? ? @room.next_reservation.updated_by.name : @room.next_reservation.updated_by.email) : "Unknown" %></span>
+                        </div>
                     </div>
                 </div>
             <% else %>

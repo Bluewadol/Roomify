@@ -1,0 +1,156 @@
+module ReservationFilterable
+  extend ActiveSupport::Concern
+
+  # Filter reservations based on date and time parameters
+  def filter_reservations(reservations, options = {})
+    exclude_ids = options[:exclude_ids] || []
+    
+    reservations = reservations.where.not(id: exclude_ids) if exclude_ids.present?
+    reservations = filter_by_date(reservations)
+    reservations = filter_by_time(reservations)
+    reservations
+  end
+
+  # Filter rooms based on reservations and other criteria
+  def filter_rooms(rooms, reservations_in_range, options = {})
+    current_reservation_id = options[:current_reservation_id]
+    
+    # Apply name filter if provided
+    if params[:name].present?
+      trimmed_name = params[:name].strip.downcase
+      rooms = rooms.where("LOWER(name) LIKE ?", "%#{trimmed_name}%")
+    end
+    
+    # Apply capacity filter if provided
+    if params[:capacity].present?
+      rooms = rooms.where("capacity_max >= ?", params[:capacity])
+    end
+    
+    # Apply amenities filter if provided
+    if params[:amenities].present? && params[:amenities].reject(&:blank?).any?
+      rooms = rooms.left_joins(:room_amenities)
+                   .where(room_amenities: { amenity_name: params[:amenities].reject(&:blank?) })
+    end
+    
+    # Determine room status and filter
+    rooms = rooms.map do |room|
+      status = determine_room_status(room, reservations_in_range)
+      room.assign_attributes(status: status)
+      room
+    end
+    
+    # Filter by status if provided
+    if params[:room_status].present? && params[:room_status].reject(&:blank?).any?
+      rooms = rooms.select { |room| params[:room_status].reject(&:blank?).include?(room.status.to_s) }
+    end
+    
+    # Special handling for current reservation
+    if current_reservation_id.present?
+      current_room_id = Reservation.find(current_reservation_id).room_id
+      rooms = rooms.select { |room| room.id == current_room_id || room.status == :available }
+    end
+    
+    rooms
+  end
+
+  # Sort rooms by status priority
+  def sort_rooms_by_status(rooms)
+    rooms.sort_by do |room|
+      case room.status
+      when 'available' then 0
+      when 'booked' then 1
+      when 'unavailable' then 2
+      end
+    end
+  end
+
+  # Determine room status based on reservations
+  def determine_room_status(room, reservations_in_range)
+    booked = reservations_in_range.where(room_id: room.id).exists?
+    
+    if room.unavailable?
+      :unavailable
+    elsif booked
+      :booked
+    else
+      :available
+    end
+  end
+
+  # Determine the next available date based on the next reservation
+  def next_available_date(next_reservation, start_date, start_time, end_time)
+    return nil unless next_reservation.present?
+    
+    today = Date.current
+    
+    # If today is within the next reservation date range
+    if today >= next_reservation.start_date && today <= next_reservation.end_date
+      # If current time is before the next reservation start time
+      if start_time < next_reservation.start_time
+        # Return today's date
+        today
+      else
+        # Return next day
+        today + 1.day
+      end
+    # If today is before the next reservation start date
+    elsif today < next_reservation.start_date
+      # Return the next reservation start date
+      next_reservation.start_date
+    else
+      # If today is after the next reservation end date
+      # Return today's date
+      today
+    end
+  end
+
+  private
+
+  def filter_by_date(reservations)
+    if @start_date && @end_date
+      if @start_date == @end_date
+        # Find reservations that overlap with the selected date
+        # This includes reservations that start before or on the selected date AND end on or after the selected date
+        reservations.where("start_date <= ? AND end_date >= ?", @start_date, @start_date)
+      else
+        # Find reservations that overlap with the date range
+        # This includes reservations that:
+        # 1. Start within the range
+        # 2. End within the range
+        # 3. Span across the entire range
+        reservations.where(
+          "(start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?) OR (start_date <= ? AND end_date >= ?)",
+          @start_date, @end_date, @start_date, @end_date, @start_date, @end_date
+        )
+      end
+    elsif @start_date
+      reservations.where("end_date >= ?", @start_date)
+    elsif @end_date
+      reservations.where("start_date <= ?", @end_date)
+    else
+      reservations
+    end
+  end
+
+  def filter_by_time(reservations)
+    if @start_time && @end_time
+      if @start_time == @end_time
+        reservations.where(
+          "(start_time <= ? AND end_time >= ?)",
+          @start_time, @end_time
+        )
+      else
+        reservations.where(
+          "(start_time >= ? AND start_time <= ? AND end_time >= ?) OR (start_time <= ? AND end_time >= ?) OR (start_time >= ? AND end_time <= ?)",
+          @start_time, @end_time, @end_time, @start_time, @start_time, @start_time, @end_time
+        )
+      end
+    elsif @start_time
+      reservations.where("start_time >= ?", @start_time)
+    elsif @end_time
+      reservations.where("end_time <= ?", @end_time)
+    else
+      reservations
+    end
+  end
+end 

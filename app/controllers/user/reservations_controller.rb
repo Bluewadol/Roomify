@@ -1,5 +1,8 @@
 class User::ReservationsController < ApplicationController
+  include ReservationFilterable
+  
   before_action :set_reservation, only: %i[show edit update destroy]
+  before_action :set_filter_params, only: [:new, :edit]
 
   def index
     # Get reservations created by the current user or where the current user is a member
@@ -102,6 +105,13 @@ class User::ReservationsController < ApplicationController
     params.require(:reservation).permit(:room_id, :start_date, :end_date, :start_time, :end_time, :description, :reservation_type, member_ids: [])
   end  
 
+  def set_filter_params
+    @start_date = params[:start_date].presence
+    @end_date = params[:end_date].presence
+    @start_time = params[:start_time].presence
+    @end_time = params[:end_time].presence
+  end
+
   def set_rooms(current_reservation_id = nil)
     if params[:room_id].present?
       @room = Room.find_by(id: params[:room_id])
@@ -110,72 +120,12 @@ class User::ReservationsController < ApplicationController
     end
 
     @rooms = Room.includes(:reservations, :room_amenities)
-  
-    @start_date = params[:start_date].presence
-    @end_date = params[:end_date].presence
-    @start_time = params[:start_time].presence
-    @end_time = params[:end_time].presence
-  
-    @reservations_in_range = Reservation.all
-    @reservations_in_range = @reservations_in_range.where.not(id: current_reservation_id) if current_reservation_id.present?
-  
-    if @start_date && @end_date
-      @reservations_in_range = if @start_date == @end_date
-        @reservations_in_range.where(start_date: @start_date)
-      else
-        @reservations_in_range.where(start_date: @start_date..@end_date)
-      end
-    elsif @start_date
-      @reservations_in_range = @reservations_in_range.where("start_date >= ?", @start_date)
-    elsif @end_date
-      @reservations_in_range = @reservations_in_range.where("end_date <= ?", @end_date)
-    end
-  
-    if @start_time && @end_time
-      if @start_time == @end_time
-        @reservations_in_range = @reservations_in_range.where(
-          "(start_time <= ? AND end_time >= ?)",
-          @start_time, @end_time
-        )
-      else
-        @reservations_in_range = @reservations_in_range.where(
-          "(start_time >= ? AND start_time <= ? AND end_time >= ?) OR (start_time <= ? AND end_time >= ?)",
-          @start_time, @end_time, @end_time, @start_time, @start_time
-        )
-      end
-    elsif @start_time
-      @reservations_in_range = @reservations_in_range.where("start_time >= ?", @start_time)
-    elsif @end_time
-      @reservations_in_range = @reservations_in_range.where("end_time <= ?", @end_time)
-    end
-  
-    if params[:name].present?
-      trimmed_name = params[:name].strip.downcase
-      @rooms = @rooms.where("LOWER(name) LIKE ?", "%#{trimmed_name}%")
-    end
-  
-    def determine_room_status(room)
-      booked = @reservations_in_range.where(room_id: room.id).exists?
-      if room.unavailable?
-        :unavailable
-      elsif booked
-        :booked
-      else
-        :available
-      end
-    end
-  
-    @rooms = @rooms.map do |room|
-      status = determine_room_status(room)
-      room.define_singleton_method(:status) { status }
-      room
-    end.select do |room|
-      if current_reservation_id && room.id == Reservation.find(current_reservation_id).room_id
-        true
-      else
-        room.status == :available
-      end
-    end
-  end  
-
+    
+    # Filter reservations
+    @reservations_in_range = filter_reservations(Reservation.all, exclude_ids: current_reservation_id ? [current_reservation_id] : [])
+    
+    # Filter and sort rooms
+    @rooms = filter_rooms(@rooms, @reservations_in_range, current_reservation_id: current_reservation_id)
+    @rooms = sort_rooms_by_status(@rooms)
+  end
 end

@@ -46,6 +46,9 @@
     ], 
     rows: @rooms, 
     path: ->(room) {
-        room_path(room, params.permit(:start_date, :end_date, :start_time, :end_time))
+        path_params = params.permit(:start_date, :end_date, :start_time, :end_time).to_h
+        path_params[:start_time] ||= Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M')
+        path_params[:end_time] ||= Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M')
+        room_path(room, path_params)
     }
 %>

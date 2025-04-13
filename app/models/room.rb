@@ -31,30 +31,49 @@ class Room < ApplicationRecord
 
     after_create :generate_qr_code
 
-    def current_reservation
-        current_time = Time.current.in_time_zone('Asia/Bangkok')
-        Rails.logger.info("Current time: #{current_time}")
-        current_date = current_time.to_date
-        current_time_str = current_time.strftime("%H:%M")
+    attr_accessor :reference_start_date, :reference_start_time, :reference_end_date, :reference_end_time
 
-        reservations
-            .where('start_date <= ? AND end_date >= ?', current_date, current_date)
-            .where('start_time <= ? AND end_time > ?', current_time_str, current_time_str)
-            .where.not(status: [:canceled, :expired, :completed])
-            .first
+    def set_reference_datetime(date, time, end_date = nil, end_time = nil)
+        @reference_start_date = date
+        @reference_start_time = time
+        @reference_end_date = end_date || date
+        @reference_end_time = end_time || time
     end
 
+
     def next_reservation
-        current_time = Time.current.in_time_zone('Asia/Bangkok')
-        Rails.logger.info("Current time: #{current_time}")
-        current_date = current_time.to_date
-        current_time_str = current_time.strftime("%H:%M")
+        # Use the provided date and time parameters if available, otherwise use current time
+        start_date = @reference_start_date || Time.current.in_time_zone('Asia/Bangkok').to_date
+        start_time = @reference_start_time || Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
+        end_date = @reference_end_date || start_date
+        end_time = @reference_end_time || start_time
+        
+        Rails.logger.info("Reference start date: #{start_date}, Reference start time: #{start_time}")
+        Rails.logger.info("Reference end date: #{end_date}, Reference end time: #{end_time}")
 
         reservations
-            .where('(start_date > ?) OR (end_date > ?) OR  (start_date = ? AND start_time > ?)', current_date, current_date, current_date, current_time_str)
+            .where('(start_date > ?) OR (end_date > ?) OR (start_date = ? AND start_time > ?)', start_date, start_date, start_date, start_time)
             .where.not(status: [:canceled, :expired])
             .order(start_date: :asc, start_time: :asc)
             .first
+    end
+
+    def current_reservation
+        if @current_reservation
+            @current_reservation
+        elsif reservations_in_range
+            reservations_in_range.where.not(status: [:canceled, :expired, :completed]).first
+        else
+            # Fallback to current time if no date range is specified
+            start_date = Time.current.in_time_zone('Asia/Bangkok').to_date
+            start_time = Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
+            
+            reservations
+                .where('start_date <= ? AND end_date >= ?', start_date, start_date)
+                .where('start_time <= ? AND end_time > ?', start_time, start_time)
+                .where.not(status: [:canceled, :expired, :completed])
+                .first
+        end
     end
 
     private

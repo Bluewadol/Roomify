@@ -11,7 +11,7 @@
             <div class="w-full flex-shrink-0">
                 <div class="grid grid-cols-2 gap-4">
                     <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time].present? ? params[:start_time] : Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M"), label: "Start Time" %>
-                    <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time], label: "End Time" %>
+                    <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time].present? ? params[:end_time] : Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M"), label: "End Time" %>
                 </div>
             </div>
             <div class="flex-grow">
