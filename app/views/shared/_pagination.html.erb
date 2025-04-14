@@ -1,30 +1,31 @@
 <% if collection.respond_to?(:total_pages) %>
-    <div class="flex flex-wrap md:justify-between justify-center items-center space-y-2">
-        <div class="flex items-center space-x-4">
+    <div class="flex flex-wrap justify-end md:justify-between items-center gap-x-4 gap-y-2">
+        <div class="flex items-center space-x-4 w-fit whitespace-nowrap">
             <p class="text-slate-600 dark:text-slate-200 text-sm">
-            Viewing page <strong><%= collection.current_page %></strong> from <strong><%= collection.total_pages %></strong> pages
+                Viewing page <strong><%= collection.current_page %></strong> from <strong><%= collection.total_pages %></strong> pages
             </p>
+
             <% if show_per_page %>
                 <div class="flex items-center space-x-2">
                     <label for="<%= prefix %>_per_page" class="text-sm text-slate-600 dark:text-slate-200">Show:</label>
-                    <select id="<%= prefix %>_per_page" name="<%= prefix %>_per_page" class="form-select text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200" onchange="this.form.submit()">
-                    <% per_page_options.each do |value| %>
+                    <select id="<%= prefix %>_per_page" name="<%= prefix %>_per_page" class="form-select text-sm border-slate-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 min-w-20" onchange="this.form.submit()">
+                        <% per_page_options.each do |value| %>
                         <option value="<%= value %>" <%= 'selected' if collection.limit_value == value %>><%= value %></option>
-                    <% end %>
+                        <% end %>
                     </select>
-                    <span class="text-sm text-slate-600 dark:text-slate-200">per page</span>
+                    <p class="text-sm text-slate-600 dark:text-slate-200">per page</p>
                 </div>
             <% end %>
         </div>
-        <nav aria-label="Page navigation" class="text-slate-500 dark:text-slate-200 md:text-sm text-base font-medium w-auto flex">
-            <ul class="flex flex-wrap items-center justify-center w-auto divide-x divide-slate-300 shadow-sm dark:divide-slate-600">
-            <li class="flex justify-start items-center">
+        <nav aria-label="Page navigation" class="h-[38px] text-slate-500 dark:text-slate-200 md:text-sm text-base font-medium w-fit flex">
+            <ul class="h-[38px] flex flex-wrap items-center justify-center w-auto divide-x divide-slate-300 shadow-sm dark:divide-slate-600 ">
+            <li class="h-[38px] flex justify-start items-center">
                 <% 
                 page_params = request.query_parameters.to_h
                 page_params["#{prefix}_page"] = collection.prev_page
                 %>
                 <%= link_to path_helper.call(collection.prev_page, page_params), 
-                    class: "bg-white inline-flex justify-center items-center md:py-2 py-[.63rem] px-2 rounded-l hover:bg-slate-50/50 group hover:text-primary-600 md:w-auto w-full border-y border-l border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600",
+                    class: "h-[38px] bg-white inline-flex justify-center items-center md:py-2 py-[.63rem] px-2 rounded-l hover:bg-slate-50/50 group hover:text-primary-600 md:w-auto w-full border-y border-l border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600",
                     disabled: collection.first_page? do %>
                 <%= icon "arrow-small-left", class: "w-5 h-5 text-slate-400 group-hover:text-primary-500 dark:group-hover:text-slate-200", title: "Previous" %>
                 <% end %>
@@ -38,26 +39,26 @@
                 <% if page_num == collection.current_page %>
                 <li>
                     <%= link_to page_num, path_helper.call(page_num, page_params), 
-                        class: "inline-flex items-center py-2 px-4 bg-primary-600 text-white hover:bg-primary-700 border-y border-primary-600 hover:border-primary-700 shadow-inner dark:hover:bg-primary-500" %>
+                        class: "h-[38px] inline-flex items-center py-2 px-4 bg-primary-600 text-white hover:bg-primary-700 border-y border-primary-600 hover:border-primary-700 shadow-inner dark:hover:bg-primary-500" %>
                 </li>
                 <% elsif page_num == 1 || page_num == collection.total_pages || (page_num >= collection.current_page - 1 && page_num <= collection.current_page + 1) %>
                 <li>
                     <%= link_to page_num, path_helper.call(page_num, page_params), 
-                        class: "bg-white inline-flex items-center py-2 px-4 border-y border-slate-300 hover:bg-slate-50/50 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600" %>
+                        class: "h-[38px] bg-white inline-flex items-center py-2 px-4 border-y border-slate-300 hover:bg-slate-50/50 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600" %>
                 </li>
                 <% elsif page_num == collection.current_page - 2 || page_num == collection.current_page + 2 %>
-                <li class="md:block hidden">
+                <li class="h-[38px] md:block hidden">
                     <span class="bg-white inline-flex items-center py-2 px-3 border-y border-slate-300 select-none pointer-events-none hover:bg-slate-50/50 dark:bg-slate-800 dark:border-slate-600">&hellip;</span>
                 </li>
                 <% end %>
             <% end %>
-            <li class="flex justify-end items-center">
+            <li class="flex justify-end items-center h-[38px]">
                 <% 
                 page_params = request.query_parameters.to_h
                 page_params["#{prefix}_page"] = collection.next_page
                 %>
                 <%= link_to path_helper.call(collection.next_page, page_params), 
-                    class: "bg-white inline-flex justify-center items-center md:py-2 py-[.63rem] px-2 rounded-r hover:bg-slate-50/50 group hover:text-primary-600 md:w-auto w-full border-y border-r border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600",
+                    class: "h-[38px] bg-white inline-flex justify-center items-center md:py-2 py-[.63rem] px-2 rounded-r hover:bg-slate-50/50 group hover:text-primary-600 md:w-auto w-full border-y border-r border-slate-300 dark:bg-slate-800 dark:hover:bg-slate-700 dark:border-slate-600",
                     disabled: collection.last_page? do %>
                 <%= icon "arrow-small-right", class: "w-5 h-5 text-slate-400 group-hover:text-primary-500 dark:group-hover:text-slate-200", title: "Next" %>
                 <% end %>
