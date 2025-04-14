@@ -10,12 +10,19 @@ class User::ReservationsController < ApplicationController
       .where('user_id = ? OR id IN (SELECT reservation_id FROM reservation_members WHERE user_id = ?)', 
              current_user.id, current_user.id)
     
+    # Add pagination for upcoming reservations
+    upcoming_per_page = params[:upcoming_per_page].present? ? params[:upcoming_per_page].to_i : 5
     @upcoming_reservations = @reservations
       .where(status: [:pending, :waiting_check_in])
       .order(start_date: :desc, start_time: :desc)
+    @upcoming_reservations = Kaminari.paginate_array(@upcoming_reservations).page(params[:upcoming_page]).per(upcoming_per_page)
+    
+    # Add pagination for past reservations
+    past_per_page = params[:past_per_page].present? ? params[:past_per_page].to_i : 10
     @past_reservations = @reservations
       .where.not(status: [:pending, :waiting_check_in])
       .order(start_date: :desc, start_time: :desc)
+    @past_reservations = Kaminari.paginate_array(@past_reservations).page(params[:past_page]).per(past_per_page)
   end  
 
   def show; end

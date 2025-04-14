@@ -76,3 +76,5 @@ gem 'rqrcode'
 
 gem 'friendly_id', '~> 5.4.0'
 
+gem 'kaminari'
+

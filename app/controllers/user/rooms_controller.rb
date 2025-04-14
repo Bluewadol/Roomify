@@ -17,6 +17,10 @@ class User::RoomsController < ApplicationController
     @rooms = filter_rooms(@rooms, @reservations_in_range)
     @rooms = sort_rooms_by_status(@rooms)
     
+    # Add pagination with custom per_page value
+    per_page = params[:room_per_page].present? ? params[:room_per_page].to_i : 5
+    @rooms = Kaminari.paginate_array(@rooms).page(params[:room_page]).per(per_page)
+    
     @room_status = Room.statuses.keys 
   end
 
