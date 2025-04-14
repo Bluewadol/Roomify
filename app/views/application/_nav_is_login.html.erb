@@ -140,7 +140,7 @@
                                 <% if current_user.has_role?(:admin) %>
                                     <%= dropdown_item "cog-6-tooth", "Management", admin_rooms_path, data_testid: "nav-my-management-btn" %>
                                 <% end %>
-                                <%= dropdown_item "user-circle", "Profile", profile_index_path, data_testid: "nav-my-profile-btn" %>
+                                <%= dropdown_item "user-circle", "Account Settings", settings_account_path, data_testid: "nav-my-account-btn" %>
                                 <%= dropdown_item "arrow-right-on-rectangle", "Sign Out", destroy_user_session_path, method: :delete, data_testid: "nav-sign-out-btn" %>
                             </div>
                         </li>

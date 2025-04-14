@@ -1,0 +1,67 @@
+<div class="container mx-auto p-6">
+    <div class="max-w-4xl mx-auto rounded-md gap-2 bg-white p-6 dark:bg-slate-800 dark:text-white">
+        <%= render "shared/typography", heading: "Account" %>
+        <div class="my-6">
+            <%= render "shared/typography", sub_heading: "Profile Information" %>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">This information will be displayed publicly.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
+            <div class="flex items-center sm:col-span-2 gap-4">
+                <div class="form-group flex flex-col gap-2 min-w-[100px]">
+                    <label class="form-label">Avatar</label>
+                    <div class="flex items-center w-full gap-4">
+                        <%= avatar_tag(@user, size: 100) %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Name</label>
+                <div class="relative">
+                    <div class="form-input bg-neutral-50 dark:bg-neutral-800">
+                        <%= @user.name %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Phone Number</label>
+                <div class="relative">
+                    <div class="form-input bg-neutral-50 dark:bg-neutral-800">
+                        <%= @user.phone_number %>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="py-6 border-t border-neutral-200 dark:border-neutral-700">
+            <%= render "shared/typography", sub_heading: "Security Settings" %>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">Your account security information.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
+            <div class="form-group">
+                <label class="form-label">Email</label>
+                <div class="relative">
+                    <div class="form-input bg-neutral-50 dark:bg-neutral-800">
+                        <%= @user.email %>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <div class="relative">
+                    <div class="form-input bg-neutral-50 dark:bg-neutral-800">
+                        ••••••••
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex items-center justify-end space-x-4 pt-6 border-t border-neutral-200 dark:border-neutral-700">
+            <%= link_to "Edit Account", settings_account_path, class: "btn btn-primary" %>
+        </div>
+    </div>
+</div>

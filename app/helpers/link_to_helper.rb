@@ -3,5 +3,5 @@ module LinkToHelper
         link_to path, class: css_class do
             text
         end
-     end
+    end
 end

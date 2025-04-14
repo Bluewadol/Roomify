@@ -39,7 +39,9 @@ Rails.application.routes.draw do
     resources :reservations, only: [:new, :create]
   end
 
-  resources :profile, only: [:index, :edit, :update], controller: 'user/profile'
+  resource :account, only: [:show, :update], controller: 'user/account' do
+    get 'settings', to: 'user/account#edit', as: :settings
+  end
 
   if Rails.env.development?
     mount Railsui::Engine, at: "/railsui"

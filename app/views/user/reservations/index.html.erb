@@ -3,9 +3,9 @@
         <%= render "shared/typography", heading: "My Reservation" %>
     </div>
     <div class="flex flex-col gap-6">
-        <div class="flex flex-col rounded-md gap-2 bg-white p-6 dark:bg-slate-800 dark:text-white shadow-md w-full">
+        <div class="flex flex-col rounded-md bg-white p-6 dark:bg-slate-800 dark:text-white shadow-md w-full">
             <div class="flex justify-between items-center mb-2">
-                <%= render "shared/typography", semi_heading: "Upcoming Reservations" %>
+                <%= render "shared/typography", sub_heading: "Upcoming Reservations" %>
                 <%= link_to "New Reservation", new_reservation_path, class: "btn btn-primary" %>
             </div>
             <%= render "user/reservations/component/table", reservation: @upcoming_reservations, upcoming: true %>
@@ -20,9 +20,9 @@
                 <% end %>
             </div>
         </div>
-        <div class="flex flex-col rounded-md gap-2 bg-white p-6 dark:bg-slate-800 dark:text-white shadow-md w-full">
+        <div class="flex flex-col rounded-md bg-white p-6 dark:bg-slate-800 dark:text-white shadow-md w-full">
             <div class="flex justify-between items-center mb-2">
-                <%= render "shared/typography", semi_heading: "Past Reservations" %>
+                <%= render "shared/typography", sub_heading: "Past Reservations" %>
             </div>
             <%= render "user/reservations/component/table", reservation: @past_reservations, upcoming: false %>
             <div class="mt-4">

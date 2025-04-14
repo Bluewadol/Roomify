@@ -2,7 +2,7 @@
     <%= tag.thead do %>
         <%= tag.tr do %>
             <% columns.each do |column| %>
-                <%= tag.th column[:header], scope: "col", class: "text-left text-lg p-3 border-b-2 border-slate-200 dark:border-slate-700/80" %>
+                <%= tag.th column[:header], scope: "col", class: "text-left text-lg p-3 font-semibold text-gray-800 dark:text-gray-200 border-b-2 border-slate-200 dark:border-slate-700/80" %>
             <% end %>
         <% end %>
     <% end %>

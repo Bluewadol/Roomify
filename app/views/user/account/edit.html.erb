@@ -1,0 +1,100 @@
+<div class="container mx-auto p-6">
+    <div class="max-w-4xl mx-auto rounded-md gap-2 bg-white p-6 dark:bg-slate-800 dark:text-white">
+        <%= render "shared/typography", heading: "Account Settings" %>
+        <div class="my-6">
+            <%= render "shared/typography", sub_heading: "Profile Information" %>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">This information will be displayed publicly.</p>
+        </div>
+
+        <%= form_for @user, url: account_path, method: :patch, html: { class: "space-y-6", multipart: true } do |f| %>
+            <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
+                <div class="flex items-center sm:col-span-2 gap-4">
+                    <div class="form-group flex flex-col gap-2 min-w-[100px]">
+                        <%= f.label :avatar, class: "form-label" %>
+                        <div class="flex items-center w-full gap-4">
+                            <%= avatar_tag(@user, size: 100, preview: true, form: f) %>
+                        </div>
+                        <%= field_error_tag(@user, :avatar) %>
+                    </div>
+                    <%= f.file_field :avatar,
+                        class: "form-file",
+                        id: "avatar-input",
+                        accept: "image/*",
+                        data: {
+                            controller: "avatar-preview",
+                            action: "change->avatar-preview#preview"
+                        } %>
+                </div>
+
+                <div class="form-group">
+                    <%= f.label :name, class: "form-label" %>
+                    <div class="relative">
+                        <%= f.text_field :name, class: input_class(@user, :name), autocomplete: "name" %>
+                        <%= error_icon(@user, :name) %>
+                    </div>
+                    <%= field_error_tag(@user, :name) %>
+                </div>
+
+                <div class="form-group">
+                    <%= f.label :phone_number, class: "form-label" %>
+                    <div class="relative">
+                        <%= f.telephone_field :phone_number, class: input_class(@user, :phone_number), autocomplete: "tel" %>
+                        <%= error_icon(@user, :phone_number) %>
+                    </div>
+                        <%= field_error_tag(@user, :phone_number) %>
+                </div>
+            </div>
+
+           
+            <div class="py-6 border-t border-neutral-200 dark:border-neutral-700">
+                <%= render "shared/typography", sub_heading: "Security Settings" %>
+                <p class="text-sm text-neutral-600 dark:text-neutral-400">Update your password and security settings.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <div class="relative">
+                        <div class="form-input bg-neutral-50 dark:bg-neutral-800">
+                            <%= @user.email %>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <%= f.label :password, class: "form-label" %>
+                    <div class="relative">
+                        <%= f.password_field :password, class: input_class(@user, :password), autocomplete: "new-password" %>
+                        <%= error_icon(@user, :password) %>
+                    </div>
+                    <p class="text-xs text-neutral-700 dark:text-neutral-400 mt-1">Leave blank if you don't want to change it</p>
+                    <p class="text-xs text-neutral-700 dark:text-neutral-400 mt-1">must include at least one uppercase letter, one lowercase letter, one digit, and one special character (!@#$%^&*)</p>
+                    <%= field_error_tag(@user, :password) %>
+                </div>
+
+                <div class="form-group">
+                    <%= f.label :password_confirmation, class: "form-label" %>
+                    <div class="relative">
+                        <%= f.password_field :password_confirmation, class: input_class(@user, :password_confirmation), autocomplete: "new-password" %>
+                        <%= error_icon(@user, :password_confirmation) %>
+                    </div>
+                    <%= field_error_tag(@user, :password_confirmation) %>
+                </div>
+
+                <div class="form-group">
+                    <%= f.label :current_password, class: "form-label" %>
+                    <div class="relative">
+                        <%= f.password_field :current_password, class: input_class(@user, :current_password), autocomplete: "current-password" %>
+                        <%= error_icon(@user, :current_password) %>
+                    </div>
+                    <p class="text-xs text-neutral-700 dark:text-neutral-400 mt-1">Your current password is required to update your account.</p>
+                    <%= field_error_tag(@user, :current_password) %>
+                </div>
+            </div> -->
+
+            <div class="flex items-center justify-end space-x-4 pt-6 border-t border-neutral-200 dark:border-neutral-700">
+                <%= link_to "Cancel", account_path, class: "btn btn-white" %>
+                <%= f.submit "Update Account", class: "btn btn-primary", data: { disable_with: "Updating..." } %>
+            </div>
+        <% end %>
+    </div>
+</div>
