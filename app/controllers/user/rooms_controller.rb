@@ -34,6 +34,10 @@ class User::RoomsController < ApplicationController
     # Determine room status
     status = determine_room_status(@room, @reservations_in_range)
     @room.assign_attributes(status: status)
+    
+    # Paginate reservations
+    per_page = params[:reservation_per_page].present? ? params[:reservation_per_page].to_i : 5
+    @reservations = @room.reservations.order(updated_at: :desc).page(params[:reservation_page]).per(per_page)
     @room_status = Room.statuses.keys
   end
 

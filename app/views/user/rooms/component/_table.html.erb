@@ -47,10 +47,8 @@
     rows: @rooms, 
     path: ->(room) {
         path_params = params.permit(:start_date, :end_date, :start_time, :end_time).to_h
-        Rails.logger.info("path_params: #{path_params}")
         path_params[:start_time] = Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M') if path_params[:start_time].blank?
         path_params[:end_time] = Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M') if path_params[:end_time].blank?
-        Rails.logger.info("path_params: #{path_params}")
         room_path(room, path_params)
     }
 %>

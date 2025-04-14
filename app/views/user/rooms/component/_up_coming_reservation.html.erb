@@ -1,38 +1,48 @@
 <div class="flex flex-col bg-white gap-2 rounded-lg p-4 shadow-md h-fit">
     <%= render "shared/typography", sub_heading: "Upcoming Bookings" %>
-    <% if @room.reservations.any? %>
-        <% @room.reservations.order(updated_at: :desc).each do |reservation| %>
-            <%= link_to reservation_path(reservation), class: "flex gap-2 border border-gray-300 rounded-md p-4 mb-2 justify-between items-center hover:bg-gray-50 transition-colors" do %>
-                <div class="flex flex-col gap-2 items-center flex-grow">
-                    <div class="flex justify-between items-center flex-grow w-full">
-                        <div class="flex gap-2 items-center">
-                            <%= avatar_tag(reservation.user, size: 40) %>
-                            <%= render "shared/typography", sub_heading: reservation.user.name.present? ? reservation.user.name : reservation.user.email %>
-                            <% if reservation.user.phone_number.present? %>
-                                <div class="flex gap-1 items-center mb-1">
-                                    <%= icon('phone-arrow-up-right', class: 'size-3 text-gray-500') %>
-                                    <%= render "shared/typography", sub_body: reservation.user.phone_number %>
-                                </div>
-                            <% end %>
+    <% if @reservations.any? %>
+        <%= form_with(url: room_path(@room), method: :get, local: true) do |f| %>
+            <% @reservations.each do |reservation| %>
+                <%= link_to reservation_path(reservation), class: "flex gap-2 border border-gray-300 rounded-md p-4 mb-2 justify-between items-center hover:bg-gray-50 transition-colors" do %>
+                    <div class="flex flex-col gap-2 items-center flex-grow">
+                        <div class="flex justify-between items-center flex-grow w-full">
+                            <div class="flex gap-2 items-center">
+                                <%= avatar_tag(reservation.user, size: 40) %>
+                                <%= render "shared/typography", sub_heading: reservation.user.name.present? ? reservation.user.name : reservation.user.email %>
+                                <% if reservation.user.phone_number.present? %>
+                                    <div class="flex gap-1 items-center mb-1">
+                                        <%= icon('phone-arrow-up-right', class: 'size-3 text-gray-500') %>
+                                        <%= render "shared/typography", sub_body: reservation.user.phone_number %>
+                                    </div>
+                                <% end %>
+                            </div>
+                            <%= status_badge(reservation.status) %>
                         </div>
-                        <%= status_badge(reservation.status) %>
-                    </div>
-                    <div class="flex justify-between items-center text-sm text-gray-400 w-full px-1">
-                        <div class="flex text-sm text-gray-500 gap-2">
-                            <%= icon('calendar-days', class: 'size-5') %>
-                            <% if reservation.start_date == reservation.end_date %>
-                                <%= format_datetime(reservation.start_date) %>
-                            <% else %>
-                                <%= format_datetime(reservation.start_date) %> - <%= format_datetime(reservation.end_date) %>
-                            <% end %>
-                            <span>•</span>
-                            <%= icon('clock', class: 'size-5') %>
-                            <%= format_datetime(reservation.start_time, time_only: true) %> - <%= format_datetime(reservation.end_time, time_only: true) %>
+                        <div class="flex justify-between items-center text-sm text-gray-400 w-full px-1">
+                            <div class="flex text-sm text-gray-500 gap-2">
+                                <%= icon('calendar-days', class: 'size-5') %>
+                                <% if reservation.start_date == reservation.end_date %>
+                                    <%= format_datetime(reservation.start_date) %>
+                                <% else %>
+                                    <%= format_datetime(reservation.start_date) %> - <%= format_datetime(reservation.end_date) %>
+                                <% end %>
+                                <span>•</span>
+                                <%= icon('clock', class: 'size-5') %>
+                                <%= format_datetime(reservation.start_time, time_only: true) %> - <%= format_datetime(reservation.end_time, time_only: true) %>
+                            </div>
+                            <span>In <%= time_elapsed(reservation.updated_at) %></span>
                         </div>
-                        <span>In <%= time_elapsed(reservation.updated_at) %></span>
                     </div>
-                </div>
+                <% end %>
             <% end %>
+            <div class="mt-4">
+                <%= render "shared/pagination", 
+                    collection: @reservations, 
+                    prefix: "reservation", 
+                    path_helper: ->(page, params) { room_path(@room, params) },
+                    show_per_page: true,
+                    per_page_options: [5, 10, 25, 50, 100] %>
+            </div>
         <% end %>
     <% else %>
         <div class="flex justify-center items-center text-gray-500 text-sm p-4">
