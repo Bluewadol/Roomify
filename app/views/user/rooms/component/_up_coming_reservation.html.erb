@@ -7,7 +7,7 @@
                     <div class="flex flex-col gap-2 items-center flex-grow">
                         <div class="flex justify-between items-center flex-grow w-full">
                             <div class="flex gap-2 items-center">
-                                <%= avatar_tag(reservation.user, size: 40) %>
+                                <%= render "shared/user_info_modal", user: reservation.user, size: 38 %>
                                 <%= render "shared/typography", sub_heading: reservation.user.name.present? ? reservation.user.name : reservation.user.email %>
                                 <% if reservation.user.phone_number.present? %>
                                     <div class="flex gap-1 items-center mb-1">

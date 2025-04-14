@@ -3,10 +3,12 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   has_one_attached :avatar
-  validates :name, presence: true, if: -> { name_changed? }
-  validates :phone_number, presence: true, uniqueness: true, if: -> { phone_number_changed? }
-  # validate :validate_avatar_file_type, if: -> { avatar.attached? }
-  # validate :validate_avatar_file_size, if: -> { avatar.attached? }
+  validates :name, presence: true, length: { maximum: 30 }, if: -> { name_changed? }
+  validates :phone_number, presence: false, uniqueness: true, 
+    format: { with: /\A\d{10}\z/, message: "must be a 10-digit number" }, 
+    if: -> { phone_number_changed? }
+  validate :validate_avatar_file_type, if: -> { avatar.attached? }
+  validate :validate_avatar_file_size, if: -> { avatar.attached? }
 
   has_many :reservations
   has_many :reservation_members

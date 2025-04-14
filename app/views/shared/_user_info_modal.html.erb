@@ -1,0 +1,51 @@
+<div data-controller="railsui-modal" class="inline-block" onclick="event.stopPropagation();">
+    <%= avatar_tag(user, size: local_assigns[:size] || 40, modal: true) %>
+
+    <div class="hidden fixed inset-0 z-50 overflow-y-auto"
+        aria-labelledby="user-info-modal-title"
+        aria-modal="true"
+        data-railsui-modal-target="container"
+        role="dialog">
+        <div class="h-screen w-full relative flex items-center justify-center">
+            <div class="hidden rounded mx-auto shadow-xl max-w-lg bg-white m-1 p-8 origin-bottom dark:bg-slate-700 dark:text-slate-200"
+                data-railsui-modal-target="content"
+                data-action="keyup@window->railsui-modal#closeWithEsc"
+                data-transition-enter-active="transition ease-out duration-300"
+                data-transition-enter-from="transform opacity-0 scale-95"
+                data-transition-enter-to="transform opacity-100 scale-100"
+                data-transition-leave-active="transition ease-in duration-300"
+                data-transition-leave-from="transform opacity-100 scale-100"
+                data-transition-leave-to="transform opacity-0 scale-95">
+
+            <!-- Header: Avatar + Name/Email -->
+            <div class="flex items-center space-x-4 mb-2">
+                <%= avatar_tag(user, size: 100) %>
+                <div class="flex-1">
+                    <h3 id="user-info-modal-title" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+                        <%= user.name %>
+                    </h3>
+                    <p class="text-gray-600 dark:text-gray-300 flex gap-2 items-center"><%= icon('envelope', class: 'size-5 text-gray-500') %><%= user.email %></p>
+                </div>
+            </div>
+
+            <!-- Body: User info in plain text -->
+            <div class="prose prose-slate dark:prose-invert mb-2">
+                <% if user.phone_number.present? %>
+                    <div class="py-3">
+                        <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 flex gap-2 items-center"> <%= icon('phone-arrow-up-right', class: 'size-3 text-gray-500') %> Phone</dt>
+                        <dd class="mt-1 text-lg text-gray-900 dark:text-white"><%= user.phone_number %></dd>
+                    </div>
+                <% end %>
+                </dl>
+            </div>
+
+            <div class="flex justify-end mt-6">
+                <button type="button" class="btn btn-white" data-action="click->railsui-modal#close">
+                    Close
+                </button>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>

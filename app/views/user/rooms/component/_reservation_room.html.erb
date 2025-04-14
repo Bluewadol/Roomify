@@ -16,7 +16,7 @@
                 <div class="flex gap-2 text-sm items-center">
                     <%= icon('user', class: 'size-5') %>
                     <span>Reserved by : </span>
-                    <span><%= avatar_tag(@current_reservation.user, size: 26)%></span>
+                    <span><%= render "shared/user_info_modal", user: @current_reservation.user %></span>
                     <span><%= @current_reservation.user.name.present? ? @current_reservation.user.name : @current_reservation.user.email %></span>
                 </div>
                 <div class="flex gap-2 text-sm items-center">
@@ -24,7 +24,7 @@
                     <span>Member : </span>
                     <% if @current_reservation.members.present? %>
                         <% @current_reservation.members.each do |member| %>
-                            <span><%= avatar_tag(member, size: 26) %></span>
+                            <span><%= render "shared/user_info_modal", user: member %></span>
                             <span><%= member.name.present? ? member.name : member.email %></span>
                         <% end %>
                     <% else %>
@@ -52,7 +52,7 @@
                 <div class="flex gap-2 text-sm items-center justify-between text-gray-500 flex-wrap">
                     <%= render "shared/typography", sub_body: "update at : #{format_datetime(@current_reservation.updated_at)}" %>
                     <div class="flex gap-2 text-sm items-center">
-                        <span><%= avatar_tag(@current_reservation.updated_by, size: 26)%></span>
+                        <span><%= render "shared/user_info_modal", user: @current_reservation.updated_by %></span>
                         <span><%= @current_reservation.updated_by ? (@current_reservation.updated_by.name.present? ? @current_reservation.updated_by.name : @current_reservation.updated_by.email) : "Unknown" %></span>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                     <div class="flex gap-2 text-sm items-center">
                         <%= icon('user', class: 'size-5') %>
                         <span>Reserved by : </span>
-                        <span><%= avatar_tag(@room.next_reservation.user, size: 26)%></span>
+                        <span><%= render "shared/user_info_modal", user: @room.next_reservation.user %></span>
                         <span><%= @room.next_reservation.user.name.present? ? @room.next_reservation.user.name : @room.next_reservation.user.email %></span>
                     </div>
                     <div class="flex gap-2 text-sm items-center">
@@ -103,7 +103,7 @@
                         <span>Member : </span>
                         <% if @room.next_reservation.members.present? %>
                             <% @room.next_reservation.members.each do |member| %>
-                                <span><%= avatar_tag(member, size: 26) %></span>
+                                <span><%= render "shared/user_info_modal", user: member %></span>
                                 <span><%= member.name.present? ? member.name : member.email %></span>
                             <% end %>
                         <% else %>
@@ -131,7 +131,7 @@
                     <div class="flex gap-2 text-sm items-center justify-between text-gray-500 flex-wrap w-full">
                         <%= render "shared/typography", sub_body: "update at : #{ format_datetime(@room.next_reservation.updated_at)}" %>
                         <div class="flex gap-2 text-sm items-center">
-                            <span><%= avatar_tag(@room.next_reservation.updated_by, size: 26)%></span>
+                            <span><%= render "shared/user_info_modal", user: @room.next_reservation.updated_by %></span>
                             <span><%= @room.next_reservation.updated_by ? (@room.next_reservation.updated_by.name.present? ? @room.next_reservation.updated_by.name : @room.next_reservation.updated_by.email) : "Unknown" %></span>
                         </div>
                     </div>
