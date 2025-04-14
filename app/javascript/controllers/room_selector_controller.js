@@ -10,7 +10,7 @@ export default class extends Controller {
 
     connect() {
         this.isSubmitting = false;
-        const roomIdFromParams = new URLSearchParams(window.location.search).get('room_id');
+        
 
         // Set today's date and current time in Bangkok timezone if not already set or if empty
         if (this.hasStartDateFieldTarget && (!this.startDateFieldTarget.value || this.startDateFieldTarget.value.trim() === '')) {
@@ -37,6 +37,8 @@ export default class extends Controller {
             const minutes = bangkokTime.getMinutes().toString().padStart(2, '0');
             this.endTimeFieldTarget.value = `${hours}:${minutes}`;
         }
+
+        const roomIdFromParams = new URLSearchParams(window.location.search).get('room_id');
 
         if (roomIdFromParams) {
             const roomElement = document.querySelector(`[data-room-id="${roomIdFromParams}"]`);
@@ -110,6 +112,15 @@ export default class extends Controller {
         }        
 
         this.updateBookingSummary();
+    }
+
+    updateValue() {
+        const isReservationForm = window.location.pathname.match(/\/reservations\/(new|\d+\/edit)/);
+        const isReservationList = window.location.pathname === '/reservations';
+        
+        if (!isReservationForm && !isReservationList) {
+            localStorage.removeItem("reservation_description");
+        }
     }
 
     disconnect() {

@@ -4,8 +4,6 @@ export default class extends Controller {
   static targets = ["form", "startDateField", "endDateField"];
 
   connect() {
-    // เรียก updateUrlParams เมื่อฟอร์มถูกโหลด
-    console.log("Stimulus controller connected");
     
     // Check if start_date and end_date are not set in URL
     const urlParams = new URLSearchParams(window.location.search);
@@ -20,7 +18,6 @@ export default class extends Controller {
         this.endDateFieldTarget.value = today;
       }
       
-      // Submit the form
       this.formTarget.submit();
     } else {
       this.updateUrlParams();
@@ -48,13 +45,11 @@ export default class extends Controller {
       }
     }
 
-    // อัปเดต URL
     window.history.pushState({}, "", newUrl);
   }
 
   handleInputChange(event) {
     this.updateUrlParams();
-    console.log("Input handleInputChange");
 
     this.formTarget.submit();
   }

@@ -25,7 +25,7 @@ module ReservationHelper
     Rails.logger.info("next_end_time: #{next_end_time}")
     
     # If start_date is within the next reservation date range
-    if start_date < next_start_date && end_date < next_start_date
+    if start_date <= next_start_date && end_date <= next_start_date
         next_start_date
     elsif (start_date < next_start_date && end_date >= next_start_date && end_date <= next_end_date) || (start_date >= next_start_date && start_date <= next_end_date && end_date <= next_end_date) || (start_date >= next_start_date && start_date <= next_end_date && end_date > next_end_date)
         if !start_time.nil?

@@ -106,10 +106,11 @@ class User::ReservationsController < ApplicationController
   end  
 
   def set_filter_params
-    @start_date = params[:start_date].presence
-    @end_date = params[:end_date].presence
-    @start_time = params[:start_time].presence
-    @end_time = params[:end_time].presence
+    Time.zone = 'Bangkok'
+    @start_date = params[:start_date].presence || Time.zone.today.to_s
+    @end_date   = params[:end_date].presence   || Time.zone.today.to_s
+    @start_time = params[:start_time].presence || Time.zone.now.strftime("%H:%M")
+    @end_time   = params[:end_time].presence   || Time.zone.now.strftime("%H:%M")
   end
 
   def set_rooms(current_reservation_id = nil)

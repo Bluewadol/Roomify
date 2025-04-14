@@ -1,21 +1,27 @@
 <div class="w-full flex flex-col bg-white gap-4 rounded-lg p-4 shadow-md min-h-fit">
     <%= render "shared/typography", sub_heading: "Book This Room" %>
-    <%= form_with url: room_path(@room), method: :get, local: true do |form| %>
+    <%= form_with url: room_path(@room), method: :get, local: true, data: { controller: "room-selector", action: "change->room-selector#submitForm" } do |form| %>
         <div class="flex flex-col h-full">
             <div class="w-full flex-shrink-0">
                 <div class="grid grid-cols-2 gap-4">
-                    <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date].present? ? params[:start_date] : Date.today, label: "Start Date" %>
-                    <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date].present? ? params[:end_date] : Date.today, label: "End Date" %>
+                    <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date].presence, label: "Start Date", data: { room_selector_target: "startDateField" } %>
+                    <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date].presence, label: "End Date", data: { room_selector_target: "endDateField" } %>
                 </div>
             </div>
             <div class="w-full flex-shrink-0">
                 <div class="grid grid-cols-2 gap-4">
-                    <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time].present? ? params[:start_time] : Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M"), label: "Start Time" %>
-                    <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time].present? ? params[:end_time] : Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M"), label: "End Time" %>
+                    <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time].presence, label: "Start Time", data: { room_selector_target: "startTimeField" } %>
+                    <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time].presence, label: "End Time", data: { room_selector_target: "endTimeField" } %>
                 </div>
             </div>
             <div class="flex-grow">
-                <%= link_to 'Book Now', new_reservation_path(room_id: @room.id, start_date: params[:start_date].present? ? params[:start_date] : Date.today, end_date: params[:end_date].present? ? params[:end_date] : Date.today, start_time: params[:start_time], end_time: params[:end_time]), class: 'btn btn-primary w-full' %>
+                <%= link_to 'Book Now', new_reservation_path(
+                    room_id: @room.id,
+                    start_date: params[:start_date].presence || Date.today,
+                    end_date: params[:end_date].presence || Date.today,
+                    start_time: params[:start_time].presence || Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M'),
+                    end_time: params[:end_time].presence || Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M')
+                ), class: 'btn btn-primary w-full' %>
             </div>
         </div>
     <% end %>

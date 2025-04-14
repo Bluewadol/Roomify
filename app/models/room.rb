@@ -52,7 +52,7 @@ class Room < ApplicationRecord
         Rails.logger.info("Reference end date: #{end_date}, Reference end time: #{end_time}")
 
         reservations
-            .where('(start_date > ?) OR (end_date > ?) OR (start_date = ? AND start_time > ?)', start_date, start_date, start_date, start_time)
+            .where('(start_date > ?) OR (end_date > ?) OR (start_date = ? AND start_time > ?) OR (end_date = ? AND start_time > ?)', start_date, start_date, start_date, start_time, start_date, start_time)
             .where.not(status: [:canceled, :expired])
             .order(start_date: :asc, start_time: :asc)
             .first
