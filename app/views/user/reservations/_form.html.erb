@@ -2,7 +2,7 @@
     <div class="flex justify-between items-center flex-wrap">
         <%= render "shared/typography", heading: @reservation.persisted? ? "Edit Reservation" : "New Reservation" %>
         <div class="w-full lg:w-1/2 flex-shrink-0">
-            <%= form_with(url: @reservation.persisted? ? edit_reservation_path(@reservation.id) : new_reservation_path, method: :get, local: true, data: { room_selector_target: "filterForm" }) do |filter_form| %>
+            <%= form_with(url: @reservation.persisted? ? edit_reservation_path(@reservation.slug) : new_reservation_path, method: :get, local: true, data: { room_selector_target: "filterForm" }) do |filter_form| %>
                 <%= filter_form.hidden_field :start_date, value: params[:start_date], data: { action: "input->room-selector#syncToFilterForm", room_selector_target: "startDateFilter" } %>
                 <%= filter_form.hidden_field :end_date, value: params[:end_date], data: { action: "input->room-selector#syncToFilterForm", room_selector_target: "endDateFilter" } %>
                 <%= filter_form.hidden_field :start_time, value: params[:start_time], data: { action: "input->room-selector#syncToFilterForm", room_selector_target: "startTimeFilter" } %>
@@ -21,8 +21,15 @@
                         <div class="flex justify-between items-center">
                             <%= render "shared/typography", sub_heading: "Available Rooms" %>
                         </div>
-                        <div class="flex flex-col">
+                        <div class="flex flex-col gap-2">
                             <%= render "user/reservations/component/room_list", rooms: @rooms%>
+                            <%= render "shared/pagination", 
+                                collection: @rooms, 
+                                prefix: "room", 
+                                path_helper: ->(page, params) { @reservation.persisted? ? edit_reservation_path(@reservation.slug) : new_reservation_path(params) },
+                                show_per_page: true,
+                                per_page_options: [5, 10, 25, 50, 100] %>
+                            </div>
                         </div>
                     </div>
                 </div>

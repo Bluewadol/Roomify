@@ -45,8 +45,8 @@
             </div>
         <% end %>
     <% else %>
-        <div class="flex justify-center items-center text-gray-500 text-sm p-4">
-            No upcoming bookings.
-        </div>
+        <%= render "shared/empty_state", 
+            message: "No reservations found." 
+        %>
     <% end %>
 </div>

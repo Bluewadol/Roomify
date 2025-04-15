@@ -23,7 +23,7 @@
                 <%= render "shared/typography", sub_body: "update at : #{format_datetime(@reservation.updated_at)}" %>
                 <div class="flex gap-2 text-sm items-center">
                     <span>by : </span>
-                    <%= render "shared/user_info_modal", user: @reservation.updated_by, size: 26%>
+                    <%= render "shared/user_info_modal", user: @reservation.updated_by, size: 26 %>
                     <span><%= @reservation.updated_by ? (@reservation.updated_by.name.present? ? @reservation.updated_by.name : @reservation.updated_by.email) : "Unknown" %></span>
                 </div>
             </div>

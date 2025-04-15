@@ -4,6 +4,9 @@
             <%= render "shared/carousel", images: @room.images.map { |img| url_for(img) }, alt: "Room Image" %>
         </div>
     <% else %>
-        <p class="text-gray-500">image</p>
+        <%= render "shared/empty_state", 
+                class_name: "text-gray-300", 
+                message: "No images." 
+            %>
     <% end %>
 </div>

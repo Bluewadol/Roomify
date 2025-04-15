@@ -3,7 +3,6 @@
     
     <%= form_with(model: @room, url: @room.persisted? ? admin_room_path(@room) : admin_rooms_path, method: @room.persisted? ? :patch : :post, local: true, html: { class: "space-y-6", multipart: true }) do |f| %>
         <%= error_messages(@room) if @room.errors.any? %>
-
         <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
             <div class="form-group">
                 <%= f.label :name, "Room Name", class: "form-label" %>
@@ -13,7 +12,7 @@
                 </div>
                 <%= field_error_tag(@room, :name) %>
             </div>
-
+            
             <div class="form-group col-span-2">
                 <%= f.label :description, "Room Description", class: "form-label" %>
                 <div class="relative">

@@ -1,0 +1,58 @@
+<div class="flex flex-col gap-2 h-full">
+    <div class="flex items-center justify-between gap-2">
+        <%= render "shared/typography", sub_heading: "Now Status" %>
+        <%= status_badge(@room.status) %>
+    </div>
+    <div class="flex flex-col gap-1.5 bg-red-50 p-3 rounded-lg">
+        <div class="flex justify-between text-sm items-center flex-wrap gap-2">
+            <span class="flex items-center gap-1"> 
+                <span class="font-medium">Reservation ID : </span> 
+                <%= @current_reservation.slug %>
+            </span>
+            <%= status_badge(@current_reservation.status) %>
+        </div>
+        <div class="flex gap-2 text-sm items-center">
+            <%= icon('user', class: 'size-5') %>
+            <span>Reserved by : </span>
+            <%= render "shared/user_info_modal", user: @current_reservation.user, size: 26 %>
+            <span><%= @current_reservation.user.name.present? ? @current_reservation.user.name : @current_reservation.user.email %></span>
+        </div>
+        <div class="flex gap-2 text-sm items-center">
+            <%= icon('user-group', class: 'size-5', variant: :solid) %>
+            <span>Member : </span>
+            <% if @current_reservation.members.present? %>
+                <% @current_reservation.members.each do |member| %>
+                    <%= render "shared/user_info_modal", user: member, size: 26 %>
+                    <span><%= member.name.present? ? member.name : member.email %></span>
+                <% end %>
+            <% else %>
+                <span class="text-gray-500">No member</span>
+            <% end %>
+        </div>
+        <div class="flex gap-2 text-sm">
+            <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
+            <% if @current_reservation.start_date == @current_reservation.end_date %>
+                <%= format_datetime(@current_reservation.start_date) %>
+            <% else %>
+                <%= format_datetime(@current_reservation.start_date) %> - <%= format_datetime(@current_reservation.end_date) %>
+            <% end %>
+        </div>
+        <div class="flex gap-2 text-sm justify-between w-full flex-wrap">
+            <div class="flex gap-2 text-sm">
+                <%= icon('clock', class: 'size-5') %>
+                <%= format_datetime(@current_reservation.start_time, time_only: true) %> - <%= format_datetime(@current_reservation.end_time, time_only: true) %>
+            </div>
+            <%= link_to reservation_path(@current_reservation), class: "text-primary-600 text-md hover:underline focus:outline-none description-toggle-btn cursor-pointer" do %>
+                more detail 
+            <% end %>
+        </div>
+        <hr class="w-full">
+        <div class="flex gap-2 text-sm items-center justify-between text-gray-500 flex-wrap">
+            <%= render "shared/typography", sub_body: "update at : #{format_datetime(@current_reservation.updated_at)}" %>
+            <div class="flex gap-2 text-sm items-center">
+                <%= render "shared/user_info_modal", user: @current_reservation.updated_by, size: 26 %>
+                <span><%= @current_reservation.updated_by ? (@current_reservation.updated_by.name.present? ? @current_reservation.updated_by.name : @current_reservation.updated_by.email) : "Unknown" %></span>
+            </div>
+        </div>
+    </div>
+</div>

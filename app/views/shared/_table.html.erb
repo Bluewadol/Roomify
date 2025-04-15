@@ -21,7 +21,9 @@
         <% else %>
             <%= tag.tr do %>
                 <%= tag.td colspan: columns.length, class: "py-8 text-center text-gray-500" do %>
-                    No data
+                    <%= render "shared/empty_state", 
+                        message: "No data." 
+                    %>
                 <% end %>
             <% end %>
         <% end %>
