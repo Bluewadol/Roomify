@@ -5,7 +5,7 @@ class Room < ApplicationRecord
     friendly_id :name , use: :slugged
 
     has_many :room_amenities, dependent: :destroy
-    accepts_nested_attributes_for :room_amenities, allow_destroy: true, reject_if: :all_blank
+    accepts_nested_attributes_for :room_amenities, allow_destroy: true
 
     has_one_attached :qr_code
 
@@ -23,8 +23,6 @@ class Room < ApplicationRecord
     validates :capacity_max, presence: true, numericality: { only_integer: true, greater_than: 0 }
     validates :description, length: { maximum: 200 } 
     validate :validate_capacity_range
-    # validates :qr_code, presence: true
-    # validate :qr_code_must_be_image
 
     validate :validate_images
     validate :images_count_within_limit
@@ -42,9 +40,7 @@ class Room < ApplicationRecord
         @reference_end_time = end_time || time
     end
 
-
     def next_reservation
-        # Use the provided date and time parameters if available, otherwise use current time
         start_date = @reference_start_date || Time.current.in_time_zone('Asia/Bangkok').to_date
         start_time = @reference_start_time || Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
         end_date = @reference_end_date || start_date
@@ -66,7 +62,6 @@ class Room < ApplicationRecord
         elsif reservations_in_range
             reservations_in_range.where.not(status: [:canceled, :expired, :completed]).first
         else
-            # Fallback to current time if no date range is specified
             start_date = Time.current.in_time_zone('Asia/Bangkok').to_date
             start_time = Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
             
@@ -93,18 +88,13 @@ class Room < ApplicationRecord
         end
     end
 
-    # def qr_code_must_be_image
-    #     return unless qr_code.attached?
-
-    #     if !qr_code.content_type.in?(%w[image/jpeg image/png])
-    #     errors.add(:qr_code, "must be a JPG or PNG image")
-    #     end
-    # end
-
     def validate_images
-        images.each do |image|
+        new_images = images.attachments.select(&:new_record?)
+        return if new_images.blank?
+        
+        new_images.each do |image|
             unless image.content_type.in?(%w[image/jpeg image/png image/webp])
-            errors.add(:images, "ต้องเป็นไฟล์ JPEG, PNG หรือ WebP เท่านั้น")
+            errors.add(:images, "must be a JPEG, PNG, or WebP image")
             end
         end
     end

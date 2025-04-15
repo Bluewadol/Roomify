@@ -4,7 +4,7 @@
     <%= form_with(model: @room, url: @room.persisted? ? admin_room_path(@room) : admin_rooms_path, method: @room.persisted? ? :patch : :post, local: true, html: { class: "space-y-6", multipart: true }) do |f| %>
         <%= error_messages(@room) if @room.errors.any? %>
         <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
-            <div class="form-group">
+            <div class="form-group ">
                 <%= f.label :name, "Room Name", class: "form-label" %>
                 <div class="relative">
                     <%= f.text_field :name, class: input_class(@room, :name), placeholder: "Enter room name" %>
@@ -12,10 +12,10 @@
                 </div>
                 <%= field_error_tag(@room, :name) %>
             </div>
-            <div class="form-group col-span-2">
+            <div class="form-group sm:col-span-2">
                 <%= f.label :description, "Room Description", class: "form-label" %>
                 <div class="relative">
-                    <%= f.text_area :description, class: "form-input min-h-[42px] resize-none overflow-hidden", 
+                    <%= f.text_area :description, class: "form-input min-h-[42px] overflow-hidden", 
                         placeholder: "Enter room description",
                         data: {
                             controller: "auto-resize",
@@ -74,6 +74,7 @@
             <div class="mb-4 flex flex-col gap-4">
                 <%= render "shared/typography", body: "New Uploads" %>
                 <div id="image-upload-container" data-image-upload-target="container" class="flex flex-col gap-4"></div>
+                <%= field_error_tag(@room, :images) %>
             </div>
 
             <button type="button" class="btn btn-secondary mt-6 flex items-center gap-2"
@@ -100,7 +101,7 @@
             <div data-room-amenities-target="container" class="flex flex-col gap-4">
                 <%= f.fields_for :room_amenities do |amenity_form| %>
                     <div class="relative amenity-fields">
-                        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-2">
                             <div class="form-group">
                                 <%= amenity_form.label :amenity_name, "Amenity Name", class: "form-label" %>
                                 <div class="relative">
@@ -115,14 +116,16 @@
                                 <div class="relative flex items-center gap-2">
                                     <%= amenity_form.number_field :quantity, class: input_class(amenity_form.object, :quantity), placeholder: "Enter quantity" %>
                                     <%= error_icon(amenity_form.object, :quantity) %>
-                                    <button type="button"
-                                            class="text-red-500 hover:text-red-600"
-                                            data-action="click->room-amenities#removeField">
+                                   <button type="button"
+                                        class="text-red-500 hover:text-red-600"
+                                        data-action="click->room-amenities#removeField">
+                                        <%= icon('trash', class: 'size-5') %>
                                     </button>
                                 </div>
                                 <%= field_error_tag(amenity_form.object, :quantity) %>
                             </div>
                         </div>
+                        <%= amenity_form.hidden_field :_destroy, class: "amenity-destroy-flag" %>
                     </div>
                 <% end %>
             </div>

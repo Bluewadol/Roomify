@@ -47,6 +47,15 @@ export default class extends Controller {
     }
 
     removeField(event) {
-        event.target.closest('.amenity-fields').remove()
+        const field = event.target.closest('.amenity-fields')
+        const destroyInput = field.querySelector('input[name*="_destroy"]')
+        
+        if (destroyInput) {
+            destroyInput.value = '1'
+            field.classList.add('hidden')
+        } else {
+            field.remove()
+            this.countValue--
+        }
     }
 } 
