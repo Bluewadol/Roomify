@@ -6,15 +6,15 @@
         <div class="flex flex-col rounded-md bg-white p-6 dark:bg-slate-800 dark:text-white shadow-md w-full">
             <div class="flex justify-between items-center mb-2">
                 <%= render "shared/typography", sub_heading: "Upcoming Reservations" %>
-                <%= btn_link_to("New Reservation", new_reservation_path, btn_class: "btn-primary", icon_name: "plus", variant: :solid) %>
+                <%= btn_link_to("New Reservation", new_admin_reservation_path, btn_class: "btn-primary", icon_name: "plus", variant: :solid) %>
             </div>
-            <%= render "user/reservations/component/table", reservation: @upcoming_reservations, upcoming: true %>
+            <%= render "admin/reservations/component/table", reservation: @upcoming_reservations, upcoming: true %>
             <div class="mt-4">
-                <%= form_with(url: reservations_path, method: :get, local: true) do |f| %>
+                <%= form_with(url: admin_reservations_path, method: :get, local: true) do |f| %>
                     <%= render "shared/pagination", 
                         collection: @upcoming_reservations, 
                         prefix: "upcoming", 
-                        path_helper: ->(page, params) { reservations_path(params) },
+                        path_helper: ->(page, params) { admin_reservations_path(params) },
                         show_per_page: true,
                         per_page_options: [5, 10, 25, 50, 100] %>
                 <% end %>
@@ -24,13 +24,13 @@
             <div class="flex justify-between items-center mb-2">
                 <%= render "shared/typography", sub_heading: "Past Reservations" %>
             </div>
-            <%= render "user/reservations/component/table", reservation: @past_reservations, upcoming: false %>
+            <%= render "admin/reservations/component/table", reservation: @past_reservations, upcoming: false %>
             <div class="mt-4">
-                <%= form_with(url: reservations_path, method: :get, local: true) do |f| %>
+                <%= form_with(url: admin_reservations_path, method: :get, local: true) do |f| %>
                     <%= render "shared/pagination", 
                         collection: @past_reservations, 
                         prefix: "past", 
-                        path_helper: ->(page, params) { reservations_path(params) },
+                        path_helper: ->(page, params) { admin_reservations_path(params) },
                         show_per_page: true,
                         per_page_options: [5, 10, 25, 50, 100] %>
                 <% end %>

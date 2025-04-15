@@ -5,6 +5,7 @@ class Room < ApplicationRecord
     friendly_id :name , use: :slugged
 
     has_many :room_amenities, dependent: :destroy
+    accepts_nested_attributes_for :room_amenities, allow_destroy: true, reject_if: :all_blank
 
     has_one_attached :qr_code
 
@@ -25,9 +26,10 @@ class Room < ApplicationRecord
     # validates :qr_code, presence: true
     # validate :qr_code_must_be_image
 
-    validates :images, presence: true
     validate :validate_images
     validate :images_count_within_limit
+    validate :capacity_max_greater_than_min
+    validate :no_duplicate_amenity_names
 
     after_create :generate_qr_code
 
@@ -136,5 +138,30 @@ class Room < ApplicationRecord
     def normalize_name
         self.name = name.strip.gsub(/\s+/, ' ') if name.present?
     end
-    
+
+    def capacity_max_greater_than_min
+        return unless capacity_min.present? && capacity_max.present?
+        if capacity_max < capacity_min
+            errors.add(:capacity_max, "must be greater than or equal to minimum capacity")
+        end
+    end
+
+    def no_duplicate_amenity_names
+        return unless room_amenities.any?
+        
+        amenity_names = room_amenities.map { |amenity| amenity.amenity_name.to_s.downcase.gsub(/\s+/, '') }
+        duplicate_names = amenity_names.select { |name| amenity_names.count(name) > 1 }.uniq
+        
+        if duplicate_names.any?
+            duplicate_names.each do |name|
+                errors.add(:base, "Amenity name '#{name}' is duplicated (ignoring spaces and case)")
+                
+                room_amenities.each do |amenity|
+                    if amenity.amenity_name.to_s.downcase.gsub(/\s+/, '') == name
+                        amenity.errors.add(:amenity_name, "should be unique (ignoring spaces and case)")
+                    end
+                end
+            end
+        end
+    end
 end

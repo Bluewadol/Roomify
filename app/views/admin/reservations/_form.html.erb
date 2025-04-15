@@ -1,65 +1,33 @@
-
-<div class="form-group">
-    <%= form_with(model: @reservation, url: @reservation.persisted? ? admin_room_reservation_path(@reservation.room, @reservation) : new_admin_reservation_path, method: :post, local: true) do |f| %>
-
-        <%= error_messages(@reservation) if @reservation.errors.any? %>
-
-        <div class="mb-4">
-            <%= f.label :room_id, "Select Room", class: "form-label" %>
-            <div class="relative">
-                <%= f.collection_select :room_id, Room.where.not(status: 'unavailable'), :id, :name, { prompt: "Choose a Room" }, class: input_class(@reservation, :room_id) %>
-                <%= error_icon(@reservation, :room_id) %>
-            </div>
-            <%= field_error_tag(@reservation, :room_id) %>
+<div  class="form-group" data-controller="room-selector">
+    <div class="flex justify-between items-center flex-wrap">
+        <%= render "shared/typography", heading: @reservation.persisted? ? "Edit Reservation" : "New Reservation" %>
+        <div class="w-full lg:w-1/2 flex-shrink-0">
+            <%= form_with(url: @reservation.persisted? ? edit_admin_reservation_path(@reservation.id) : new_admin_reservation_path, method: :get, local: true, data: { room_selector_target: "filterForm" }) do |filter_form| %>
+                <%= filter_form.hidden_field :start_date, value: params[:start_date], data: { action: "input->room-selector#syncToFilterForm", room_selector_target: "startDateFilter" } %>
+                <%= filter_form.hidden_field :end_date, value: params[:end_date], data: { action: "input->room-selector#syncToFilterForm", room_selector_target: "endDateFilter" } %>
+                <%= filter_form.hidden_field :start_time, value: params[:start_time], data: { action: "input->room-selector#syncToFilterForm", room_selector_target: "startTimeFilter" } %>
+                <%= filter_form.hidden_field :end_time, value: params[:end_time], data: { action: "input->room-selector#syncToFilterForm", room_selector_target: "endTimeFilter" } %>
+                <%= filter_form.hidden_field :room_id, value: @reservation.room_id || params[:room_id] || @room&.id, data: { room_selector_target: "roomIdFilter" } %>
+                <%= render "shared/search_input", form: filter_form, field: :name, value: params[:name], placeholder: "Search room by name..." %>
+            <% end %>
         </div>
-
-        <div class="mb-4">
-            <%= f.label :date, "Reservation Date", class: "form-label" %>
-            <div class="relative">
-                <%= f.date_field :date, class: input_class(@reservation, :date) %>
-                <%= error_icon(@reservation, :date) %>
-            </div>
-            <%= field_error_tag(@reservation, :date) %>
-        </div>
-
-        <div class="mb-4 flex space-x-4">
-            <div class="w-1/2">
-                <%= f.label :start_time, "Start Time", class: "form-label" %>
-                <div class="relative">
-                    <%= f.time_field :start_time, class: input_class(@reservation, :start_time) %>
-                    <%= error_icon(@reservation, :start_time) %>
+    </div>
+    <div class="form-group flex flex-col gap-4">
+        <%= form_with(model: @reservation, url: @reservation.persisted? ? reservation_path(@reservation) : reservations_path, method: @reservation.persisted? ? :patch : :post, local: true, data: { room_selector_target: "reservationForm" }) do |form| %>
+            <div class="flex w-full gap-4 flex-wrap lg:flex-nowrap">
+                <div class="w-full lg:w-2/3 flex flex-col gap-4">
+                    <%= render "admin/reservations/component/inputs", form: form%>
+                    <div class="flex flex-col bg-white gap-2 w-full h-auto rounded-lg border p-4 shadow-md">
+                        <div class="flex justify-between items-center">
+                            <%= render "shared/typography", sub_heading: "Available Rooms" %>
+                        </div>
+                        <div class="flex flex-col">
+                            <%= render "admin/reservations/component/room_list", rooms: @rooms%>
+                        </div>
+                    </div>
                 </div>
-                <%= field_error_tag(@reservation, :start_time) %>
+                <%= render "admin/reservations/component/reservation_summary", form: form%>
             </div>
-
-            <div class="w-1/2">
-                <%= f.label :end_time, "End Time", class: "form-label" %>
-                <div class="relative">
-                    <%= f.time_field :end_time, class: input_class(@reservation, :end_time) %>
-                    <%= error_icon(@reservation, :end_time) %>
-                </div>
-                <%= field_error_tag(@reservation, :end_time) %>
-            </div>
-        </div>
-
-        <div class="mb-4" data-controller="reservation-members">
-            <%= f.label :reservation_members, "Add Members", class: "form-label" %>
-            <div id="reservation-members-container">
-                <div class="relative mb-2" data-reservation-members-target="field">
-                    <%= f.collection_select :user_ids, User.all, :id, :email, { prompt: "Select Members" }, class: "form-control", multiple: true, name: "reservation[user_ids][]" %>
-                </div>
-            </div>
-            <p class="text-sm text-gray-500 mt-2">Hold CTRL (Windows) or CMD (Mac) to select multiple users.</p>
-        </div>
-
-        <div class="flex space-x-2">
-        <%= f.submit @reservation.persisted? ? "Update Reservation" : "Create Reservation", class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-
-            <%= link_to "Cancel", 
-                @reservation.persisted? ? admin_room_reservation_path(@reservation.room, @reservation) : admin_rooms_path, 
-                class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" 
-            %>
-        </div>
-
-    <% end %>
+        <% end %> 
+    </div>
 </div>

@@ -16,12 +16,19 @@
             <div class="md:flex-1 md:flex flex-wrap items-center justify-between lg:text-left text-center">
                 <nav role="Primary navigation">
                     <ul class="md:flex block items-center flex-wrap space-x-0 md:space-x-3 md:text-base text-lg md:leading-normal leading-relaxed space-y-1 md:space-y-0 sm:mb-0 mb-4 h-13">
-                        <% if !request.path.start_with?('/admin') %>
+                        <% if !current_user.has_role?(:admin) %>
                             <li data-testid="nav-rooms-page">
                                 <%= nav_link_to "Room", rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/rooms')}" %>
                             </li>
                             <li data-testid="nav-reservations-page">
                                 <%= nav_link_to "Reservations", reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/reservations')}" %>
+                            </li>
+                        <% else %>
+                            <li data-testid="nav-rooms-page">
+                                <%= nav_link_to "Room", admin_rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/admin/rooms')}" %>
+                            </li>
+                            <li data-testid="nav-reservations-page">
+                                <%= nav_link_to "Reservations", admin_reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/admin/reservations')}" %>
                             </li>
                         <% end %>
                     </ul>

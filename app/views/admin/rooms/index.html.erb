@@ -1,97 +1,48 @@
-<div class="container mx-auto p-6" data-testid="room-list">
-    <h1 class="text-2xl font-bold mb-4">Available Meeting Rooms</h1>
+<div class="container mx-auto p-6" data-controller="reset-filter">
+    <%= form_with(url: admin_rooms_path, method: :get, local: true, 
+        class: "p-0 w-full flex flex-wrap", 
+        data: { testid: "filter-admin-list-room-form", reset_filter_target: "form" }) do |form| %>
+        <div class="flex justify-between items-center flex-wrap w-full">
+            <%= render "shared/typography", heading: "Meeting Rooms" %>
+            <div class="w-full md:w-2/3 flex justify-end gap-4 items-start">
+                        <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>
+                    <%= btn_link_to("New Room", new_admin_room_path, btn_class: "btn-primary", icon_name: "plus", variant: :solid) %>
+            </div>
+        </div>
 
-    <div class="mb-4">
-        <%= link_to "Add New Room", new_admin_room_path, class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-    </div>
+        <div class="flex gap-4 w-full h-full items-stretch">
+            <div class="flex flex-col gap-4 h-auto "> 
+                <div class="flex flex-col rounded-md bg-white p-6 pb-2 dark:bg-slate-800 dark:text-white shadow-md md:w-[300px]">
+                    <div class="flex flex-col gap-2">
+                        <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date].presence, label: "Start date", data: { reset_filter_target:"startDateField" } %>
+                        <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date].presence, label: "End date", data: { reset_filter_target:"endDateField" } %>
+                    </div>
 
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg mb-6">
-        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
-            <thead class="bg-gray-100">
-                <tr class="border-b">
-                    <th class="px-4 py-2 text-left">Name</th>
-                    <th class="px-4 py-2 text-left">Capacity (Min - Max)</th>
-                    <th class="px-4 py-2 text-left">Status</th>
-                    <th class="px-4 py-2 text-left">QR Code</th>
-                    <th class="px-4 py-2 text-left">Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-            <% @rooms.each do |room| %>
-            <tr class="border-b hover:bg-gray-50">
-                <td class="px-4 py-2">
-                    <%= link_to room.name, admin_room_path(room), class: "text-blue-600 hover:underline" %>
-                </td>
-                <td class="px-4 py-2"><%= room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}" %> คน</td>
-                <td class="px-4 py-2">
-                <span class="px-2 py-1 rounded text-white 
-                    <%= room.available? ? 'bg-green-500' : room.booked? ? 'bg-yellow-500' : 'bg-red-500' %>">
-                    <%= room.status.capitalize %>
-                </span>
-                </td>
-                <td class="px-4 py-2">
-                <% if room.qr_code.attached? %>
-                    <%= image_tag url_for(room.qr_code.variant(resize_to_limit: [50, 50]).processed), class: "rounded-lg shadow-md" %>
-                <% else %>
-                    <span class="text-gray-500">No QR Code</span>
-                <% end %>
-                </td>
-                <td class="px-4 py-2">
-                <%= link_to "Amenities", admin_room_room_amenities_path(room), class: "text-blue-500 hover:underline" %> |
-                <!--
-                <%= link_to "Edit", edit_admin_room_path(room), class: "text-yellow-600 hover:underline mr-2" %>  |
-                -->
-                <%= button_to "Delete", admin_room_path(room), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
-                </td>
-            </tr>
-            <% end %>
-            </tbody>
-        </table>
-    </div>
-
-    <h2 class="text-xl font-semibold mb-4">Reservations</h2>
-
-    <div class="overflow-x-auto bg-white shadow-md rounded-lg">
-        <table class="min-w-full bg-white border border-gray-300 rounded-lg">
-            <thead class="bg-gray-100">
-            <tr class="border-b">
-                <th class="px-4 py-2 text-left">Room</th>
-                <th class="px-4 py-2 text-left">User</th>
-                <th class="px-4 py-2 text-left">Date</th>
-                <th class="px-4 py-2 text-left">Date</th>
-                <th class="px-4 py-2 text-left">Time</th>
-                <th class="px-4 py-2 text-left">Status</th>
-                <th class="px-4 py-2 text-left">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <% @rooms.each do |room| %>
-                <% room.reservations.each do |reservation| %>
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="px-4 py-2"><%= room.name %></td>
-                    <td class="px-4 py-2"><%= reservation.user.email %></td>
-                    <td class="px-4 py-2"><%= reservation.start_date.strftime('%B %d, %Y') %></td>
-                    <td class="px-4 py-2"><%= reservation.end_date.strftime('%B %d, %Y') %></td>
-                    <td class="px-4 py-2"><%= reservation.start_time.strftime('%H:%M') %> - <%= reservation.end_time.strftime('%H:%M') %></td>
-                    <td class="px-4 py-2">
-                    <span class="px-2 py-1 rounded text-white 
-                        <%= reservation.status == "pending" ? 'bg-yellow-500' : 
-                            reservation.status == "checked_in" ? 'bg-green-500' : 
-                            reservation.status == "checked_out" ? 'bg-gray-500' : 
-                            reservation.status == "canceled" ? 'bg-red-500' : 
-                            reservation.status == "expired" ? 'bg-purple-500' : 'bg-blue-500' %>">
-                        <%= reservation.status.capitalize %>
-                    </span>
-                    </td>
-                    <td class="px-4 py-2">
-                    <%= link_to "View", admin_room_reservation_path(room, reservation), class: "text-blue-500 hover:underline" %> |
-                    <%= link_to "Edit", edit_admin_room_reservation_path(room, reservation), class: "text-yellow-600 hover:underline mr-2" %>  |
-                    <%= button_to "Delete", admin_room_reservation_path(room, reservation), method: :delete, data: { confirm: "Are you sure?" }, class: "text-red-600 hover:underline" %>
-                    </td>
-                </tr>
-                <% end %>
-            <% end %>
-            </tbody>
-        </table>
-    </div>
+                    <div class="flex flex-col gap-2">
+                        <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time], label: "Start time" %>
+                        <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time], label: "End time" %>
+                    </div>
+                </div>
+                <%= render "shared/slider", field: "capacity", id: "capacity", label: "Capacity", maximum: @maximum_capacity, unit: "people" %>
+                <%= render "shared/multi_checkboxes", form: form, id: "amenities", label: "Amenities", field: "amenities", options: @amenities %>
+                <%= render "shared/multi_checkboxes", form: form, id: "room_status", label: "Room Status", field: "room_status", options: @room_status %>
+                <div class="flex justify-start">
+                    <button type="button" data-action="reset-filter#reset" class="btn btn-black">Reset Filters</button>
+                </div>
+            </div>
+            <div class="flex flex-col rounded-md gap-2 bg-white px-6 pb-6 pt-2 dark:bg-slate-800 dark:text-white shadow-md w-full h-full">
+                <%= render "admin/rooms/component/table", rooms: @rooms %>
+                <div class="mt-4">
+                    <%= form_with(url: admin_rooms_path, method: :get, local: true) do |f| %>
+                        <%= render "shared/pagination", 
+                            collection: @rooms, 
+                            prefix: "room", 
+                            path_helper: ->(page, params) { admin_rooms_path(params) },
+                            show_per_page: true,
+                            per_page_options: [5, 10, 25, 50, 100] %>
+                    <% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
 </div>

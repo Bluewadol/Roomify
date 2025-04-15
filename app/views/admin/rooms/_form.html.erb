@@ -1,75 +1,136 @@
-<div class="form-group">
-    <%= form_with(model: @room, url: @room.persisted? ? admin_room_path(@room) : admin_rooms_path, method: @room.persisted? ? :patch : :post, local: true) do |f| %>
+<div class="max-w-4xl mx-auto rounded-md gap-2 bg-white p-6 dark:bg-slate-800 dark:text-white">
+    <%= render "shared/typography", heading: @room.persisted? ? "Update Room" : "Create Room" %>
+    
+    <%= form_with(model: @room, url: @room.persisted? ? admin_room_path(@room) : admin_rooms_path, method: @room.persisted? ? :patch : :post, local: true, html: { class: "space-y-6", multipart: true }) do |f| %>
+        <%= error_messages(@room) if @room.errors.any? %>
 
-    <%= error_messages(@room) if @room.errors.any? %>
-
-    <div class="mb-4">
-        <%= f.label :name, "Room Name", class: "form-label" %>
-        <div class="relative">
-            <%= f.text_field :name, class: input_class(@room, :name), placeholder: "Enter room name" %>
-            <%= error_icon(@room, :name) %>
-        </div>
-        <%= field_error_tag(@room, :name) %>
-    </div>
-
-    <div class="mb-4">
-        <%= f.label :description, "Room Description", class: "block font-medium text-gray-700" %>
-        <div class="relative">
-        <%= f.text_field :description, class: input_class(@room, :description), placeholder: "Enter room description" %>
-        <%= error_icon(@room, :description) %>
-        <%= field_error_tag(@room, :description) %>
-        </div>
-    </div>
-
-    <div class="mb-4 flex space-x-4">
-        <div class="w-1/2">
-            <%= f.label :capacity_min, "Minimum Capacity", class: "form-label" %>
-            <div class="relative">
-                <%= f.number_field :capacity_min, class: input_class(@room, :capacity_min), placeholder: "Min capacity" %>
-                <%= error_icon(@room, :capacity_min) %>
+        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
+            <div class="form-group">
+                <%= f.label :name, "Room Name", class: "form-label" %>
+                <div class="relative">
+                    <%= f.text_field :name, class: input_class(@room, :name), placeholder: "Enter room name" %>
+                    <%= error_icon(@room, :name) %>
+                </div>
+                <%= field_error_tag(@room, :name) %>
             </div>
-            <%= field_error_tag(@room, :capacity_min) %>
-        </div>
 
-        <div class="w-1/2">
-            <%= f.label :capacity_max, "Maximum Capacity", class: "form-label" %>
-            <div class="relative">
-                <%= f.number_field :capacity_max, class: input_class(@room, :capacity_max), placeholder: "Max capacity" %>
-                <%= error_icon(@room, :capacity_max) %>
+            <div class="form-group col-span-2">
+                <%= f.label :description, "Room Description", class: "form-label" %>
+                <div class="relative">
+                    <%= f.text_area :description, class: "form-input min-h-[42px] resize-none overflow-hidden", 
+                        placeholder: "Enter room description",
+                        data: {
+                            controller: "auto-resize",
+                            action: "input->auto-resize#resize"
+                        } %>
+                    <%= error_icon(@room, :description) %>
+                </div>
+                <%= field_error_tag(@room, :description) %>
             </div>
-            <%= field_error_tag(@room, :capacity_max) %>
-        </div>
-    </div>
 
-    <!--
-    <div class="mb-4">
-        <%= f.label :qr_code, "QR Code", class: "form-label" %>
-        <div class="relative">
-            <%= f.file_field :qr_code, class: input_class(@room, :qr_code), placeholder: "Upload QR Code" %>
-            <%= error_icon(@room, :qr_code) %>
-        </div>
-        <%= field_error_tag(@room, :qr_code) %>
-    </div>
-    -->
+            <div class="form-group">
+                <%= f.label :capacity_min, "Minimum Capacity", class: "form-label" %>
+                <div class="relative">
+                    <%= f.number_field :capacity_min, class: input_class(@room, :capacity_min), placeholder: "Min capacity" %>
+                    <%= error_icon(@room, :capacity_min) %>
+                </div>
+                <%= field_error_tag(@room, :capacity_min) %>
+            </div>
 
-    <div class="mb-4" data-controller="image-upload">
-        <%= f.label :images, "Room Images", class: "form-label" %>
-        <div id="image-upload-container">
-            <div class="relative mb-2" data-image-upload-target="field">
-                <%= f.file_field :images, multiple: true, accept: "image/png,image/jpeg,image/webp", class: "form-control", name: "room[images][]" %>
+            <div class="form-group">
+                <%= f.label :capacity_max, "Maximum Capacity", class: "form-label" %>
+                <div class="relative">
+                    <%= f.number_field :capacity_max, class: input_class(@room, :capacity_max), placeholder: "Max capacity" %>
+                    <%= error_icon(@room, :capacity_max) %>
+                </div>
+                <%= field_error_tag(@room, :capacity_max) %>
             </div>
         </div>
 
-        <button type="button" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded-lg text-sm" 
-                data-action="click->image-upload#addField">+ Add Image</button>
+        <div class="pt-6 border-t border-neutral-200 dark:border-neutral-700">
+            <%= render "shared/typography", sub_heading: "Room Images" %>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">Upload images of your room. Maximum 4 images allowed.</p>
+        </div>
 
-        <p class="text-sm text-gray-500 mt-2">Maximum 4 images allowed.</p>
-    </div>
+        <div data-controller="image-upload">
+            <div id="image-upload-container" class="flex flex-col gap-4">
+                <div class="relative pb-4 hover:cursor-pointer" data-image-upload-target="field">
+                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                        <div class="flex items-center justify-center h-full">
+                            <%= f.file_field :images,
+                                class: "form-file border-none outline-none cursor-pointer",
+                                accept: "image/*",
+                                data: {
+                                    controller: "image-preview",
+                                    action: "change->image-preview#preview"
+                                },
+                                name: "room[images][]" %>
+                                <%= error_icon(@room, :images) %>
+                        </div>
+                        <%= field_error_tag(@room, :images) %>
+                        <div class="image-preview hidden absolute inset-0 w-full h-full" data-image-preview-target="preview"></div>
+                    </div>
+                    <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-600" 
+                        data-action="click->image-upload#removeField">
+                        <%= icon('trash', class: 'size-5') %>
+                    </button>
+                </div>
+            </div>
+            <button type="button" class="btn btn-secondary mt-2 flex items-center gap-2" data-action="click->image-upload#addField">
+                <%= icon('plus', class: 'size-3', variant: :solid) %>
+                <span> Image</span>
+            </button>
+        </div>
 
-    <div class="flex space-x-2">
-        <%= f.submit @room.persisted? ? "Update Room" : "Create Room", class: "bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg" %>
-        <%= link_to "Cancel", admin_rooms_path, class: "bg-gray-400 hover:bg-gray-500 text-white px-4 py-2 rounded-lg" %>
-    </div>
+        <!-- Hidden template for trash icon -->
+        <template id="trash-icon-template">
+            <%= icon('trash', class: 'size-5') %>
+        </template>
 
+        <div class="pt-6 border-t border-neutral-200 dark:border-neutral-700">
+            <%= render "shared/typography", sub_heading: "Room Amenities" %>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400">Add amenities available in this room.</p>
+        </div>
+
+        <div data-controller="room-amenities">
+            <div data-room-amenities-target="container" class="flex flex-col gap-4">
+                <%= f.fields_for :room_amenities do |amenity_form| %>
+                    <div class="relative amenity-fields">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
+                            <div class="form-group">
+                                <%= amenity_form.label :amenity_name, "Amenity Name", class: "form-label" %>
+                                <div class="relative">
+                                    <%= amenity_form.text_field :amenity_name, class: input_class(amenity_form.object, :amenity_name), placeholder: "Enter amenity name" %>
+                                    <%= error_icon(amenity_form.object, :amenity_name) %>
+                                </div>
+                                <%= field_error_tag(amenity_form.object, :amenity_name) %>
+                            </div>
+
+                            <div class="form-group">
+                                <%= amenity_form.label :quantity, "Quantity", class: "form-label" %>
+                                <div class="relative flex items-center gap-2">
+                                    <%= amenity_form.number_field :quantity, class: input_class(amenity_form.object, :quantity), placeholder: "Enter quantity" %>
+                                    <%= error_icon(amenity_form.object, :quantity) %>
+                                    <button type="button"
+                                            class="text-red-500 hover:text-red-600"
+                                            data-action="click->room-amenities#removeField">
+                                    </button>
+                                </div>
+                                <%= field_error_tag(amenity_form.object, :quantity) %>
+                            </div>
+                        </div>
+                    </div>
+                <% end %>
+            </div>
+            <button type="button" class="btn btn-secondary mt-2 flex items-center gap-2" data-action="click->room-amenities#addField">
+                <%= icon('plus', class: 'size-3', variant: :solid) %>
+                <span> Amenity</span>
+            </button>
+        </div>
+
+        <div class="flex items-center justify-end space-x-4 pt-6 border-t border-neutral-200 dark:border-neutral-700">
+            <%= link_to "Cancel", admin_rooms_path, class: "btn btn-white" %>
+            <%= f.submit @room.persisted? ? "Update Room" : "Create Room", class: "btn btn-primary", data: { disable_with: "Saving..." } %>
+        </div>
     <% end %>
 </div>

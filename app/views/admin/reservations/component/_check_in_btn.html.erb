@@ -1,0 +1,11 @@
+<% if reservation.pending? %>
+    <% reservation_datetime = reservation.start_date.to_time.change(hour: reservation.start_time.hour, min: reservation.start_time.min).in_time_zone('Asia/Bangkok') %>
+    <% time_window_start = reservation_datetime - 15.minutes %>
+    <% time_window_end = reservation_datetime + 15.minutes %>
+
+    <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
+
+    <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
+        <%= render "user/reservations/component/check_in_modal", reservation: reservation %>
+    <% end %>
+<% end %>

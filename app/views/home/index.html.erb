@@ -1,11 +1,23 @@
 <div class="min-h-screen flex flex-col justify-center items-center text-center -mt-16">
-    <h1 class="text-4xl font-bold text-gray-900 dark:text-white">Roomify</h1>
+
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mt-2">Roomify</h1>
+    <% if user_signed_in? %>
+        <% if current_user.has_role?(:admin) %>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, Admin!</h1>
+        <% else %>
+            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, <%= current_user.name.presence || "User" %>!</h1>
+        <% end %>
+    <% end %>
     <p class="text-lg text-gray-600 dark:text-gray-300 mt-2">The best platform for managing your meeting rooms.</p>
     
     <div class="mt-6 flex space-x-4">        
         <% if !user_signed_in? %>
             <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary" %>
             <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
+        <% elsif current_user.has_role?(:admin) %>
+            <%= link_to "View Rooms", admin_rooms_path, class: "btn btn-white" %>
+            <%= link_to "My Reservations", admin_reservations_path, class: "btn btn-white" %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-transparent" %>
         <% else %>
             <%= link_to "View Rooms", rooms_path, class: "btn btn-white" %>
             <%= link_to "My Reservations", reservations_path, class: "btn btn-white" %>

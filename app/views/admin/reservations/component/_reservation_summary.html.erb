@@ -1,0 +1,71 @@
+<div class="w-full lg:w-1/3 flex flex-col bg-white gap-4 rounded-lg p-4 shadow-md h-full">
+    <%= render "shared/typography", sub_heading: "Reservation Summary" %>
+    <div class="flex flex-col" data-room-selector-target="bookingSummary">
+        <div class="mb-2 flex justify-between">
+            <%= render "shared/typography", body: "Date" %>
+            <div class="text-sm text-gray-500 dark:text-gray-500">
+                <span id="selected-start-date" data-start-date="<%= format_datetime(@reservation.start_date) %>">
+                    <%= format_datetime(@reservation.start_date) if @reservation.start_date.present? %>
+                </span>
+                <span id="dash-date">-</span>
+                <span id="selected-end-date" data-end-date="<%= format_datetime(@reservation.end_date) %>">
+                    <%= format_datetime(@reservation.end_date) if @reservation.end_date.present? %>
+                </span>
+            </div>
+        </div>
+
+        <div class="mb-2 flex justify-between">
+            <%= render "shared/typography", body: "Time" %>
+            <div class="text-sm text-gray-500 dark:text-gray-500">
+                <span id="selected-start-time" data-start-time="<%= format_datetime(@reservation.start_time, time_only: true) %>">
+                    <%= format_datetime(@reservation.start_time, time_only: true) if @reservation.start_time.present? %>
+                </span>
+                <span id="dash-time">-</span>
+                <span id="selected-end-time" data-end-time="<%= format_datetime(@reservation.end_time, time_only: true) %>">
+                    <%= format_datetime(@reservation.end_time, time_only: true) if @reservation.end_time.present? %>
+                </span>
+            </div>
+        </div>
+
+        <div class="mb-2 flex justify-between">
+            <%= render "shared/typography", body: "Room" %>
+            <span id="selected-room-name" class="text-sm text-gray-500 dark:text-gray-500" ><%= @room ? @room.name : 'Please select room' %></span>
+        </div>
+
+        <div class="mb-2 flex flex-col flex-wrap gap-1">
+            <%= render "shared/typography", body: "Description" %>
+            <div class="relative" data-controller="description-toggle">
+                <div
+                    id="selected-description"
+                    class="break-all whitespace-pre-line text-sm text-gray-500 dark:text-gray-500 description-content"
+                    style="word-break: break-word; overflow-wrap: break-word; max-height: 3em; overflow: hidden;"
+                    >
+                    <%= @reservation.description %>
+                </div>
+                <div 
+                    class="text-primary-600 text-xs mt-1 hover:underline focus:outline-none description-toggle-btn cursor-pointer"
+                    data-action="click->description-toggle#toggle"
+                    data-description-toggle-target="toggleButton">
+                    See All
+                </div>
+            </div>
+        </div>
+        <hr class="border-t border-gray-300 my-2">
+        <div class="mb-4" data-controller="multi-select">
+            <%= form.label :member_ids, "Invite Members", class: "form-label" %>
+            <select name="reservation[member_ids][]" multiple class="contacts form-control" data-multi-select-target="select">
+                <% User.where.not(id: current_user.id).each do |user| %>
+                    <option value="<%= user.id %>"
+                            data-data='<%= {
+                            id: user.id,
+                            email: user.email,
+                            name: user.name
+                            }.to_json %>'
+                            <%= 'selected' if @reservation.member_ids.include?(user.id) %>>
+                    <%= user.name %> (<%= user.email %>)
+                    </option>
+                <% end %>
+            </select>
+        </div>
+    <%= form.submit @reservation.persisted? ? "Update Reservation" : "Create Reservation", class: "btn btn-primary" %>
+</div>

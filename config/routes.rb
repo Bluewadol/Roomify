@@ -20,7 +20,6 @@ Rails.application.routes.draw do
     get "integrations", to: "pages#integrations"
   end
 
-  # root action: :index, controller: "railsui/default"
   root "home#index"
 
   devise_for :users
@@ -32,11 +31,11 @@ Rails.application.routes.draw do
   end  
 
   namespace :admin do
-    resources :rooms do
+    root to: 'dashboard#index'
+    resources :rooms, param: :slug do
       resources :room_amenities
-      resources :reservations, only: [:show, :edit, :update, :destroy]
     end
-    resources :reservations, only: [:new, :create]
+    resources :reservations, param: :slug
   end
 
   resource :account, only: [:show, :update], controller: 'user/account' do

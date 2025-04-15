@@ -2,35 +2,60 @@ import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
     static targets = ["field"];
+    static values = {
+        maxFiles: { type: Number, default: 4 }
+    };
 
     connect() {
-        this.maxFiles = 4;
         this.updateCount();
     }
 
     addField() {
-        event.preventDefault(); 
-        if (this.fieldTargets.length >= this.maxFiles) {
-        alert("You can only upload up to 4 images.");
-        return;
+        if (this.fieldTargets.length >= this.maxFilesValue) {
+            alert(`You can only upload up to ${this.maxFilesValue} images.`);
+            return;
         }
 
-        const container = document.querySelector("#image-upload-container");
-        const newField = document.createElement("div");
-        newField.classList.add("relative", "mb-2");
+        const newField = document.createElement('div');
+        newField.className = 'relative pb-4';
+        newField.setAttribute('data-image-upload-target', 'field');
         newField.innerHTML = `
-        <input type="file" name="room[images][]" accept="image/png,image/jpeg,image/webp" class="form-control" data-action="change->image-upload#updateCount">
-        <button type="button" class="text-red-500 text-sm ml-2" onclick="this.parentElement.remove();">✖ Remove</button>
+            <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                <div class="flex items-center justify-center h-full">
+                    <input type="file" 
+                        name="room[images][]" 
+                        accept="image/*" 
+                        class="form-file border-none outline-none cursor-pointer"
+                        data-controller="image-preview"
+                        data-action="change->image-preview#preview">
+                </div>
+                <div class="image-preview hidden absolute inset-0 w-full h-full" data-image-preview-target="preview"></div>
+            </div>
+            <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-600" 
+                data-action="click->image-upload#removeField">
+            </button>
         `;
-        container.appendChild(newField);
+
+        // Clone and append the trash icon from the template
+        const trashIconTemplate = document.getElementById('trash-icon-template');
+        const trashIcon = trashIconTemplate.content.cloneNode(true);
+        newField.querySelector('button').appendChild(trashIcon);
+
+        this.element.querySelector('#image-upload-container').appendChild(newField);
+        this.updateCount();
+    }
+
+    removeField(event) {
+        event.target.closest('[data-image-upload-target="field"]').remove();
         this.updateCount();
     }
 
     updateCount() {
-        if (this.fieldTargets.length >= this.maxFiles) {
-        this.element.querySelector("[data-action='click->image-upload#addField']").disabled = true;
+        const addButton = this.element.querySelector("[data-action='click->image-upload#addField']");
+        if (this.fieldTargets.length >= this.maxFilesValue) {
+            addButton.disabled = true;
         } else {
-        this.element.querySelector("[data-action='click->image-upload#addField']").disabled = false;
+            addButton.disabled = false;
         }
     }
 }

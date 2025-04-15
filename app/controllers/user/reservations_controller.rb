@@ -102,8 +102,6 @@ class User::ReservationsController < ApplicationController
   def set_reservation
     @reservation = Reservation.friendly.find(params[:slug])
     
-    # No need to check permissions for viewing - all users can view
-    # The edit/update/destroy actions will handle their own permissions
   rescue ActiveRecord::RecordNotFound
     redirect_to reservations_path, alert: "Reservation not found." 
   end

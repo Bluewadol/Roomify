@@ -15,6 +15,8 @@ import MultiSelectController from "./multi_select_controller";
 import AutoHeightController from "./auto_height_controller";
 import DescriptionToggleController from "./description_toggle_controller";
 import AvatarPreviewController from "./avatar_preview_controller";
+import ImagePreviewController from "./image_preview_controller";
+import RoomAmenitiesController from "./room_amenities_controller";
 
 application.register("hello", HelloController);
 application.register("image-upload", ImageUploadController);
@@ -27,3 +29,5 @@ application.register("multi-select", MultiSelectController);
 application.register("auto-height", AutoHeightController);
 application.register("description-toggle", DescriptionToggleController);
 application.register("avatar-preview", AvatarPreviewController);
+application.register("image-preview", ImagePreviewController);
+application.register("room-amenities", RoomAmenitiesController);
