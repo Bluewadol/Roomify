@@ -1,4 +1,4 @@
-<div data-controller="railsui-dropdown" class="relative inline-block" onclick="event.stopPropagation();">
+<div data-controller="railsui-dropdown railsui-modal" class="relative inline-block" onclick="event.stopPropagation();">
     <button type="button" data-action="click->railsui-dropdown#toggle click@window->railsui-dropdown#hide" class="btn btn-light inline-flex items-center h-[38px]">
         <%= icon "ellipsis-vertical", :variant => :solid, class: "size-5" %>
     </button>
@@ -26,11 +26,17 @@
             <%= dropdown_item("eye", "Show", admin_reservation_path(reservation), data_testid: "show-reservation") %>
         </div>
         <div role="none" class="pt-1 text-red-600">
-            <%= dropdown_item("trash", "Delete", 
-                admin_reservation_path(reservation), 
-                method: :delete,
-                data_testid: "delete-reservation"
-            ) %>
-        </div>
+            <button class="w-full flex items-center gap-4 px-3 py-2 text-sm text-red-600 hover:bg-red-50 dark:hover:bg-red-500/10" 
+                    data-action="click->railsui-dropdown#hide click->railsui-modal#open">
+                <%= icon "trash", class: "size-5" %>
+                Delete 
+            </button>
+        </div>  
     </div>
+    <%= render "shared/delete_modal", 
+        title: "Delete Reservation",
+        message: "Are you sure you want to delete this #{reservation.slug} reservation? This action cannot be undone.",
+        path: admin_reservation_path(reservation),
+        action_label: "Delete"
+    %>
 </div> 

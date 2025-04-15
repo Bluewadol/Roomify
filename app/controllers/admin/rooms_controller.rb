@@ -1,8 +1,7 @@
 class Admin::RoomsController < Admin::BaseController
-    before_action :set_room, only: [ :show, :edit, :update, :destroy ]
     include ReservationFilterable
-    
-    before_action :set_room, only: [:show]
+
+    before_action :set_room, only: [ :show, :edit, :update, :destroy ]
     before_action :set_filter_params, only: [:index]
     before_action :set_filter_room_details_params, only: [:show]
 
@@ -62,6 +61,18 @@ class Admin::RoomsController < Admin::BaseController
 
     def update
         @room.updated_by = current_user
+        
+        # Handle image removal
+        if params[:room][:remove_image_ids].present?
+            params[:room][:remove_image_ids].each do |image_id|
+                image = @room.images.find(image_id)
+                image.purge if image
+            end
+        end
+
+        # Remove remove_image_ids from params before update
+        params[:room].delete(:remove_image_ids) if params[:room][:remove_image_ids].present?
+
         if @room.update(room_params)
             redirect_to admin_rooms_path, notice: "Room updated successfully."
         else

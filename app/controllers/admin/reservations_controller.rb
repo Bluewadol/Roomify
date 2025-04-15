@@ -48,37 +48,13 @@ class Admin::ReservationsController < Admin::BaseController
         end
     end  
     
-    def edit
-        # Check if the user has permission to edit this reservation
-        unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
-            redirect_to reservation_path(@reservation), alert: "You don't have permission to edit this reservation."
-            return
-        end
-        
-        # Check if the reservation status allows editing
-        unless @reservation.pending? || @reservation.waiting_check_in?
-            redirect_to reservation_path(@reservation), alert: "This reservation cannot be edited."
-            return
-        end
-        
+    def edit        
         set_rooms(@reservation.id)
         @room_select = Room.find_by(id: params[:room_id])
         @reservation.room_id = @room_select.id if @room_select
     end
     
     def update
-        # Check if the user has permission to update this reservation
-        unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
-            redirect_to reservation_path(@reservation), alert: "You don't have permission to update this reservation."
-            return
-        end
-        
-        # Check if the reservation status allows updating
-        unless @reservation.pending? || @reservation.waiting_check_in?
-            redirect_to reservation_path(@reservation), alert: "This reservation cannot be updated because it's no longer in pending or waiting check-in status."
-            return
-        end
-        
         set_rooms(@reservation.id)
         @reservation.updated_by = current_user
         if @reservation.update(reservation_params)
@@ -91,7 +67,7 @@ class Admin::ReservationsController < Admin::BaseController
 
     def destroy
         @reservation.destroy
-        redirect_to admin_rooms_path, notice: "Reservation was successfully deleted."
+        redirect_to admin_reservations_path, notice: "Reservation was successfully deleted."
     end
 
     private
@@ -132,7 +108,7 @@ class Admin::ReservationsController < Admin::BaseController
         
         @rooms = filter_rooms(@rooms, @reservations_in_range, current_reservation_id: current_reservation_id)
         @rooms = sort_rooms_by_status(@rooms)
-        
+
         per_page = params[:room_per_page].present? ? params[:room_per_page].to_i : 5
         @rooms = Kaminari.paginate_array(@rooms).page(params[:room_page]).per(per_page)
         

@@ -1,20 +1,18 @@
 <div class="container mx-auto p-6 flex flex-col gap-2">
     <div class="flex justify-between items-center">
         <%= render "shared/typography", heading: "Reservation Details" %>
-        <% if (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.pending? || @reservation.waiting_check_in?) %>
-            <div class="flex gap-4">
-                    <%= btn_link_to "Edit", edit_reservation_path(@reservation, 
-                        room_id: @reservation.room_id, 
-                        start_date: @reservation.start_date,
-                        end_date: @reservation.end_date,
-                        start_time: @reservation.start_time&.strftime("%H:%M"),
-                        end_time: @reservation.end_time&.strftime("%H:%M")
-                        ), 
-                        btn_class: "btn-white", icon_name: "pencil-square", variant: :solid 
-                    %>
-                <%= render "admin/reservations/component/check_in_btn", reservation: @reservation %>
-            </div>
-        <% end %>
+        <div class="flex gap-4">
+                <%= btn_link_to "Edit", edit_admin_reservation_path(@reservation, 
+                    room_id: @reservation.room_id, 
+                    start_date: @reservation.start_date,
+                    end_date: @reservation.end_date,
+                    start_time: @reservation.start_time&.strftime("%H:%M"),
+                    end_time: @reservation.end_time&.strftime("%H:%M")
+                    ), 
+                    btn_class: "btn-white", icon_name: "pencil-square", variant: :solid 
+                %>
+            <%= render "admin/reservations/component/check_in_btn", reservation: @reservation %>
+        </div>
     </div>
     <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
         <div class="flex justify-between flex-wrap">

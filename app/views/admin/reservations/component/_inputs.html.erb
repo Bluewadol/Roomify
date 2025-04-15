@@ -1,4 +1,4 @@
-<div class="rounded-lg bg-white overflow-hidden w-full shadow-md p-4">
+<div class="rounded-lg bg-white overflow-hidden w-full shadow-md p-4 h-fit">
     <div class="flex gap-2 md:gap-0 h-auto md:h-14 w-full flex-wrap justify-between items-center">
         <div class="mb-2">
             <%= render "shared/typography", sub_heading: "Select Details" %>
@@ -64,7 +64,7 @@
             <%= field_error_tag(@reservation, :end_time) %>
         </div>
     </div>
-    <div class="mb-4">
+    <div>
         <%= form.label :description, "Reservation Description", class: "form-label" %>
         <div class="relative">
             <%= form.text_area :description, 

@@ -29,7 +29,6 @@
                                 path_helper: ->(page, params) { @reservation.persisted? ? edit_admin_reservation_path(@reservation.id) : new_admin_reservation_path(params) },
                                 show_per_page: true,
                                 per_page_options: [5, 10, 25, 50, 100] %>
-                            </div>
                         </div>
                     </div>
                 </div>

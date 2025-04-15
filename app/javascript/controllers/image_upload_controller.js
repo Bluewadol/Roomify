@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus";
 
 export default class extends Controller {
-    static targets = ["field"];
+    static targets = ["field", "container"];
     static values = {
         maxFiles: { type: Number, default: 4 }
     };
@@ -11,51 +11,69 @@ export default class extends Controller {
     }
 
     addField() {
-        if (this.fieldTargets.length >= this.maxFilesValue) {
+        if (this.getTotalImages() >= this.maxFilesValue) {
             alert(`You can only upload up to ${this.maxFilesValue} images.`);
             return;
         }
 
         const newField = document.createElement('div');
-        newField.className = 'relative pb-4';
+        newField.className = 'flex flex-col gap-2 hover:cursor-pointer';
         newField.setAttribute('data-image-upload-target', 'field');
         newField.innerHTML = `
-            <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+            <div class="flex items-center justify-between h-full rounded-lg overflow-hidden">
                 <div class="flex items-center justify-center h-full">
                     <input type="file" 
                         name="room[images][]" 
                         accept="image/*" 
-                        class="form-file border-none outline-none cursor-pointer"
+                        class="form-file border-none outline-none cursor-pointer w-full h-full"
                         data-controller="image-preview"
                         data-action="change->image-preview#preview">
                 </div>
-                <div class="image-preview hidden absolute inset-0 w-full h-full" data-image-preview-target="preview"></div>
+                <button type="button" class="text-red-500 hover:text-red-600" 
+                    data-action="click->image-upload#removeField">
+                    ${document.getElementById('trash-icon-template').innerHTML}
+                </button>
             </div>
-            <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-600" 
-                data-action="click->image-upload#removeField">
-            </button>
         `;
 
-        // Clone and append the trash icon from the template
-        const trashIconTemplate = document.getElementById('trash-icon-template');
-        const trashIcon = trashIconTemplate.content.cloneNode(true);
-        newField.querySelector('button').appendChild(trashIcon);
-
-        this.element.querySelector('#image-upload-container').appendChild(newField);
+        this.containerTarget.appendChild(newField);
         this.updateCount();
     }
 
     removeField(event) {
-        event.target.closest('[data-image-upload-target="field"]').remove();
-        this.updateCount();
+        const field = event.currentTarget.closest('[data-image-upload-target="field"]');
+        if (field) {
+            field.remove();
+            this.updateCount();
+        }
+    }
+
+    removeImage(event) {
+        const imageId = event.currentTarget.dataset.imageId;
+        if (imageId) {
+            // Add a hidden input to mark the image for removal
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'room[remove_image_ids][]';
+            input.value = imageId;
+            this.element.appendChild(input);
+            
+            // Remove the image element
+            event.currentTarget.closest('.relative').remove();
+            this.updateCount();
+        }
+    }
+
+    getTotalImages() {
+        const existingImages = this.element.querySelectorAll('[data-image-id]').length;
+        const newImageFields = this.element.querySelectorAll('input[type="file"]').length;
+        return existingImages + newImageFields;
     }
 
     updateCount() {
-        const addButton = this.element.querySelector("[data-action='click->image-upload#addField']");
-        if (this.fieldTargets.length >= this.maxFilesValue) {
-            addButton.disabled = true;
-        } else {
-            addButton.disabled = false;
+        const addButton = this.element.querySelector('[data-action="click->image-upload#addField"]');
+        if (addButton) {
+            addButton.disabled = this.getTotalImages() >= this.maxFilesValue;
         }
     }
 }

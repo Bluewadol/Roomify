@@ -12,7 +12,6 @@
                 </div>
                 <%= field_error_tag(@room, :name) %>
             </div>
-            
             <div class="form-group col-span-2">
                 <%= f.label :description, "Room Description", class: "form-label" %>
                 <div class="relative">
@@ -52,32 +51,55 @@
         </div>
 
         <div data-controller="image-upload">
-            <div id="image-upload-container" class="flex flex-col gap-4">
-                <div class="relative pb-4 hover:cursor-pointer" data-image-upload-target="field">
-                    <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+            <div id="image-upload-container" class="flex flex-col gap-4" data-image-upload-target="container">
+                <% if @room.persisted? && @room.images.attached? %>
+                    <% @room.images.each do |image| %>
+                        <div class="relative pb-4 hover:cursor-pointer" data-image-upload-target="field">
+                            <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden">
+                                <div class="flex items-center justify-center h-full">
+                                    <%= f.file_field :images,
+                                        class: "form-file border-none outline-none cursor-pointer absolute inset-0 w-full h-full opacity-0",
+                                        accept: "image/*",
+                                        data: {
+                                            controller: "image-preview",
+                                            action: "change->image-preview#preview",
+                                            image_url: url_for(image)
+                                        },
+                                        name: "room[images][]" %>
+                                </div>
+                                <div class="image-preview absolute inset-0 w-full h-full" data-image-preview-target="preview" style="background-image: url('<%= url_for(image) %>'); background-size: cover; background-position: center;"></div>
+                            </div>
+                            <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-600" 
+                                data-action="click->image-upload#removeImage"
+                                data-image-id="<%= image.id %>">
+                                <%= icon('trash', class: 'size-5') %>
+                            </button>
+                        </div>
+                    <% end %>
+                <% end %>
+                <div class="flex flex-col gap-2 hover:cursor-pointer" data-image-upload-target="field">
+                    <div class="flex items-center justify-between h-full rounded-lg overflow-hidden">
                         <div class="flex items-center justify-center h-full">
                             <%= f.file_field :images,
-                                class: "form-file border-none outline-none cursor-pointer",
+                                class: "form-file border-none outline-none cursor-pointer w-full h-full",
                                 accept: "image/*",
                                 data: {
                                     controller: "image-preview",
                                     action: "change->image-preview#preview"
                                 },
                                 name: "room[images][]" %>
-                                <%= error_icon(@room, :images) %>
                         </div>
-                        <%= field_error_tag(@room, :images) %>
-                        <div class="image-preview hidden absolute inset-0 w-full h-full" data-image-preview-target="preview"></div>
+                        <button type="button" class="text-red-500 hover:text-red-600" 
+                            data-action="click->image-upload#removeField">
+                            <%= icon('trash', class: 'size-5') %>
+                        </button>
                     </div>
-                    <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-600" 
-                        data-action="click->image-upload#removeField">
-                        <%= icon('trash', class: 'size-5') %>
-                    </button>
+                    <%= field_error_tag(@room, :images) %>
                 </div>
             </div>
             <button type="button" class="btn btn-secondary mt-2 flex items-center gap-2" data-action="click->image-upload#addField">
                 <%= icon('plus', class: 'size-3', variant: :solid) %>
-                <span> Image</span>
+                <span> Add Image</span>
             </button>
         </div>
 
