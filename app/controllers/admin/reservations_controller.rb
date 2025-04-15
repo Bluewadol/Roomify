@@ -6,10 +6,8 @@ class Admin::ReservationsController < Admin::BaseController
     before_action :set_filter_params, only: [:new, :edit]
 
     def index
-        # Get reservations created by the current user or where the current user is a member
+        # Get reservations created 
         @reservations = Reservation.includes(:room)
-            .where('user_id = ? OR id IN (SELECT reservation_id FROM reservation_members WHERE user_id = ?)', 
-                current_user.id, current_user.id)
         
         # Add pagination for upcoming reservations
         upcoming_per_page = params[:upcoming_per_page].present? ? params[:upcoming_per_page].to_i : 5
@@ -42,7 +40,7 @@ class Admin::ReservationsController < Admin::BaseController
     
         if @reservation.save
             @reservation.members = User.where(id: params[:reservation][:member_ids].reject(&:blank?)) if params[:reservation][:member_ids]
-            redirect_to @reservation, notice: "Reservation was successfully created."
+            redirect_to admin_reservations_path(slug: @reservation.slug), notice: "Reservation was successfully created."
         else
             render :new, status: :unprocessable_entity
         end
@@ -59,7 +57,7 @@ class Admin::ReservationsController < Admin::BaseController
         @reservation.updated_by = current_user
         if @reservation.update(reservation_params)
             @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
-            redirect_to @reservation, notice: "Reservation was successfully updated."
+            redirect_to admin_reservations_path(slug: @reservation.slug), notice: "Reservation was successfully updated."
         else
             render :edit, status: :unprocessable_entity
         end

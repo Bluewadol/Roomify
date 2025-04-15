@@ -33,7 +33,9 @@ Rails.application.routes.draw do
   namespace :admin do
     root to: 'dashboard#index'
     resources :rooms, param: :slug do
-      resources :room_amenities
+      collection do
+        get :download_all_qr_codes
+      end
     end
     resources :reservations, param: :slug
   end

@@ -25,10 +25,10 @@
                             </li>
                         <% else %>
                             <li data-testid="nav-rooms-page">
-                                <%= nav_link_to "Room", admin_rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/admin/rooms')}" %>
+                                <%= nav_link_to "Room Management", admin_rooms_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/admin/rooms')}" %>
                             </li>
                             <li data-testid="nav-reservations-page">
-                                <%= nav_link_to "Reservations", admin_reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/admin/reservations')}" %>
+                                <%= nav_link_to "Reservations Management", admin_reservations_path, class: "rui-nav-link #{'rui-nav-link-active' if request.path.start_with?('/admin/reservations')}" %>
                             </li>
                         <% end %>
                     </ul>
@@ -145,7 +145,8 @@
                                 data-transition-leave-from="opacity-100 scale-100"
                                 data-transition-leave-to="opacity-0 scale-95">
                                 <% if current_user.has_role?(:admin) %>
-                                    <%= dropdown_item "cog-6-tooth", "Management", admin_rooms_path, data_testid: "nav-my-management-btn" %>
+                                    <%= dropdown_item "cube", "Room", rooms_path, data_testid: "nav-my-management-btn" %>
+                                    <%= dropdown_item "newspaper", "Reservation", reservations_path, data_testid: "nav-my-management-btn" %>
                                 <% end %>
                                 <%= dropdown_item "user-circle", "Account Settings", settings_account_path, data_testid: "nav-my-account-btn" %>
                                 <%= dropdown_item "arrow-right-on-rectangle", "Sign Out", destroy_user_session_path, method: :delete, data_testid: "nav-sign-out-btn" %>

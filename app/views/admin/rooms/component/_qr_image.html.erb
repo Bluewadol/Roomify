@@ -1,0 +1,12 @@
+<div class="w-full flex flex-col bg-white rounded-lg p-4 shadow-md min-h-fit">
+        <%= render "shared/typography", sub_heading: "Room QR Code" %>
+        <% if @room.qr_code.attached? %>
+            <%= image_tag url_for(@room.qr_code.variant(resize_to_limit: [250, 250]).processed) %>
+            <%= link_to 'Download QR Code', rails_blob_path(@room.qr_code, disposition: 'attachment'), class: 'btn btn-light' %>
+        <% else %>
+            <%= render "shared/empty_state", 
+                icon_name: "qr-code",
+                message: "No QR Code" 
+            %>
+        <% end %>
+</div>

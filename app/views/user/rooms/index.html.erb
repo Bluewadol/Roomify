@@ -2,7 +2,7 @@
     <%= form_with(url: rooms_path, method: :get, local: true, 
         class: "p-0 w-full flex flex-wrap", 
         data: { testid: "filter-user-list-room-form", reset_filter_target: "form" }) do |form| %>
-        <div class="flex justify-between items-center flex-wrap w-full">
+        <div class="flex justify-between items-center flex-wrap w-full mb-4">
             <%= render "shared/typography", heading: "Meeting Rooms" %>
             <div class="w-full md:w-2/3 flex-shrink-0">
                     <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>

@@ -51,7 +51,7 @@ class Admin::RoomsController < Admin::BaseController
         @room.updated_by = current_user
 
         if @room.save
-            redirect_to admin_rooms_path, notice: "Room created successfully."
+            redirect_to admin_rooms_path(slug: @room.slug), notice: "Room created successfully."
         else
             render :new, status: :unprocessable_entity
         end
@@ -61,20 +61,19 @@ class Admin::RoomsController < Admin::BaseController
 
     def update
         @room.updated_by = current_user
-        
-        # Handle image removal
-        if params[:room][:remove_image_ids].present?
+    
+        if params[:room][:remove_image_ids]
             params[:room][:remove_image_ids].each do |image_id|
                 image = @room.images.find(image_id)
-                image.purge if image
+                image.purge_later
             end
         end
 
-        # Remove remove_image_ids from params before update
-        params[:room].delete(:remove_image_ids) if params[:room][:remove_image_ids].present?
-
+        new_images = params[:room].delete(:images)
+    
         if @room.update(room_params)
-            redirect_to admin_rooms_path, notice: "Room updated successfully."
+            @room.images.attach(new_images) if new_images.present?
+            redirect_to admin_rooms_path(slug: @room.slug), notice: "Room updated successfully."
         else
             render :edit, status: :unprocessable_entity
         end
@@ -84,6 +83,32 @@ class Admin::RoomsController < Admin::BaseController
         @room.qr_code.purge
         @room.destroy
         redirect_to admin_rooms_path, notice: "Room deleted successfully."
+    end
+
+    require 'zip'
+
+    def download_all_qr_codes
+        rooms = Room.includes(qr_code_attachment: :blob).where.not(active_storage_attachments: { id: nil })
+        
+        temp_file = Tempfile.new("room_qr_codes.zip")
+        
+        Zip::OutputStream.open(temp_file.path) do |zip|
+            rooms.each do |room|
+            next unless room.qr_code.attached?
+        
+            filename = "#{room.name.parameterize}-qr-code.png"
+            blob = room.qr_code.blob
+            file = blob.download
+        
+            zip.put_next_entry(filename)
+            zip.write(file)
+            end
+        end
+        
+        send_data File.read(temp_file.path), filename: "all-room-qr-codes.zip", type: "application/zip"
+    ensure
+        temp_file.close
+        temp_file.unlink
     end
 
     private

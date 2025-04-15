@@ -1,5 +1,5 @@
 <div  class="form-group" data-controller="room-selector">
-    <div class="flex justify-between items-center flex-wrap">
+    <div class="flex justify-between items-center flex-wrap mb-4">
         <%= render "shared/typography", heading: @reservation.persisted? ? "Edit Reservation" : "New Reservation" %>
         <div class="w-full lg:w-1/2 flex-shrink-0">
             <%= form_with(url: @reservation.persisted? ? edit_reservation_path(@reservation.slug) : new_reservation_path, method: :get, local: true, data: { room_selector_target: "filterForm" }) do |filter_form| %>

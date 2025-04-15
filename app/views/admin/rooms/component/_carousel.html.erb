@@ -1,6 +1,6 @@
-<div class="rounded-lg bg-primary-950 h-[24rem] overflow-hidden w-full shadow-md relative">
+<div class="rounded-lg bg-primary-950 w-full aspect-[4/3] overflow-hidden shadow-md relative">
     <% if @room.images.attached? %>
-        <div class="h-full">
+        <div class="h-full w-full">
             <%= render "shared/carousel", images: @room.images.map { |img| url_for(img) }, alt: "Room Image" %>
         </div>
     <% else %>

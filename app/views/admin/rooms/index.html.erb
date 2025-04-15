@@ -1,15 +1,17 @@
 <div class="container mx-auto p-6" data-controller="reset-filter">
     <%= form_with(url: admin_rooms_path, method: :get, local: true, 
-        class: "p-0 w-full flex flex-wrap", 
+        class: "p-0 w-full flex flex-wrap",
         data: { testid: "filter-admin-list-room-form", reset_filter_target: "form" }) do |form| %>
-        <div class="flex justify-between items-center flex-wrap w-full">
-            <%= render "shared/typography", heading: "Meeting Rooms" %>
-            <div class="w-full md:w-2/3 flex justify-end gap-4 items-start">
-                        <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>
+        <div class="flex justify-between items-center flex-wrap w-full mb-4">
+            <%= render "shared/typography", heading: "Rooms Management" %>
+            <div class="w-full lg:w-2/3 flex flex-wrap justify-start lg:justify-end gap-4 items-start">
+                <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>
+                <div class="flex gap-4 items-center md:justify-end w-full md:w-auto justify-between">
                     <%= btn_link_to("New Room", new_admin_room_path, btn_class: "btn-primary", icon_name: "plus", variant: :solid) %>
+                    <%= btn_link_to("All QR Codes", download_all_qr_codes_admin_rooms_path, btn_class: "btn-white", icon_name: "inbox-arrow-down", target: "_blank") %>
+                </div>
             </div>
         </div>
-
         <div class="flex gap-4 w-full h-full items-stretch">
             <div class="flex flex-col gap-4 h-auto "> 
                 <div class="flex flex-col rounded-md bg-white p-6 pb-2 dark:bg-slate-800 dark:text-white shadow-md md:w-[300px]">
