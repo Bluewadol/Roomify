@@ -8,13 +8,13 @@
 
         <%= form_with model: @user, url: account_path, method: :patch, local: true, html: { multipart: true } do |f| %>
             <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
-                <div class="flex items-center sm:col-span-2 gap-4">
+                <div class="form-group w-full sm:col-span-2">
                     <div class="form-group flex flex-col gap-2 min-w-[100px]">
-                        <%= f.label :avatar, class: "form-label" %>
-                        <div class="flex items-center w-full gap-4">
-                            <%= avatar_tag(@user, size: 100, preview: true, form: f) %>
-                        </div>
-                        <%= field_error_tag(@user, :avatar) %>
+                    <%= f.label :avatar, class: "form-label" %>
+                    <div class="flex items-center w-full gap-4">
+                        <%= avatar_tag(@user, size: 100, preview: true, form: f) %>
+                    </div>
+                    <%= field_error_tag(@user, :avatar) %>
                     </div>
                 </div>
 

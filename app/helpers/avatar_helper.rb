@@ -5,7 +5,7 @@ module AvatarHelper
         style = "width: #{size}px; height: #{size}px; font-size: #{size / 2}px;"
         image_classes = "rounded-full object-cover border-2 border-neutral-200 dark:border-neutral-700 group-hover:border-primary-600 transition duration-300 ease-in-out"
         image_preview_classes = "rounded-full object-cover border-4 border-neutral-200 dark:border-neutral-700 group-hover:border-primary-600 transition duration-300 ease-in-out text-xl bg-primary-500 dark:bg-primary-600 text-white min-w-[100px] min-h-[100px] flex items-center justify-center"
-        outer_style = "width: #{size}px; height: #{size}px; font-size: #{size / 2}px; display: flex; align-items: center; justify-content: center;"
+        outer_style = "width: #{size}px; height: #{size}px; font-size: #{size / 2}px;"
         inner_style = "width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: #{size / 2}px;"
         outer_classes = "rounded-full border-1 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out bg-primary-500 dark:bg-primary-600 text-white"
         inner_classes = "rounded-full bg-primary-500 text-white font-bold overflow-hidden flex items-center justify-center"
@@ -13,11 +13,11 @@ module AvatarHelper
         initial = user.name&.first&.upcase || user.email&.first&.upcase || "?"
 
         if preview && form
-            content_tag :div, class: "relative flex items-center justify-center gap-4 w-full" do
-                concat content_tag(:div, initial, class: image_preview_classes, id: "avatar-preview")
+            content_tag :div, class: "relative flex items-center justify-start gap-4 w-full" do
+                concat content_tag(:div, initial, class: image_preview_classes, style: outer_style, id: "avatar-preview")
                 
                 concat form.file_field(:avatar,
-                    class: "form-file",
+                    class: "form-file w-auto",
                     id: "avatar-input",
                     accept: "image/*",
                     data: {
