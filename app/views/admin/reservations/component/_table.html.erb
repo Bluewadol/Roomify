@@ -1,36 +1,24 @@
 <%= render "shared/table", 
     columns: [
         { header: "Room", field: ->(reservation) { 
-            content_tag(:div, class: "text-center") do
-                ApplicationController.render(
+            ApplicationController.render(
                     partial: "shared/typography",
                     locals: { sub_heading: reservation.room.name}
-                ).html_safe
-            end
+                    ).html_safe
             }
         },
         { header: "Date", field: ->(reservation) {  
-            content_tag(:div, class: "text-center") do
-                if reservation.start_date == reservation.end_date
-                    format_datetime(reservation.start_date)
-                else
-                    "#{format_datetime(reservation.start_date)} - #{format_datetime(reservation.end_date)}"
-                end
+            if reservation.start_date == reservation.end_date
+                format_datetime(reservation.start_date)
+            else
+                "#{format_datetime(reservation.start_date)} - #{format_datetime(reservation.end_date)}"
             end
             }
         },
-        { header: "Time", field: ->(reservation) { 
-            content_tag(:div, class: "text-center") do
-                "#{format_datetime(reservation.start_time, time_only: true)} - #{format_datetime(reservation.end_time, time_only: true)}"
-            end
-        } },
+        { header: "Time", field: ->(reservation) { "#{format_datetime(reservation.start_time, time_only: true)} - #{format_datetime(reservation.end_time, time_only: true)}" } },
         { 
             header: "Status", 
-            field: ->(reservation) {
-                content_tag(:div, class: "text-center") do
-                    status_badge(reservation.status)
-                end
-            }
+            field: ->(reservation) {status_badge(reservation.status)}
         },
         {
             header: "Updated By",
@@ -43,9 +31,7 @@
         {
             header: "Updated On",
             field: ->(reservation) { 
-                content_tag(:div, class: "text-center") do
-                    format_datetime(reservation.updated_at)
-                end
+                format_datetime(reservation.updated_at)
             }
         },
         {
