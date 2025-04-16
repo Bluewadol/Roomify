@@ -44,12 +44,6 @@ module ReservationFilterable
       rooms = rooms.select { |room| params[:room_status].reject(&:blank?).include?(room.status.to_s) }
     end
     
-    # Special handling for current reservation
-    if current_reservation_id.present?
-      current_room_id = Reservation.find(current_reservation_id).room_id
-      rooms = rooms.select { |room| room.id == current_room_id || room.status == :available }
-    end
-    
     rooms
   end
 

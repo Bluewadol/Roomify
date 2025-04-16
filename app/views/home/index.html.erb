@@ -1,14 +1,17 @@
 <div class="min-h-screen flex flex-col justify-center items-center text-center -mt-16">
-
-    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mt-2">Roomify</h1>
-    <% if user_signed_in? %>
-        <% if current_user.has_role?(:admin) %>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, Admin!</h1>
-        <% else %>
-            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, <%= current_user.name.presence || "User" %>!</h1>
+    <%= image_tag "roomify/logo.png", alt: "Roomify Logo", class: "w-32 h-32" %>
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Roomify</h1>
+    
+    <div class="text-lg text-gray-600 dark:text-gray-300 mt-2">
+        <% if user_signed_in? %>
+            <% if current_user.has_role?(:admin) %>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, Admin!</span>
+            <% else %>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, <%= current_user.name.presence || "User" %>!</span>
+            <% end %>
         <% end %>
-    <% end %>
-    <p class="text-lg text-gray-600 dark:text-gray-300 mt-2">The best platform for managing your meeting rooms.</p>
+        - The best platform for managing your meeting rooms.
+    </div>
     
     <div class="mt-6 flex space-x-4">        
         <% if !user_signed_in? %>
