@@ -2,7 +2,7 @@ class User < ApplicationRecord
   rolify
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
-  has_one_attached :avatar
+  has_one_attached :avatar 
   validates :name, presence: true, length: { maximum: 30 }, if: -> { name_changed? }
   validates :phone_number, presence: false, uniqueness: true, 
     format: { with: /\A\d{10}\z/, message: "must be a 10-digit number" }, 
