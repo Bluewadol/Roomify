@@ -8,22 +8,27 @@ class User::AccountController < ApplicationController
     end
 
     def update
-  
-        if user_params[:password].present? && user_params[:password_confirmation].present?
-            if @user.update_with_password(user_params)
-                sign_in(@user, bypass: true)
-                redirect_to account_path, notice: "Password updated successfully."
-                return
+        @user = current_user
+        
+        if password_change_requested?
+            if @user.valid_password?(params[:user][:current_password])
+                if @user.update(user_params_with_password)
+                    bypass_sign_in(@user)
+                    redirect_to account_path, notice: "Profile & password updated."
+                else
+                    render :edit, status: :unprocessable_entity
+                end
+            else
+                @user.errors.add(:current_password, "is incorrect")
+                render :edit, status: :unprocessable_entity
             end
         else
-            if @user.update(user_params.except(:password, :password_confirmation, :current_password))
-                redirect_to account_path, notice: "Account updated successfully."
-                return
+            if @user.update(user_params_without_password)
+                redirect_to account_path, notice: "Profile updated."
+            else
+                render :edit, status: :unprocessable_entity
             end
         end
-
-        flash.now[:alert] = @user.errors.full_messages.to_sentence
-        render :edit, status: :unprocessable_entity
     end
 
     private
@@ -32,21 +37,15 @@ class User::AccountController < ApplicationController
         @user = current_user
     end
 
-    def user_params
-        params.require(:user).permit(
-            :name,
-            :phone_number,
-            :avatar,
-            :password,
-            :password_confirmation,
-            :current_password
-        ).tap do |whitelisted|
-            # Remove avatar if it's a string (from form submission)
-            whitelisted.delete(:avatar) if whitelisted[:avatar].is_a?(String)
-            # Remove blank password fields
-            whitelisted.delete(:password) if whitelisted[:password].blank?
-            whitelisted.delete(:password_confirmation) if whitelisted[:password_confirmation].blank?
-            whitelisted.delete(:current_password) if whitelisted[:current_password].blank?
-        end
+    def password_change_requested?
+        params[:user][:password].present?
+    end
+    
+    def user_params_with_password
+        params.require(:user).permit(:name, :phone_number, :avatar, :password, :password_confirmation)
+    end
+    
+    def user_params_without_password
+        params.require(:user).permit(:name, :phone_number, :avatar)
     end
 end

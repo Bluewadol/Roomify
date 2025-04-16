@@ -17,7 +17,6 @@ class User < ApplicationRecord
 
   validate :validate_password_complexity, if: :password_required?
 
-  # Add current_password validation
   attr_accessor :current_password
 
   validate :validate_current_password, if: :password_change_requested?
