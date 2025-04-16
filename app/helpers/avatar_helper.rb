@@ -4,15 +4,18 @@ module AvatarHelper
 
         style = "width: #{size}px; height: #{size}px; font-size: #{size / 2}px;"
         image_classes = "rounded-full object-cover border-2 border-neutral-200 dark:border-neutral-700 group-hover:border-primary-600 transition duration-300 ease-in-out"
-        image_preview_classes = "rounded-full object-cover border-4 border-neutral-200 dark:border-neutral-700 group-hover:border-primary-600 transition duration-300 ease-in-out text-xl"
-        outer_style = "width: #{size}px; height: #{size}px; font-size: #{size / 2}px;"
+        image_preview_classes = "rounded-full object-cover border-4 border-neutral-200 dark:border-neutral-700 group-hover:border-primary-600 transition duration-300 ease-in-out text-xl bg-primary-500 dark:bg-primary-600 text-white"
+        outer_style = "width: #{size}px; height: #{size}px; font-size: #{size / 2}px; display: flex; align-items: center; justify-content: center;"
         inner_style = "width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; font-size: #{size / 2}px;"
         outer_classes = "rounded-full border-1 border-transparent group-hover:border-primary-600 transition duration-300 ease-in-out bg-primary-500 dark:bg-primary-600 text-white"
-        inner_classes = "rounded-full bg-primary-500 text-white font-bold overflow-hidden"
+        inner_classes = "rounded-full bg-primary-500 text-white font-bold overflow-hidden flex items-center justify-center"
 
         if preview && form
             content_tag :div, class: "relative" do
-                concat image_tag(user.avatar, class: image_preview_classes, style: style, id: "avatar-preview")
+                # Always show the initial for preview mode with form
+                initial = user.name&.first&.upcase || user.email&.first&.upcase || "?"
+                concat content_tag(:div, initial, class: image_preview_classes, style: outer_style, id: "avatar-preview")
+                
                 concat form.file_field(:avatar,
                 class: "hidden",
                 id: "avatar-input",
@@ -25,41 +28,48 @@ module AvatarHelper
                 concat content_tag(:label,
                 content_tag(:div, class: "absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 hover:opacity-100 transition-opacity rounded-full cursor-pointer") do
                     content_tag(:span, "Change", class: "text-white font-medium")
-            end,
-            for: "avatar-input",
-            class: "absolute inset-0 cursor-pointer"
-            )
-        end
-
-        elsif user.avatar.attached?
-            image_options = {
-                style: style,
-                class: image_classes
-            }
-
-            if modal
-                image_options[:class] += " cursor-pointer"
-                image_options[:data] = {
-                    action: "click->railsui-modal#open",
-                    "railsui-modal-target": "button"
+                end,
+                for: "avatar-input",
+                class: "absolute inset-0 cursor-pointer"
+                )
+            end
+        elsif user.persisted? && user.avatar.attached?
+            begin
+                image_options = {
+                    style: style,
+                    class: image_classes
                 }
-            end
 
-            if user.avatar.content_type == "image/svg+xml"
-                image_tag user.avatar, **image_options
-            elsif user.avatar.variable?
-                image_tag user.avatar.variant(resize_to_limit: [size, size]).processed, **image_options
-            else
-                image_tag user.avatar, **image_options
-            end
+                if modal
+                    image_options[:class] += " cursor-pointer"
+                    image_options[:data] = {
+                        action: "click->railsui-modal#open",
+                        "railsui-modal-target": "button"
+                    }
+                end
 
+                if user.avatar.content_type == "image/svg+xml"
+                    image_tag user.avatar, **image_options
+                elsif user.avatar.variable?
+                    image_tag user.avatar.variant(resize_to_limit: [size, size]).processed, **image_options
+                else
+                    image_tag user.avatar, **image_options
+                end
+            rescue ActiveStorage::FileNotFoundError
+                # If file is not found, show initial instead
+                initial = user.name&.first&.upcase || user.email&.first&.upcase || "?"
+                content_tag :div, class: outer_classes, style: outer_style do
+                    content_tag :div, initial, class: image_classes, style: inner_style
+                end
+            end
         else
             outer_classes_with_modal = outer_classes.dup
             outer_classes_with_modal += " cursor-pointer" if modal
 
             content_tag :div, class: outer_classes_with_modal, style: outer_style,
             data: (modal ? { action: "click->railsui-modal#open", "railsui-modal-target": "button" } : {}) do
-                content_tag :div, user.email[0].upcase, class: image_classes, style: inner_style
+                initial = user.name&.first&.upcase || user.email&.first&.upcase || "?"
+                content_tag :div, initial, class: image_classes, style: inner_style
             end
         end
     end

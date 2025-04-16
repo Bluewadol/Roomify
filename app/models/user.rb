@@ -7,8 +7,8 @@ class User < ApplicationRecord
   validates :phone_number, presence: false, uniqueness: true, 
     format: { with: /\A\d{10}\z/, message: "must be a 10-digit number" }, 
     if: -> { phone_number_changed? }
-  validate :validate_avatar_file_type, if: -> { avatar.attached? }
-  validate :validate_avatar_file_size, if: -> { avatar.attached? }
+  validate :validate_avatar_file_type
+  validate :validate_avatar_file_size
 
   has_many :reservations
   has_many :reservation_members

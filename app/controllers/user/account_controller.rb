@@ -8,8 +8,7 @@ class User::AccountController < ApplicationController
     end
 
     def update
- 
-        # Handle password changes separately
+  
         if user_params[:password].present? && user_params[:password_confirmation].present?
             if @user.update_with_password(user_params)
                 sign_in(@user, bypass: true)
