@@ -54,7 +54,7 @@
                 <span>Member : </span>
                 <% if @reservation.members.present? %>
                     <% @reservation.members.each do |member| %>
-                        <span><%= render "shared/user_info_modal", user: member, size: 26%></span>
+                        <%= render "shared/user_info_modal", user: member, size: 26%>
                         <span><%= member.name.present? ? member.name : member.email %></span>
                     <% end %>
                 <% else %>

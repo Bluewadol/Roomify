@@ -21,10 +21,18 @@
             <div class="flex items-center space-x-4 mb-2">
                 <%= avatar_tag(user, size: 100) %>
                 <div class="flex-1">
-                    <h3 id="user-info-modal-title" class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
+                    <h3 id="user-info-modal-title" class="text-2xl text-left font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">
                         <%= user.name %>
                     </h3>
-                    <p class="text-gray-600 dark:text-gray-300 flex gap-2 items-center"><%= icon('envelope', class: 'size-5 text-gray-500') %><%= user.email %></p>
+                    <p class="text-gray-600 text-left dark:text-gray-300 flex gap-2 items-center"><%= icon('envelope', class: 'size-5 text-gray-500') %><%= user.email %></p>
+                    <% if user.has_role?(:admin) %>
+                        <div class="mt-2 text-left">
+                            <span class="inline-flex items-start gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                                <%= icon('shield-check', class: 'size-3.5') %>
+                                Admin
+                            </span>
+                        </div>
+                    <% end %>
                 </div>
             </div>
 
@@ -33,7 +41,7 @@
                 <% if user.phone_number.present? %>
                     <div class="py-3">
                         <dt class="text-sm font-medium text-gray-500 dark:text-gray-400 flex gap-2 items-center"> <%= icon('phone-arrow-up-right', class: 'size-3 text-gray-500') %> Phone</dt>
-                        <dd class="mt-1 text-lg text-gray-900 dark:text-white"><%= user.phone_number %></dd>
+                        <dd class="mt-1 text-lg text-left text-gray-900 dark:text-white"><%= user.phone_number %></dd>
                     </div>
                 <% end %>
                 </dl>

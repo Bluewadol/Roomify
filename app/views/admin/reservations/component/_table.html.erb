@@ -1,32 +1,52 @@
 <%= render "shared/table", 
     columns: [
         { header: "Room", field: ->(reservation) { 
-            ApplicationController.render(
+            content_tag(:div, class: "text-center") do
+                ApplicationController.render(
                     partial: "shared/typography",
                     locals: { sub_heading: reservation.room.name}
-                    ).html_safe
-            }
-        },
-        { header: "Date", field: ->(reservation) {  
-            if reservation.start_date == reservation.end_date
-                format_datetime(reservation.start_date)
-            else
-                "#{format_datetime(reservation.start_date)} - #{format_datetime(reservation.end_date)}"
+                ).html_safe
             end
             }
         },
-        { header: "Time", field: ->(reservation) { "#{format_datetime(reservation.start_time, time_only: true)} - #{format_datetime(reservation.end_time, time_only: true)}" } },
+        { header: "Date", field: ->(reservation) {  
+            content_tag(:div, class: "text-center") do
+                if reservation.start_date == reservation.end_date
+                    format_datetime(reservation.start_date)
+                else
+                    "#{format_datetime(reservation.start_date)} - #{format_datetime(reservation.end_date)}"
+                end
+            end
+            }
+        },
+        { header: "Time", field: ->(reservation) { 
+            content_tag(:div, class: "text-center") do
+                "#{format_datetime(reservation.start_time, time_only: true)} - #{format_datetime(reservation.end_time, time_only: true)}"
+            end
+        } },
         { 
             header: "Status", 
-            field: ->(reservation) {status_badge(reservation.status)}
+            field: ->(reservation) {
+                content_tag(:div, class: "text-center") do
+                    status_badge(reservation.status)
+                end
+            }
         },
         {
             header: "Updated By",
-            field: ->(reservation) { reservation.updated_by&.name || "System" }
+            field: ->(reservation) { 
+                content_tag(:div, class: "text-center") do
+                    render "shared/user_info_modal", user: reservation.updated_by, size: 26 
+                end
+            }
         },
         {
             header: "Updated On",
-            field: ->(reservation) { format_datetime(reservation.updated_at) }
+            field: ->(reservation) { 
+                content_tag(:div, class: "text-center") do
+                    format_datetime(reservation.updated_at)
+                end
+            }
         },
         {
             header: "Actions",
