@@ -21,6 +21,14 @@
             field: ->(reservation) {status_badge(reservation.status)}
         },
         {
+            header: "Updated By",
+            field: ->(reservation) { reservation.updated_by&.name || "System" }
+        },
+        {
+            header: "Updated On",
+            field: ->(reservation) { format_datetime(reservation.updated_at) }
+        },
+        {
             header: "Actions",
             field: ->(reservation) {
                 content_tag(:div, class: "flex justify-center") do

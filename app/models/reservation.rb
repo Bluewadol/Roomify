@@ -14,16 +14,14 @@ class Reservation < ApplicationRecord
   has_one :check_in, dependent: :destroy
 
   enum :status, {
-  pending: 0,
-  waiting_check_in: 1,
-  checked_in: 2,
-  canceled: 3,
-  expired: 4,
-  completed: 5
-}, default: :pending
+    pending: 0,
+    using: 1,
+    canceled: 2,
+    expired: 3,
+    completed: 4
+  }, default: :pending
 
-
-  enum :reservation_type, { meeting: 0, conference: 1, workshop: 2, seminar: 3, training: 4, webinar: 5, private_event: 6 }, default: :meeting
+  enum :reservation_type, { meeting: 0, conference: 1, workshop: 2, seminar: 3, training: 4, webinar: 5, exclusive: 6 }, default: :meeting
 
   validates :user_id, presence: true
   validates :room_id, presence: true

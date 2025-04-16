@@ -12,14 +12,14 @@ class Admin::ReservationsController < Admin::BaseController
         # Add pagination for upcoming reservations
         upcoming_per_page = params[:upcoming_per_page].present? ? params[:upcoming_per_page].to_i : 5
         @upcoming_reservations = @reservations
-            .where(status: [:pending, :waiting_check_in])
+            .where(status: [:pending, :in_use])
             .order(start_date: :desc, start_time: :desc)
         @upcoming_reservations = Kaminari.paginate_array(@upcoming_reservations).page(params[:upcoming_page]).per(upcoming_per_page)
         
         # Add pagination for past reservations
         past_per_page = params[:past_per_page].present? ? params[:past_per_page].to_i : 10
         @past_reservations = @reservations
-            .where.not(status: [:pending, :waiting_check_in])
+            .where.not(status: [:pending, :in_use])
             .order(start_date: :desc, start_time: :desc)
         @past_reservations = Kaminari.paginate_array(@past_reservations).page(params[:past_page]).per(past_per_page)
     end  
@@ -40,7 +40,7 @@ class Admin::ReservationsController < Admin::BaseController
     
         if @reservation.save
             @reservation.members = User.where(id: params[:reservation][:member_ids].reject(&:blank?)) if params[:reservation][:member_ids]
-            redirect_to admin_reservations_path(slug: @reservation.slug), notice: "Reservation was successfully created."
+            redirect_to admin_reservation_path(slug: @reservation.slug), notice: "Reservation was successfully created."
         else
             render :new, status: :unprocessable_entity
         end
@@ -57,7 +57,7 @@ class Admin::ReservationsController < Admin::BaseController
         @reservation.updated_by = current_user
         if @reservation.update(reservation_params)
             @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
-            redirect_to admin_reservations_path(slug: @reservation.slug), notice: "Reservation was successfully updated."
+            redirect_to admin_reservation_path(slug: @reservation.slug), notice: "Reservation was successfully updated."
         else
             render :edit, status: :unprocessable_entity
         end
@@ -70,10 +70,6 @@ class Admin::ReservationsController < Admin::BaseController
 
     private
 
-    def reservation_params
-        params.require(:reservation).permit(:room_id, :date, :start_time, :end_time)
-    end
-
     def set_reservation
         @reservation = Reservation.friendly.find(params[:slug])
         
@@ -82,7 +78,7 @@ class Admin::ReservationsController < Admin::BaseController
     end
     
     def reservation_params
-        params.require(:reservation).permit(:room_id, :start_date, :end_date, :start_time, :end_time, :description, :reservation_type, member_ids: [])
+        params.require(:reservation).permit(:room_id, :start_date, :end_date, :start_time, :end_time, :description, :reservation_type, :status, member_ids: [])
     end  
     
     def set_filter_params
@@ -109,6 +105,5 @@ class Admin::ReservationsController < Admin::BaseController
 
         per_page = params[:room_per_page].present? ? params[:room_per_page].to_i : 5
         @rooms = Kaminari.paginate_array(@rooms).page(params[:room_page]).per(per_page)
-        
     end
 end

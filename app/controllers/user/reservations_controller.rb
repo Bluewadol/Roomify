@@ -13,14 +13,14 @@ class User::ReservationsController < ApplicationController
     # Add pagination for upcoming reservations
     upcoming_per_page = params[:upcoming_per_page].present? ? params[:upcoming_per_page].to_i : 5
     @upcoming_reservations = @reservations
-      .where(status: [:pending, :waiting_check_in])
+      .where(status: [:pending, :in_use])
       .order(start_date: :desc, start_time: :desc)
     @upcoming_reservations = Kaminari.paginate_array(@upcoming_reservations).page(params[:upcoming_page]).per(upcoming_per_page)
     
     # Add pagination for past reservations
     past_per_page = params[:past_per_page].present? ? params[:past_per_page].to_i : 10
     @past_reservations = @reservations
-      .where.not(status: [:pending, :waiting_check_in])
+      .where.not(status: [:pending, :in_use])
       .order(start_date: :desc, start_time: :desc)
     @past_reservations = Kaminari.paginate_array(@past_reservations).page(params[:past_page]).per(past_per_page)
   end  
@@ -55,7 +55,7 @@ class User::ReservationsController < ApplicationController
     end
     
     # Check if the reservation status allows editing
-    unless @reservation.pending? || @reservation.waiting_check_in?
+    unless @reservation.pending?
       redirect_to reservation_path(@reservation), alert: "This reservation cannot be edited."
       return
     end
@@ -73,7 +73,7 @@ class User::ReservationsController < ApplicationController
     end
     
     # Check if the reservation status allows updating
-    unless @reservation.pending? || @reservation.waiting_check_in?
+    unless @reservation.pending?
       redirect_to reservation_path(@reservation), alert: "This reservation cannot be updated because it's no longer in pending or waiting check-in status."
       return
     end

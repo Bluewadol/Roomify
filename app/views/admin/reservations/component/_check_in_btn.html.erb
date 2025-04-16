@@ -1,21 +1,5 @@
-<% if reservation.pending? %>
-    <% reservation_datetime = reservation.start_date.to_time.change(hour: reservation.start_time.hour, min: reservation.start_time.min).in_time_zone('Asia/Bangkok') %>
-    <% time_window_start = reservation_datetime - 15.minutes %>
-    <% time_window_end = reservation_datetime %>
-
-    <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
-
-    <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
-        <%= render "user/reservations/component/check_in_modal", reservation: reservation %>
-    <% else %>
-        <%= btn_link_to "Check-In", "#",
-            btn_class: "btn btn-light h-10 border border-gray-300 cursor-not-allowed shadow-sm text-gray-600 inline-flex items-center text-sm",
-            icon_name: "arrow-right-on-rectangle",
-            variant: :solid,
-            title: "Check-In available 15 minutes before or after the start time",
-            html_options: { style: "pointer-events: none;" },
-            onclick: "event.stopPropagation();" %>
-    <% end %>
+<% if !reservation.using? %>
+    <%= render "admin/reservations/component/check_in_modal", reservation: reservation %>
 <% else %>
     <%= btn_link_to "Check-In", "#",
         btn_class: "btn btn-light h-10 border border-gray-300 cursor-not-allowed shadow-sm text-gray-600 inline-flex items-center text-sm",

@@ -1,6 +1,5 @@
 class User::CheckInsController < ApplicationController
     before_action :set_reservation, only: [:new, :create]
-    before_action :validate_reservation_status, only: [:new, :create]
 
     def new
       @check_in = CheckIn.new(reservation_id: @reservation.id)
@@ -21,25 +20,13 @@ class User::CheckInsController < ApplicationController
     def show
     end
 
-  
-
     private
 
     def set_reservation 
       @reservation = Reservation.friendly.find(params[:reservation_slug])
-      
-      # Check if the current user is the owner or a member of the reservation
-      unless @reservation.user_id == current_user.id || @reservation.members.include?(current_user)
-        redirect_to request.referer, alert: "You don't have permission to check in to this reservation."
-      end
+
     rescue ActiveRecord::RecordNotFound => e
       redirect_to request.referer, alert: "Reservation not found." 
-    end
-
-    def validate_reservation_status
-      unless @reservation.pending?
-        redirect_to reservation_path(@reservation), alert: "Cannot check in."
-      end
     end
 
     def check_in_params

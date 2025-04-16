@@ -37,7 +37,9 @@ Rails.application.routes.draw do
         get :download_all_qr_codes
       end
     end
-    resources :reservations, param: :slug
+    resources :reservations, param: :slug do
+      resource :check_in, only: [:new, :create], controller: 'admin/check_ins'
+    end
   end
 
   resource :account, only: [:show, :update], controller: 'user/account' do
