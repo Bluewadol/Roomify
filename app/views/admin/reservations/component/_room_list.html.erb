@@ -27,7 +27,7 @@
             </div>
             <div class="flex flex-col relative justify-start items-center w-auto h-full">
                 <%= status_badge(room.status) %>
-                <%= link_to "detail", room_path(room), class: "absolute bottom-0 right-1 w-full text-right text-sm text-gray-500 dark:text-gray-500 hover:underline cursor-pointer", onclick: "event.stopPropagation();" %>
+                <%= link_to "detail", admin_room_path(room), class: "absolute bottom-0 right-1 w-full text-right text-sm text-gray-500 dark:text-gray-500 hover:underline cursor-pointer", onclick: "event.stopPropagation();" %>
             </div>
         </div>
     <% end %>
