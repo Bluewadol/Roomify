@@ -3,6 +3,7 @@ class User::ReservationsController < ApplicationController
   
   before_action :set_reservation, only: %i[show edit update destroy]
   before_action :set_filter_params, only: [:new, :edit]
+  before_action :set_current_user, only: [:new, :edit]
 
   def index
     # Get reservations created by the current user or where the current user is a member
@@ -77,7 +78,6 @@ class User::ReservationsController < ApplicationController
       return
     end
     
-    # Check if the reservation status allows updating
     unless @reservation.pending?
       redirect_to reservation_path(@reservation), alert: "This reservation cannot be updated because it's no longer in pending or waiting check-in status."
       return
@@ -148,5 +148,9 @@ class User::ReservationsController < ApplicationController
     @reservation = Reservation.friendly.find(params[:slug])
     @reservation.update(status: :completed)
     redirect_to @reservation, notice: "Reservation was successfully completed."
+  end
+
+  def set_current_user
+    @current_user = current_user
   end
 end

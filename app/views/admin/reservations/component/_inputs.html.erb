@@ -4,6 +4,7 @@
             <%= render "shared/typography", sub_heading: "Select Details" %>
         </div>
     </div>
+    <%= error_messages(@reservation) if @reservation.errors.any? %>
     <%= form.hidden_field :room_id, value: @room&.id, id: "room_id_field", data: { room_selector_target: "roomIdField" } %>
         <div class="flex mb-2 gap-4">
             <div class="w-1/2">

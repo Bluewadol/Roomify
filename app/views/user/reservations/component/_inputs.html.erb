@@ -13,6 +13,7 @@
                 label: "" %>
         </div>
     </div>
+    <%= error_messages(@reservation) if @reservation.errors.any? %>
     <%= form.hidden_field :room_id, value: @room&.id, id: "room_id_field", data: { room_selector_target: "roomIdField" } %>
     <div class="mb-4 flex space-x-4">
         <div class="w-1/2">
@@ -21,6 +22,7 @@
                 <%= form.date_field :start_date, 
                     class: input_class(@reservation, :start_date), 
                     value: params[:start_date] || @reservation.start_date || Date.today,
+                    min: Date.today,
                     data: { room_selector_target: "startDateField" } %>
                 <%= error_icon(@reservation, :start_date) %>
             </div>
@@ -33,6 +35,7 @@
                 <%= form.date_field :end_date, 
                     class: input_class(@reservation, :end_date), 
                     value: params[:end_date] || @reservation.end_date || Date.today,
+                    min: Date.today,
                     data: { room_selector_target: "endDateField" } %>
                 <%= error_icon(@reservation, :end_date) %>
             </div>

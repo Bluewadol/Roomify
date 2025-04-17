@@ -1,5 +1,6 @@
 class Reservation < ApplicationRecord
   extend FriendlyId
+  attr_accessor :current_user
   
   friendly_id :slug, use: :slugged
 
@@ -24,7 +25,6 @@ class Reservation < ApplicationRecord
   enum :reservation_type, { meeting: 0, conference: 1, workshop: 2, seminar: 3, training: 4, webinar: 5, exclusive: 6 }, default: :meeting
 
   validates :user_id, presence: true
-  validates :room_id, presence: true
   validates :start_date, presence: true
   validates :end_date, presence: true
   validates :start_time, presence: true
@@ -35,6 +35,10 @@ class Reservation < ApplicationRecord
   validate :start_time_before_end_time
   validate :start_date_before_end_date
   validate :room_availability
+
+  # validate :check_start_time_for_non_admin
+  validate :start_time_is_in_the_future
+  validate :end_time_is_in_the_future
 
   private
 
@@ -70,6 +74,44 @@ class Reservation < ApplicationRecord
 
   def set_custom_slug
     update_column(:slug, "reservation-#{id}")
+  end
+
+  def current_time
+    Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
+  end
+
+  def current_date
+    Time.current.in_time_zone('Asia/Bangkok').strftime("%Y-%m-%d")
+  end
+
+  def start_time_is_in_the_future
+    return if current_user&.has_role?(:admin)
+
+    if start_date.present? == current_date
+      if start_time.present? && current_time.present?
+        formatted_start_time = start_time.strftime("%H:%M")
+        if formatted_start_time < current_time
+          errors.add(:start_time, "must be in the future")
+        end
+      else
+        errors.add(:start_time, "is invalid or missing")
+      end    
+    end
+  end
+
+  def end_time_is_in_the_future
+    return if current_user&.has_role?(:admin)
+
+    if start_date.present? == current_date
+      if end_time.present? && current_time.present?
+        formatted_end_time = end_time.strftime("%H:%M")
+        if formatted_end_time < current_time
+          errors.add(:end_time, "must be in the future")
+        end
+      else
+        errors.add(:end_time, "is invalid or missing")
+      end
+    end
   end
 
 end
