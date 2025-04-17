@@ -23,7 +23,7 @@
             class="form-input flex items-center justify-between pr-1.5 shadow-sm">
             <span id="combobox-label" class="sr-only">Select option</span>
             <span data-railsui-combobox-target="text">
-                <%= form.object.send(field).to_s.downcase || default_value.to_s.downcase %>
+                <%= form.object.send(field).humanize.downcase || default_value.humanize.downcase %>
             </span>
             <%= icon "chevron-up-down", class: "stroke-gray-500 pointer-events-none size-5" %>
         </div>

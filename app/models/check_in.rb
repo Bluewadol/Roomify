@@ -8,8 +8,8 @@ class CheckIn < ApplicationRecord
   private
 
   def user_is_member_of_reservation
-    unless reservation.members.include?(user) || reservation.user_id == user.id
-      errors.add(:user, "must be a member of the reservation or the reservation's owner.")
+    unless reservation.user_id == user_id || reservation.members.include?(user)
+      errors.add(:user_id, "must be either the owner or a member of the reservation")
     end
   end
 
@@ -30,6 +30,4 @@ class CheckIn < ApplicationRecord
   #     Current time: #{current_time_in_bkk}, Start window: #{time_window_start}, End window: #{time_window_end}")
   #   end
   # end
-
-  
 end

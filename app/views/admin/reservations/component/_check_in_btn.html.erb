@@ -1,4 +1,4 @@
-<% if !reservation.using? %>
+<% if reservation.pending? %>
     <%= render "admin/reservations/component/check_in_modal", reservation: reservation %>
 <% else %>
     <%= btn_link_to "Check-In", "#",

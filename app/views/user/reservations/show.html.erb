@@ -15,6 +15,8 @@
                 <%= render "user/reservations/component/check_in_btn", reservation: @reservation %>
                 <%= render "user/reservations/component/cancel_btn", reservation: @reservation %>
             </div>
+        <% elsif (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.checked_in?) %>
+            <%= render "user/reservations/component/completed_btn", reservation: @reservation %>
         <% end %>
     </div>
     <div class="rounded-lg bg-white p-4 flex flex-col gap-2">

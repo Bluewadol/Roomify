@@ -78,8 +78,23 @@ class Admin::ReservationsController < Admin::BaseController
     end
     
     def reservation_params
-        params.require(:reservation).permit(:room_id, :start_date, :end_date, :start_time, :end_time, :description, :reservation_type, :status, member_ids: [])
-    end  
+        if params[:reservation][:status].present?
+            params[:reservation][:status] = params[:reservation][:status].to_s.downcase.tr(' ', '_')
+        end
+        
+        params.require(:reservation).permit(
+            :room_id,
+            :start_date,
+            :end_date,
+            :start_time,
+            :end_time,
+            :description,
+            :reservation_type,
+            :status,
+            member_ids: []
+        )
+    end
+        
     
     def set_filter_params
         Time.zone = 'Bangkok'

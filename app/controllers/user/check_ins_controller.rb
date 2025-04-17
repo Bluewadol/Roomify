@@ -9,19 +9,21 @@ class User::CheckInsController < ApplicationController
     def create
       @check_in = @reservation.build_check_in(check_in_params)
       if @check_in.save
-        @reservation.status = :in_use
+        @reservation.status = :checked_in
         @reservation.updated_by = current_user
-        @reservation.save
-        redirect_to reservation_path(@reservation), notice: 'Check-in successful.'
+        if @reservation.save
+          redirect_to reservation_path(@reservation), notice: 'Check-in successful.'
+        else
+          @check_in.destroy
+          render :new, status: :unprocessable_entity, alert: 'Failed to update reservation status.'
+        end
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_entity, alert: @check_in.errors.full_messages.join(', ')
       end
     end    
 
     def show
     end
-
-  
 
     private
 

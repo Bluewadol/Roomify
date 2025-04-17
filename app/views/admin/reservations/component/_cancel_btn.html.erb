@@ -1,4 +1,4 @@
-<% if reservation.pending? %>
+<% if reservation.pending? || reservation.checked_in? %>
     <div data-controller="railsui-modal">
         <button type="button" 
                 data-action="click->railsui-modal#open" 
@@ -30,7 +30,7 @@
                         data-action="click->railsui-modal#close">
                     <%= icon "x-mark", class: "text-slate-400 size-6 group-hover:text-slate-500 pointer-events-none dark:group-hover:text-slate-800 dark:text-slate-400" %>
                 </button>
-                <div class="size-8 w-auto rounded-full bg-yellow-50 flex items-center justify-center dark:bg-yellow-500/30">
+                <div class="size-8 rounded-full bg-yellow-50 flex items-center justify-center dark:bg-yellow-500/30">
                     <%= icon "exclamation-circle", class: "size-6 text-yellow-600 flex-shrink-0 dark:text-yellow-300" %>
                 </div>
 
@@ -38,13 +38,13 @@
                     <h3 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Cancel Reservation</h3>
 
                     <div class="prose prose-slate dark:prose-invert mb-6 mt-2 pr-6">
-                        <p>Are you sure you want to cancel this reservation? This action cannot be undone.</p>
+                    <p>Are you sure you want to cancel this reservation? This action cannot be undone.</p>
                     </div>
 
                     <div class="flex justify-end items-center space-x-3">
                     <button class="btn btn-light" data-action="click->railsui-modal#close">Cancel</button>
                     <%= button_to "Cancel Reservation", 
-                        reservation_path(reservation.slug), 
+                        admin_reservation_path(reservation.slug), 
                         method: :patch,
                         params: { reservation: { status: "cancelled" } },
                         class: "btn bg-yellow-600 text-white focus:ring-yellow-100 hover:bg-yellow-700 hover:shadow-sm hover:shadow-slate-600/10" %>

@@ -71,6 +71,11 @@ class User::ReservationsController < ApplicationController
       redirect_to reservation_path(@reservation), alert: "You don't have permission to update this reservation."
       return
     end
+
+    if params[:reservation][:status] == "completed" && @reservation.checked_in?
+      completed_reservation()
+      return
+    end
     
     # Check if the reservation status allows updating
     unless @reservation.pending?
@@ -137,5 +142,11 @@ class User::ReservationsController < ApplicationController
     # Add pagination with custom per_page value
     per_page = params[:room_per_page].present? ? params[:room_per_page].to_i : 5
     @rooms = Kaminari.paginate_array(@rooms).page(params[:room_page]).per(per_page)
+  end
+
+  def completed_reservation
+    @reservation = Reservation.friendly.find(params[:slug])
+    @reservation.update(status: :completed)
+    redirect_to @reservation, notice: "Reservation was successfully completed."
   end
 end

@@ -38,7 +38,7 @@
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <button class="btn btn-white w-full sm:order-1 order-2" data-action="click->railsui-modal#close">Cancel</button>
-                        <%= form_with(model: CheckIn.new, url: admin_reservation_check_in_path(reservation), method: :post, local: true) do |f| %>
+                        <%= form_with(model: CheckIn.new, url: admin_reservation_check_in_path(@reservation), method: :post, local: true) do |f| %>
                             <%= f.hidden_field :reservation_id, value: reservation.id %>
                             <%= f.hidden_field :user_id, value: current_user.id %>
                             <%= f.hidden_field :check_in_time, value: Time.current %>
