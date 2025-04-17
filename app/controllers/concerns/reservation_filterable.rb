@@ -70,7 +70,7 @@ module ReservationFilterable
       :available
     end
   end
-
+  
   # Determine the next available date based on the next reservation
   def next_available_date(next_reservation, start_date, start_time, end_time)
     return nil unless next_reservation.present?
@@ -103,15 +103,8 @@ module ReservationFilterable
   def filter_by_date(reservations)
     if @start_date && @end_date
       if @start_date == @end_date
-        # Find reservations that overlap with the selected date
-        # This includes reservations that start before or on the selected date AND end on or after the selected date
         reservations.where("start_date <= ? AND end_date >= ?", @start_date, @start_date)
       else
-        # Find reservations that overlap with the date range
-        # This includes reservations that:
-        # 1. Start within the range
-        # 2. End within the range
-        # 3. Span across the entire range
         reservations.where(
           "(start_date BETWEEN ? AND ?) OR (end_date BETWEEN ? AND ?) OR (start_date <= ? AND end_date >= ?)",
           @start_date, @end_date, @start_date, @end_date, @start_date, @end_date

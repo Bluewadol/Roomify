@@ -9,7 +9,7 @@ export default class extends Controller {
     const urlParams = new URLSearchParams(window.location.search);
     if (!urlParams.has('start_date') && !urlParams.has('end_date')) {
       // Set default dates to today
-      const today = new Date().toISOString().split('T')[0];
+      const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Bangkok' });
       
       if (this.hasStartDateFieldTarget) {
         this.startDateFieldTarget.value = today;

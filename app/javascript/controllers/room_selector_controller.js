@@ -11,14 +11,13 @@ export default class extends Controller {
     connect() {
         this.isSubmitting = false;
         
-
         // Set today's date and current time in Bangkok timezone if not already set or if empty
         if (this.hasStartDateFieldTarget && (!this.startDateFieldTarget.value || this.startDateFieldTarget.value.trim() === '')) {
-            const today = new Date();
+            const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Bangkok' });
             this.startDateFieldTarget.value = today.toISOString().split('T')[0];
         }
         if (this.hasEndDateFieldTarget && (!this.endDateFieldTarget.value || this.endDateFieldTarget.value.trim() === '')) {
-            const today = new Date();
+            const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Bangkok' });
             this.endDateFieldTarget.value = today.toISOString().split('T')[0];
         }
         if (this.hasStartTimeFieldTarget && (!this.startTimeFieldTarget.value || this.startTimeFieldTarget.value.trim() === '')) {
