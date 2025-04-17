@@ -107,7 +107,7 @@ class User::ReservationsController < ApplicationController
   end
 
   def reservation_params
-    params.require(:reservation).permit(:room_id, :start_date, :end_date, :start_time, :end_time, :description, :reservation_type, member_ids: [])
+    params.require(:reservation).permit(:room_id, :start_date, :end_date, :status, :start_time, :end_time, :description, :reservation_type, member_ids: [])
   end  
 
   def set_filter_params

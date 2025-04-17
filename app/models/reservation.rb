@@ -16,7 +16,7 @@ class Reservation < ApplicationRecord
   enum :status, {
     pending: 0,
     using: 1,
-    canceled: 2,
+    cancelled: 2,
     expired: 3,
     completed: 4
   }, default: :pending
