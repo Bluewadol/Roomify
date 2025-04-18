@@ -4,6 +4,6 @@ class Admin::BaseController < ApplicationController
     private
 
     def authorize_admin
-        redirect_to root_path, alert: "คุณไม่มีสิทธิ์เข้าถึงหน้านี้" unless current_user.has_role?(:admin)
+        redirect_to root_path, alert: "You are not authorized to access this page" unless current_user.has_role?(:admin)
     end
 end
