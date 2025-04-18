@@ -20,14 +20,15 @@ export default class extends Controller {
         wrapper.className = "relative aspect-[16/9] rounded-lg overflow-hidden"
         wrapper.setAttribute("data-image-upload-target", "field")
         wrapper.innerHTML = `
-            <div class="relative w-full h-full" data-controller="image-preview">
+            <div class="relative w-full h-full group hover:opacity-70 transition-opacity duration-300 hover:bg-neutral-100 hover:text-gray-900 text-gray-400" data-controller="image-preview">
                 <input type="file" name="room[images][]" accept="image/jpeg,image/png,image/webp"
                     class="absolute inset-0 opacity-0 cursor-pointer w-full h-full z-10"
                     data-image-preview-target="input"
                     data-action="change->image-upload#validateFile change->image-preview#preview" />
                 <div class="absolute inset-0 bg-cover bg-center hidden"
                     data-image-preview-target="preview"></div>
-                <div class="absolute inset-0 flex flex-col gap-2 border border-dashed border-gray-400 rounded-lg items-center justify-center text-gray-400">
+                <div class="absolute inset-0 flex flex-col gap-2 border border-dashed border-gray-400 rounded-lg items-center justify-center"
+                    data-image-preview-target="uploadPlaceholder">
                     ${document.getElementById("upload-icon-template").innerHTML}
                     <span class="text-sm">Upload room Image</span>
                 </div>
