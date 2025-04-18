@@ -27,6 +27,6 @@ module InputHelper
     end
 
     def error_messages(resource)
-        render "rui/shared/error_messages", resource: resource if resource.errors.any?
+        render "shared/error_messages", resource: resource if resource.errors.any?
     end
 end
