@@ -38,7 +38,7 @@ Rails.application.routes.draw do
       end
     end
     resources :reservations, param: :slug do
-      resource :check_in, only: [:new, :create], controller: 'admin/check_ins'
+      resource :check_in, only: [:new, :create]
     end
   end
 

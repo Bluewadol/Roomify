@@ -36,19 +36,23 @@ class Reservation < ApplicationRecord
   validate :start_date_before_end_date
   validate :room_availability
 
-  # validate :check_start_time_for_non_admin
-  validate :start_time_is_in_the_future
-  validate :end_time_is_in_the_future
+  validate :start_date_is_today_or_future, if: :start_date_changed?
+  validate :start_time_is_in_the_future, if: :start_time_changed?
+  validate :end_time_is_in_the_future, if: :end_time_changed?
 
   private
 
   def start_time_before_end_time
+    return unless start_time_changed? || end_time_changed?
+    
     if start_time.present? && end_time.present? && start_time >= end_time
       errors.add(:start_time, "must be before end time")
     end
   end  
 
   def start_date_before_end_date
+    return unless start_date_changed? || end_date_changed?
+    
     if start_date.present? && end_date.present? && start_date > end_date
       errors.add(:start_date, "must be before or the same as the end date")
     end
@@ -56,6 +60,7 @@ class Reservation < ApplicationRecord
 
   def room_availability
     return if room.nil? || start_date.nil? || end_date.nil? || start_time.nil? || end_time.nil?
+    return unless start_date_changed? || end_date_changed? || start_time_changed? || end_time_changed?
 
     overlapping_reservations = Reservation.where(room_id: room.id)
                                           .where('start_date BETWEEN ? AND ?', start_date, end_date)
@@ -82,13 +87,12 @@ class Reservation < ApplicationRecord
   end
 
   def current_date
-    Time.current.in_time_zone('Asia/Bangkok').strftime("%Y-%m-%d")
+    Time.current.in_time_zone('Asia/Bangkok').to_date
   end
 
   def start_time_is_in_the_future
-    Rails.logger.info("start_date: #{start_date} | current_date: #{current_date}")
-    Rails.logger.info("start_time: #{start_time} | current_time: #{current_time}")
     return if current_user&.has_role?(:admin)
+    return unless start_time_changed?
 
     if start_date.present?
       if start_time.present? && current_time.present?
@@ -105,6 +109,7 @@ class Reservation < ApplicationRecord
 
   def end_time_is_in_the_future
     return if current_user&.has_role?(:admin)
+    return unless end_time_changed?
 
     if start_date.present?
       if end_time.present? && current_time.present?
@@ -117,5 +122,24 @@ class Reservation < ApplicationRecord
       end
     end
   end
+
+  def start_date_is_today_or_future
+    return if start_date.nil?
+    return unless start_date_changed?
+    
+    Rails.logger.info("start_date: #{start_date} | current_date: #{current_date}")
+    if start_date < current_date
+      errors.add(:start_date, "must be today or in the future")
+    end
+  end
+
+  # def end_date_is_today_or_future
+  #   return if end_date.nil?
+  #   return unless end_date_changed?
+    
+  #   if end_date < current_date
+  #     errors.add(:end_date, "must be today or in the future")
+  #   end
+  # end
 
 end
