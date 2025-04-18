@@ -63,6 +63,9 @@ jobs:
       - name: Install libvips (for image_processing gem)
         run: sudo apt-get install -y libvips
 
+      - name: Install bun
+        run: curl -fsSL https://bun.sh/install | bash
+
       - name: Checkout code
         uses: actions/checkout@v4
 
