@@ -6,7 +6,6 @@ const rails_ui_template_path = outputRailsUI.trim() + "/**/*.html.erb";
 
 module.exports = {
   presets: [presets.hound],
-  darkMode: false,
   content: [
     "./config/initializers/railsui_icon.rb",
     './app/assets/stylesheets/**/*.css',
