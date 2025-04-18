@@ -1,7 +1,7 @@
 # Exported from Render on 2025-04-08T02:12:34Z
 services:
 - type: web
-  name: meeting_room_booking
+  name: roomify-odt
   runtime: docker
   repo: https://github.com/Bluewadol/Roomify
   plan: free
