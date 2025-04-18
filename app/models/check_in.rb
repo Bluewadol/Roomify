@@ -15,18 +15,18 @@ class CheckIn < ApplicationRecord
 
   # def check_in_time_within_allowed_window
   #   return unless reservation.present? && check_in_time.present?
-  
+
   #   reservation_datetime = reservation.start_date.to_time.change({ hour: reservation.start_time.hour, min: reservation.start_time.min })
   #   reservation_datetime = reservation_datetime.in_time_zone('Asia/Bangkok')
-  
+
   #   time_window_start = reservation_datetime - 15.minutes
   #   time_window_end = reservation_datetime + 15.minutes
-  
+
   #   current_time_in_bkk = check_in_time.in_time_zone('Asia/Bangkok')
   #   current_time_in_bkk = current_time_in_bkk - 7.hours
-  
+
   #   if current_time_in_bkk < time_window_start || current_time_in_bkk > time_window_end
-  #     errors.add(:check_in_time, "must be within 15 minutes before or after the reservation's start time. 
+  #     errors.add(:check_in_time, "must be within 15 minutes before or after the reservation's start time.
   #     Current time: #{current_time_in_bkk}, Start window: #{time_window_start}, End window: #{time_window_end}")
   #   end
   # end

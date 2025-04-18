@@ -23,36 +23,36 @@ module ReservationFilterable
   # Filter rooms based on reservations and other criteria
   def filter_rooms(rooms, reservations_in_range, options = {})
     current_reservation_id = options[:current_reservation_id]
-    
+
     # Apply name filter if provided
     if params[:name].present?
       trimmed_name = params[:name].strip.downcase
       rooms = rooms.where("LOWER(name) LIKE ?", "%#{trimmed_name}%")
     end
-    
+
     # Apply capacity filter if provided
     if params[:capacity].present?
       rooms = rooms.where("capacity_max >= ?", params[:capacity])
     end
-    
+
     # Apply amenities filter if provided
     if params[:amenities].present? && params[:amenities].reject(&:blank?).any?
       rooms = rooms.left_joins(:room_amenities)
                    .where(room_amenities: { amenity_name: params[:amenities].reject(&:blank?) })
     end
-    
+
     # Determine room status and filter
     rooms = rooms.map do |room|
       status = determine_room_status(room, reservations_in_range)
       room.assign_attributes(status: status)
       room
     end
-    
+
     # Filter by status if provided
     if params[:room_status].present? && params[:room_status].reject(&:blank?).any?
       rooms = rooms.select { |room| params[:room_status].reject(&:blank?).include?(room.status.to_s) }
     end
-    
+
     rooms
   end
 
@@ -60,9 +60,9 @@ module ReservationFilterable
   def sort_rooms_by_status(rooms)
     rooms.sort_by do |room|
       case room.status
-      when 'available' then 0
-      when 'booked' then 1
-      when 'unavailable' then 2
+      when "available" then 0
+      when "booked" then 1
+      when "unavailable" then 2
       end
     end
   end
@@ -70,7 +70,7 @@ module ReservationFilterable
   # Determine room status based on reservations
   def determine_room_status(room, reservations_in_range)
     booked = reservations_in_range.where(room_id: room.id).exists?
-    
+
     if room.unavailable?
       :unavailable
     elsif booked
@@ -79,12 +79,12 @@ module ReservationFilterable
       :available
     end
   end
-  
+
   def next_available_date(next_reservation, start_date, start_time, end_time)
     return nil unless next_reservation.present?
-    
+
     today = Date.current
-    
+
     if today >= next_reservation.start_date && today <= next_reservation.end_date
       if start_time < next_reservation.start_time
         today
@@ -141,10 +141,10 @@ module ReservationFilterable
       reservations
     end
   end
-  
+
   def parse_time_in_zone(date, time_str)
     return nil if date.blank? || time_str.blank?
     Rails.logger.info("parse_time_in_zone date: #{date} | time_str: #{time_str}")
     Time.zone.parse("#{date} #{time_str}")
   end
-end 
+end

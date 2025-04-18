@@ -1,7 +1,7 @@
 module FormatDateTimeHelper
     def format_datetime(date_or_time, time_only: false)
         return "" if date_or_time.nil?
-        
+
         if date_or_time.is_a?(Date)
             date_or_time.strftime("%d %b %Y")
         elsif date_or_time.is_a?(Time) || date_or_time.is_a?(DateTime)
@@ -33,5 +33,5 @@ module FormatDateTimeHelper
         else
             "#{elapsed_minutes} min"
         end
-    end      
+    end
 end

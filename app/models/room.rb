@@ -1,8 +1,8 @@
-class Room < ApplicationRecord 
+class Room < ApplicationRecord
     before_validation :normalize_name
     extend FriendlyId
-    
-    friendly_id :name , use: :slugged
+
+    friendly_id :name, use: :slugged
 
     has_many :room_amenities, dependent: :destroy
     accepts_nested_attributes_for :room_amenities, allow_destroy: true
@@ -21,7 +21,7 @@ class Room < ApplicationRecord
     validates :name, presence: true, uniqueness: true
     validates :capacity_min, presence: true, numericality: { only_integer: true, greater_than: 0 }
     validates :capacity_max, presence: true, numericality: { only_integer: true, greater_than: 0 }
-    validates :description, length: { maximum: 200 } 
+    validates :description, length: { maximum: 200 }
     validate :validate_capacity_range
 
     validate :validate_images
@@ -41,17 +41,17 @@ class Room < ApplicationRecord
     end
 
     def next_reservation
-        start_date = @reference_start_date || Time.current.in_time_zone('Asia/Bangkok').to_date
-        start_time = @reference_start_time || Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
+        start_date = @reference_start_date || Time.current.in_time_zone("Asia/Bangkok").to_date
+        start_time = @reference_start_time || Time.current.in_time_zone("Asia/Bangkok").strftime("%H:%M")
         end_date = @reference_end_date || start_date
         end_time = @reference_end_time || start_time
-        
+
         Rails.logger.info("Reference start date: #{start_date}, Reference start time: #{start_time}")
         Rails.logger.info("Reference end date: #{end_date}, Reference end time: #{end_time}")
 
         reservations
-            .where('(start_date > ?) OR (end_date > ?) OR (start_date = ? AND start_time > ?) OR (end_date = ? AND start_time > ?)', start_date, start_date, start_date, start_time, start_date, start_time)
-            .where.not(status: [:canceled, :expired, :completed])
+            .where("(start_date > ?) OR (end_date > ?) OR (start_date = ? AND start_time > ?) OR (end_date = ? AND start_time > ?)", start_date, start_date, start_date, start_time, start_date, start_time)
+            .where.not(status: [ :canceled, :expired, :completed ])
             .order(start_date: :asc, start_time: :asc)
             .first
     end
@@ -74,7 +74,7 @@ class Room < ApplicationRecord
     def validate_images
         new_images = images.attachments.select(&:new_record?)
         return if new_images.blank?
-        
+
         new_images.each do |image|
             unless image.content_type.in?(%w[image/jpeg image/png image/webp])
             errors.add(:images, "must be a JPEG, PNG, or WebP image")
@@ -91,17 +91,17 @@ class Room < ApplicationRecord
     def generate_qr_code
         qr = RQRCode::QRCode.new(room_url)
         png = qr.as_png(size: 300)
-    
+
         self.qr_code.attach(
             io: StringIO.new(png.to_s),
             filename: "room-#{id}-qr.png",
-            content_type: 'image/png'
+            content_type: "image/png"
         )
     end
-    
+
     def room_url
         Rails.application.routes.url_helpers.room_url(self, host: "http://127.0.0.1:3000/")
-        # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
+      # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
     end
 
     def should_generate_new_friendly_id?
@@ -109,7 +109,7 @@ class Room < ApplicationRecord
     end
 
     def normalize_name
-        self.name = name.strip.gsub(/\s+/, ' ') if name.present?
+        self.name = name.strip.gsub(/\s+/, " ") if name.present?
     end
 
     def capacity_max_greater_than_min
@@ -121,16 +121,16 @@ class Room < ApplicationRecord
 
     def no_duplicate_amenity_names
         return unless room_amenities.any?
-        
-        amenity_names = room_amenities.map { |amenity| amenity.amenity_name.to_s.downcase.gsub(/\s+/, '') }
+
+        amenity_names = room_amenities.map { |amenity| amenity.amenity_name.to_s.downcase.gsub(/\s+/, "") }
         duplicate_names = amenity_names.select { |name| amenity_names.count(name) > 1 }.uniq
-        
+
         if duplicate_names.any?
             duplicate_names.each do |name|
                 errors.add(:base, "Amenity name '#{name}' is duplicated (ignoring spaces and case)")
-                
+
                 room_amenities.each do |amenity|
-                    if amenity.amenity_name.to_s.downcase.gsub(/\s+/, '') == name
+                    if amenity.amenity_name.to_s.downcase.gsub(/\s+/, "") == name
                         amenity.errors.add(:amenity_name, "should be unique (ignoring spaces and case)")
                     end
                 end

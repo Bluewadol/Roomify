@@ -1,13 +1,13 @@
 class Reservation < ApplicationRecord
   extend FriendlyId
   attr_accessor :current_user
-  
+
   friendly_id :slug, use: :slugged
 
   after_create :set_custom_slug
 
   belongs_to :user
-  belongs_to :updated_by, class_name: 'User', optional: true
+  belongs_to :updated_by, class_name: "User", optional: true
 
   belongs_to :room
   has_many :reservation_members, dependent: :destroy
@@ -44,15 +44,15 @@ class Reservation < ApplicationRecord
 
   def start_time_before_end_time
     return unless start_time_changed? || end_time_changed?
-    
+
     if start_time.present? && end_time.present? && start_time >= end_time
       errors.add(:start_time, "must be before end time")
     end
-  end  
+  end
 
   def start_date_before_end_date
     return unless start_date_changed? || end_date_changed?
-    
+
     if start_date.present? && end_date.present? && start_date > end_date
       errors.add(:start_date, "must be before or the same as the end date")
     end
@@ -63,9 +63,9 @@ class Reservation < ApplicationRecord
     return unless start_date_changed? || end_date_changed? || start_time_changed? || end_time_changed?
 
     overlapping_reservations = Reservation.where(room_id: room.id)
-                                          .where('start_date BETWEEN ? AND ?', start_date, end_date)
-                                          .where('start_time < ? AND end_time > ?', end_time, start_time)
-                                          .where("status NOT IN (?)", [Reservation.statuses[:cancelled], Reservation.statuses[:completed]])
+                                          .where("start_date BETWEEN ? AND ?", start_date, end_date)
+                                          .where("start_time < ? AND end_time > ?", end_time, start_time)
+                                          .where("status NOT IN (?)", [ Reservation.statuses[:cancelled], Reservation.statuses[:completed] ])
 
     overlapping_reservations = overlapping_reservations.where.not(id: id) if persisted?
 
@@ -83,11 +83,11 @@ class Reservation < ApplicationRecord
   end
 
   def current_time
-    Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
+    Time.current.in_time_zone("Asia/Bangkok").strftime("%H:%M")
   end
 
   def current_date
-    Time.current.in_time_zone('Asia/Bangkok').to_date
+    Time.current.in_time_zone("Asia/Bangkok").to_date
   end
 
   def start_time_is_in_the_future
@@ -103,7 +103,7 @@ class Reservation < ApplicationRecord
         end
       else
         errors.add(:start_time, "is invalid or missing")
-      end    
+      end
     end
   end
 
@@ -126,7 +126,7 @@ class Reservation < ApplicationRecord
   def start_date_is_today_or_future
     return if start_date.nil?
     return unless start_date_changed?
-    
+
     Rails.logger.info("start_date: #{start_date} | current_date: #{current_date}")
     if start_date < current_date
       errors.add(:start_date, "must be today or in the future")
@@ -136,10 +136,9 @@ class Reservation < ApplicationRecord
   # def end_date_is_today_or_future
   #   return if end_date.nil?
   #   return unless end_date_changed?
-    
+
   #   if end_date < current_date
   #     errors.add(:end_date, "must be today or in the future")
   #   end
   # end
-
 end

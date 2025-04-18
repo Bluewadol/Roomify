@@ -2,10 +2,10 @@ class User < ApplicationRecord
   rolify
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
-  has_one_attached :avatar 
+  has_one_attached :avatar
   validates :name, presence: true, length: { maximum: 30 }, if: -> { name_changed? }
-  validates :phone_number, presence: false, uniqueness: true, 
-    format: { with: /\A\d{10}\z/, message: "must be a 10-digit number" }, 
+  validates :phone_number, presence: false, uniqueness: true,
+    format: { with: /\A\d{10}\z/, message: "must be a 10-digit number" },
     if: -> { phone_number_changed? }
   validate :validate_avatar_file_type
   validate :validate_avatar_file_size
@@ -22,24 +22,24 @@ class User < ApplicationRecord
   validate :validate_current_password, if: :password_change_requested?
 
   private
-  
+
 
   def validate_password_complexity
     return if password.blank?
-  
+
     unless password.length >= 8 &&
            password =~ /[a-z]/ &&
            password =~ /[A-Z]/ &&
            password =~ /\d/ &&
            password =~ /[!@#$%^&*]/
-  
+
       errors.add(:password, "must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one digit, and one special character (!@#$%^&*)")
     end
-  end  
+  end
 
   def password_required?
     new_record? || password.present? || password_confirmation.present?
-  end  
+  end
 
   def password_change_requested?
     password.present? || password_confirmation.present? || current_password.present?
@@ -54,18 +54,18 @@ class User < ApplicationRecord
 
   def validate_avatar_file_type
     return unless avatar.attached?
-    
+
     unless avatar.content_type.in?(%w[image/jpeg image/png image/gif image/webp])
-      errors.add(:avatar, 'must be a JPEG, PNG, GIF, or WEBP image')
+      errors.add(:avatar, "must be a JPEG, PNG, GIF, or WEBP image")
     end
   end
 
   def validate_avatar_file_size
     return unless avatar.attached?
     return unless avatar.blob&.byte_size
-  
+
     if avatar.blob.byte_size > 5.megabytes
-      errors.add(:avatar, 'size must be less than 5MB')
+      errors.add(:avatar, "size must be less than 5MB")
     end
-  end  
+  end
 end

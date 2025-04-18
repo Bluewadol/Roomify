@@ -9,7 +9,7 @@ class User::AccountController < ApplicationController
 
     def update
         @user = current_user
-        
+
         if password_change_requested?
             if @user.valid_password?(params[:user][:current_password])
                 if @user.update(user_params_with_password)
@@ -40,11 +40,11 @@ class User::AccountController < ApplicationController
     def password_change_requested?
         params[:user][:password].present?
     end
-    
+
     def user_params_with_password
         params.require(:user).permit(:name, :phone_number, :avatar, :password, :password_confirmation)
     end
-    
+
     def user_params_without_password
         params.require(:user).permit(:name, :phone_number, :avatar)
     end

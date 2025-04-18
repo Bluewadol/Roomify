@@ -15,7 +15,7 @@ module AvatarHelper
         if preview && form
             content_tag :div, class: "relative flex items-center justify-start gap-4 w-full" do
                 concat content_tag(:div, initial, class: image_preview_classes, style: outer_style, id: "avatar-preview")
-                
+
                 concat form.file_field(:avatar,
                     class: "form-file w-auto",
                     id: "avatar-input",
@@ -51,7 +51,7 @@ module AvatarHelper
                 if user.avatar.content_type == "image/svg+xml"
                     image_tag user.avatar, **image_options
                 elsif user.avatar.variable?
-                    image_tag user.avatar.variant(resize_to_limit: [size, size]).processed, **image_options
+                    image_tag user.avatar.variant(resize_to_limit: [ size, size ]).processed, **image_options
                 else
                     image_tag user.avatar, **image_options
                 end
