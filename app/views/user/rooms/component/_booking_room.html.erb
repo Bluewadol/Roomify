@@ -19,7 +19,6 @@
                 <%= link_to 'Reserve Now', new_reservation_path(
                     room_id: @room.id,
                     start_date: params[:start_date].presence || Date.today.in_time_zone('Asia/Bangkok').strftime('%Y-%m-%d'),
-                    end_date: params[:end_date].presence || Date.today.in_time_zone('Asia/Bangkok').strftime('%Y-%m-%d'),
                     start_time: params[:start_time].presence || Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M'),
                     end_time: params[:end_time].presence || Time.current.in_time_zone('Asia/Bangkok').strftime('%H:%M')
                 ), class: 'btn btn-primary w-full' %>

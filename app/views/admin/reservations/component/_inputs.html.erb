@@ -8,7 +8,7 @@
     <%= form.hidden_field :room_id, value: @room&.id, id: "room_id_field", data: { room_selector_target: "roomIdField" } %>
         <div class="flex mb-2 gap-4">
             <div class="w-1/2">
-                <%= form.label :start_date, "Status", class: "form-label" %>
+                <%= form.label :status, "Status", class: "form-label" %>
                 <div class="relative">
                     <%= render "shared/combobox", 
                     form: form, 
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="w-1/2">
-                <%= form.label :start_date, "Status", class: "form-label" %>
+                <%= form.label :reservation_type, "Reservation Type", class: "form-label" %>
                 <div class="relative">
                     <%= render "shared/combobox", 
                         form: form, 
@@ -46,11 +46,11 @@
         </div>
 
         <div class="w-1/2">
-            <%= form.label :end_date, "End Date", class: "form-label" %>
+            <%= form.label :end_date, "End Date", class: "form-label hidden" %>
             <div class="relative">
-                <%= form.date_field :end_date, 
+                <%= form.hidden_field :end_date, 
                     class: input_class(@reservation, :end_date), 
-                    value: params[:end_date] || @reservation.end_date || Date.today,
+                    value: params[:start_date] || @reservation.start_date || Date.today,
                     data: { room_selector_target: "endDateField" } %>
                 <%= error_icon(@reservation, :end_date) %>
             </div>

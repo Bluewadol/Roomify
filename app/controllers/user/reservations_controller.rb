@@ -112,12 +112,16 @@ class User::ReservationsController < ApplicationController
   end
 
   def reservation_params
+    if params[:reservation][:start_date].present?
+      params[:reservation][:end_date] = params[:reservation][:start_date]
+    end
     params.require(:reservation).permit(:room_id, :start_date, :end_date, :status, :start_time, :end_time, :description, :reservation_type, member_ids: [])
   end  
 
   def set_filter_params
     Time.zone = 'Bangkok'
     @start_date = params[:start_date].presence || Time.zone.today.to_s
+    # @end_date   = params[:end_date].presence   || Time.zone.today.to_s
     @end_date   = params[:end_date].presence   || Time.zone.today.to_s
     @start_time = parse_time_in_zone(@start_date, params[:start_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))
     @end_time   = parse_time_in_zone(@end_date, params[:end_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))

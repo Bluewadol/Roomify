@@ -6,7 +6,6 @@
                     <%= btn_link_to "Edit", edit_reservation_path(@reservation, 
                         room_id: @reservation.room_id, 
                         start_date: @reservation.start_date,
-                        end_date: @reservation.end_date,
                         start_time: @reservation.start_time&.strftime("%H:%M"),
                         end_time: @reservation.end_time&.strftime("%H:%M")
                         ), 

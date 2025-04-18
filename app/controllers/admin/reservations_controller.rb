@@ -29,12 +29,14 @@ class Admin::ReservationsController < Admin::BaseController
     def new
         set_rooms()
         @reservation = Reservation.new
+        @reservation.end_date = @reservation.start_date
         @room_select = Room.find_by(id: params[:room_id])
         @reservation.room_id = @room_select.id if @room_select
     end
     
     def create
         @reservation = current_user.reservations.build(reservation_params)
+        @reservation.end_date = @reservation.start_date
         @reservation.updated_by = current_user
         set_rooms()
     
@@ -48,12 +50,14 @@ class Admin::ReservationsController < Admin::BaseController
     
     def edit        
         set_rooms(@reservation.id)
+        @reservation.end_date = @reservation.start_date
         @room_select = Room.find_by(id: params[:room_id])
         @reservation.room_id = @room_select.id if @room_select
     end
     
     def update
         set_rooms(@reservation.id)
+        @reservation.end_date = @reservation.start_date
         @reservation.updated_by = current_user
         if @reservation.update(reservation_params)
             @reservation.members = User.where(id: params[:reservation][:member_ids]) if params[:reservation][:member_ids]
@@ -81,6 +85,10 @@ class Admin::ReservationsController < Admin::BaseController
         if params[:reservation][:status].present?
             params[:reservation][:status] = params[:reservation][:status].to_s.downcase.tr(' ', '_')
         end
+
+        if params[:reservation][:start_date].present?
+            params[:reservation][:end_date] = params[:reservation][:start_date]
+        end
         
         params.require(:reservation).permit(
             :room_id,
@@ -93,13 +101,15 @@ class Admin::ReservationsController < Admin::BaseController
             :status,
             member_ids: []
         )
+        # params[:reservation][:end_date] = params[:reservation][:start_date]
     end
         
     
     def set_filter_params
         Time.zone = 'Bangkok'
         @start_date = params[:start_date].presence || Time.zone.today.to_s
-        @end_date   = params[:end_date].presence   || Time.zone.today.to_s
+        # @end_date   = params[:end_date].presence   || Time.zone.today.to_s
+        @end_date   = params[:start_date].presence || Time.zone.today.to_s
         @start_time = parse_time_in_zone(@start_date, params[:start_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))
         @end_time   = parse_time_in_zone(@end_date, params[:end_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))
     end

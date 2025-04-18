@@ -7,10 +7,6 @@
                 <span id="selected-start-date" data-start-date="<%= format_datetime(@reservation.start_date) %>">
                     <%= format_datetime(@reservation.start_date) if @reservation.start_date.present? %>
                 </span>
-                <span id="dash-date">-</span>
-                <span id="selected-end-date" data-end-date="<%= format_datetime(@reservation.end_date) %>">
-                    <%= format_datetime(@reservation.end_date) if @reservation.end_date.present? %>
-                </span>
             </div>
         </div>
 
