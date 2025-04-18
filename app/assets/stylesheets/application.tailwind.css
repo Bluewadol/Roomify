@@ -1,8 +1,3 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-
-@import "railsui/actiontext";
-@import "railsui/forms";
-@import "railsui/navigation";
-@import "tailwindcss/utilities";
-@import "tom-select/dist/css/tom-select.css";
+@import "stylesheets/railsui/actiontext";
+@import "stylesheets/railsui/forms";
+@import "stylesheets/railsui/navigation";
