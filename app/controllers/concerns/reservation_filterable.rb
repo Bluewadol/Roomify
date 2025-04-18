@@ -1,7 +1,6 @@
 module ReservationFilterable
   extend ActiveSupport::Concern
 
-  # Filter reservations based on date and time parameters
   def filter_reservations(reservations, options = {})
     exclude_ids = options[:exclude_ids] || []
     Rails.logger.info("filter_reservations exclude_ids: #{exclude_ids}")
@@ -10,10 +9,12 @@ module ReservationFilterable
     Rails.logger.info("end_date: #{@end_date}")
     Rails.logger.info("start_time: #{@start_time}")
     Rails.logger.info("end_time: #{@end_time}")
+
+    # Return empty relation if all parameters are empty
+    return reservations.none if @start_date.blank? && @end_date.blank? && @start_time.blank? && @end_time.blank?
+
     reservations = reservations.where.not(id: exclude_ids) if exclude_ids.present?
-
     reservations = filter_by_date(reservations)
-
     reservations = filter_by_time(reservations)
 
     reservations
