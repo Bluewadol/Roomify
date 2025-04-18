@@ -4,18 +4,16 @@ export default class extends Controller {
   static targets = ["form", "startDateField", "endDateField"];
 
   connect() {
-    
-    // Check if start_date and end_date are not set in URL
+    const bangkokDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
+    const formattedDate = bangkokDate.toISOString().split('T')[0]; 
+
     const urlParams = new URLSearchParams(window.location.search);
     if (!urlParams.has('start_date') && !urlParams.has('end_date')) {
-      // Set default dates to today
-      const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Bangkok' });
-      
       if (this.hasStartDateFieldTarget) {
-        this.startDateFieldTarget.value = today;
+        this.startDateFieldTarget.value = formattedDate;
       }
       if (this.hasEndDateFieldTarget) {
-        this.endDateFieldTarget.value = today;
+        this.endDateFieldTarget.value = formattedDate;
       }
       
       this.formTarget.submit();

@@ -11,30 +11,35 @@ export default class extends Controller {
     connect() {
         this.isSubmitting = false;
         
-        // Set today's date and current time in Bangkok timezone if not already set or if empty
-        if (this.hasStartDateFieldTarget && (!this.startDateFieldTarget.value || this.startDateFieldTarget.value.trim() === '')) {
-            const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Bangkok' });
-            this.startDateFieldTarget.value = today.toISOString().split('T')[0];
+        const urlParams = new URLSearchParams(window.location.search);
+        const bangkokDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
+        const formattedDate = bangkokDate.toISOString().split('T')[0]; 
+        const hours = bangkokDate.getHours().toString().padStart(2, '0');
+        const minutes = bangkokDate.getMinutes().toString().padStart(2, '0');
+        const formattedTime = `${hours}:${minutes}`;
+
+        if (!urlParams.has('start_date')) {
+            console.log("start_date not set, setting to today");
+            this.startDateFieldTarget.value = formattedDate;
+            this.syncToFilterForm();
         }
-        if (this.hasEndDateFieldTarget && (!this.endDateFieldTarget.value || this.endDateFieldTarget.value.trim() === '')) {
-            const today = new Date().toLocaleDateString('en-US', { timeZone: 'Asia/Bangkok' });
-            this.endDateFieldTarget.value = today.toISOString().split('T')[0];
+        
+        if (!urlParams.has('end_date')) {
+            console.log("end_date not set, setting to today");
+            this.endDateFieldTarget.value = formattedDate;
+            this.syncToFilterForm();
         }
-        if (this.hasStartTimeFieldTarget && (!this.startTimeFieldTarget.value || this.startTimeFieldTarget.value.trim() === '')) {
-            // Get current time in Bangkok timezone
-            const now = new Date();
-            const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
-            const hours = bangkokTime.getHours().toString().padStart(2, '0');
-            const minutes = bangkokTime.getMinutes().toString().padStart(2, '0');
-            this.startTimeFieldTarget.value = `${hours}:${minutes}`;
+
+        if (!urlParams.has('start_time')) {
+            console.log("start_time not set, setting to current time");
+            this.startTimeFieldTarget.value = formattedTime;
+            this.syncToFilterForm();
         }
-        if (this.hasEndTimeFieldTarget && (!this.endTimeFieldTarget.value || this.endTimeFieldTarget.value.trim() === '')) {
-            // Get current time in Bangkok timezone
-            const now = new Date();
-            const bangkokTime = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Bangkok' }));
-            const hours = bangkokTime.getHours().toString().padStart(2, '0');
-            const minutes = bangkokTime.getMinutes().toString().padStart(2, '0');
-            this.endTimeFieldTarget.value = `${hours}:${minutes}`;
+
+        if (!urlParams.has('end_time')) {
+            console.log("end_time not set, setting to current time");
+            this.endTimeFieldTarget.value = formattedTime;
+            this.syncToFilterForm();
         }
 
         const roomIdFromParams = new URLSearchParams(window.location.search).get('room_id');
@@ -162,8 +167,8 @@ export default class extends Controller {
     
         this.setText("selected-room-name", roomName);
 
-        const startDate = this.formatDateTime(this.startDateFieldTarget.value);
-        const endDate = this.formatDateTime(this.endDateFieldTarget.value);
+        const startDate = this.formatDate(this.startDateFieldTarget.value);
+        const endDate = this.formatDate(this.endDateFieldTarget.value);
     
         if (startDate) {
             this.setText("selected-start-date", startDate);
@@ -175,8 +180,13 @@ export default class extends Controller {
             this.setText("selected-end-date", ""); 
             this.setText("dash-date", "");
         }
-        const startTime = this.formatDateTime(this.startTimeFieldTarget.value);
-        const endTime = this.formatDateTime(this.endTimeFieldTarget.value);
+        
+        const startTime = this.formatTime(this.startTimeFieldTarget.value);
+        console.log("startTime", startTime);
+        const endTime = this.formatTime(this.endTimeFieldTarget.value);
+        console.log("endTime", endTime);
+        console.log("startTime in updateBookingSummary", this.startTimeFieldTarget.value);
+        console.log("endTime in updateBookingSummary", this.endTimeFieldTarget.value);
     
         if (startTime) {
             this.setText("selected-start-time", startTime);
@@ -200,37 +210,37 @@ export default class extends Controller {
     
         this.setText("selected-description", this.descriptionFieldTarget.value);
     }
-    formatDateTime(dateOrTime) {
-        if (!dateOrTime) return '';
+
+    formatDate(value) {
+        if (!value) return '';
     
-        const date = new Date(dateOrTime);
-        
-        if (date instanceof Date && !isNaN(date)) {
-            return date.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
-        } 
-        
-        if (typeof dateOrTime === 'string' && /^\d{2}:\d{2}$/.test(dateOrTime)) {
-            const [hours, minutes] = dateOrTime.split(':');
-            const hour = parseInt(hours);
+        const date = new Date(value);
+        if (isNaN(date)) return value.toString();
+    
+        return date.toLocaleDateString("en-GB", {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric',
+            timeZone: 'Asia/Bangkok'
+        });
+    }
+
+    formatTime(value) {
+        if (!value) return '';
+    
+        const timeMatch = value.match(/^(\d{2}):(\d{2})/);
+        if (timeMatch) {
+            const hour = parseInt(timeMatch[1]);
+            const minutes = timeMatch[2];
             const ampm = hour >= 12 ? 'PM' : 'AM';
             const hour12 = hour % 12 || 12;
             return `${hour12}:${minutes} ${ampm}`;
         }
-
-        const time = new Date(dateOrTime);
-
-        if (!isNaN(time)) {
-            if (time instanceof Date) {
-                return time.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' });
-            }
-            const options = { hour: '2-digit', minute: '2-digit', hour12: true };
-            const formattedTime = time.toLocaleTimeString('en-US', options);
-            return formattedTime;
-        }
-
-        return dateOrTime.toString();
+    
+        return value.toString();
     }
-
+    
+    
     updateUrlParams(params) {
         const url = new URL(window.location);
         Object.keys(params).forEach((key) => {
