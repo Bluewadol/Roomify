@@ -14,7 +14,7 @@
                     <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time].presence, label: "End Time", data: { room_selector_target: "endTimeField" } %>
                 </div>
             </div>
-            <%= form.hidden_field :description, value: params[:description].presence || "", data: { room_selector_target: "descriptionField" } %>
+            <%= form.hidden_field :description, value: "", data: { room_selector_target: "descriptionField" } %>
             <div class="flex-grow">
                 <%= link_to 'Reserve Now', new_reservation_path(
                     room_id: @room.id,

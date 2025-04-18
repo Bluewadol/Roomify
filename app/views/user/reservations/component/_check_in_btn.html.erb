@@ -1,8 +1,9 @@
-<% if reservation.pending? %>
-    <% reservation_datetime = reservation.start_date.to_time.change(hour: reservation.start_time.hour, min: reservation.start_time.min).in_time_zone('Asia/Bangkok') %>
-    <% time_window_start = reservation_datetime - 15.minutes %>
-    <% time_window_end = reservation_datetime + 30.minutes %>
+<% reservation_datetime = reservation.start_date.to_time.change(hour: reservation.start_time.hour, min: reservation.start_time.min).in_time_zone('Asia/Bangkok') %>
+<% reservation_endtime = reservation.end_date.to_time.change(hour: reservation.end_time.hour, min: reservation.end_time.min).in_time_zone('Asia/Bangkok') %>
+<% time_window_start = reservation_datetime - 15.minutes %>
+<% time_window_end = reservation_datetime + 30.minutes %>
 
+<% if reservation.pending? && (reservation_endtime > Time.current) %>
     <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
 
     <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>

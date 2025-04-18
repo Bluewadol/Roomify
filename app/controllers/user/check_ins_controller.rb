@@ -15,10 +15,10 @@ class User::CheckInsController < ApplicationController
           redirect_to reservation_path(@reservation), notice: 'Check-in successful.'
         else
           @check_in.destroy
-          render :new, status: :unprocessable_entity, alert: 'Failed to update reservation status.'
+          redirect_to reservation_path(@reservation), alert: 'Failed to update reservation status.'
         end
       else
-        render :new, status: :unprocessable_entity, alert: @check_in.errors.full_messages.join(', ')
+        redirect_to reservation_path(@reservation), alert: @check_in.errors.full_messages.join(', ')
       end
     end    
 

@@ -4,10 +4,21 @@ module ReservationFilterable
   # Filter reservations based on date and time parameters
   def filter_reservations(reservations, options = {})
     exclude_ids = options[:exclude_ids] || []
-    
+    Rails.logger.info("filter_reservations exclude_ids: #{exclude_ids}")
+    Rails.logger.info("filter_reservations reservations: #{reservations.count}")
+    Rails.logger.info("start_date: #{@start_date}")
+    Rails.logger.info("end_date: #{@end_date}")
+    Rails.logger.info("start_time: #{@start_time}")
+    Rails.logger.info("end_time: #{@end_time}")
     reservations = reservations.where.not(id: exclude_ids) if exclude_ids.present?
     reservations = filter_by_date(reservations)
+    reservations.each do |res|
+      Rails.logger.info("Res ID: filter_by_date #{res.id} | room: #{res.room_id} | room name: #{res.room.name} | start: #{res.start_time.strftime('%H:%M')} | end: #{res.end_time.strftime('%H:%M')}")
+    end
     reservations = filter_by_time(reservations)
+    reservations.each do |res|
+      Rails.logger.info("Res ID: filter_by_time #{res.id} | start: #{res.start_time.strftime('%H:%M')} | end: #{res.end_time.strftime('%H:%M')}")
+    end
     reservations
   end
 
@@ -71,29 +82,20 @@ module ReservationFilterable
     end
   end
   
-  # Determine the next available date based on the next reservation
   def next_available_date(next_reservation, start_date, start_time, end_time)
     return nil unless next_reservation.present?
     
     today = Date.current
     
-    # If today is within the next reservation date range
     if today >= next_reservation.start_date && today <= next_reservation.end_date
-      # If current time is before the next reservation start time
       if start_time < next_reservation.start_time
-        # Return today's date
         today
       else
-        # Return next day
         today + 1.day
       end
-    # If today is before the next reservation start date
     elsif today < next_reservation.start_date
-      # Return the next reservation start date
       next_reservation.start_date
     else
-      # If today is after the next reservation end date
-      # Return today's date
       today
     end
   end
@@ -137,7 +139,14 @@ module ReservationFilterable
     elsif @end_time
       reservations.where("end_time <= ?", @end_time)
     else
+      Rails.logger.info("filter_by_time else")
       reservations
     end
+  end
+  
+  def parse_time_in_zone(date, time_str)
+    return nil if date.blank? || time_str.blank?
+    Rails.logger.info("parse_time_in_zone date: #{date} | time_str: #{time_str}")
+    Time.zone.parse("#{date} #{time_str}")
   end
 end 

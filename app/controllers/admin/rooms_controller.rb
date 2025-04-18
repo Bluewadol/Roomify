@@ -132,22 +132,30 @@ class Admin::RoomsController < Admin::BaseController
         Time.zone = 'Bangkok'
         @start_date = params[:start_date].presence || Time.zone.today.to_s
         @end_date   = params[:end_date].presence   || Time.zone.today.to_s
-        @start_time = params[:start_time].presence 
-        @end_time   = params[:end_time].presence
+        @start_time = parse_time_in_zone(@start_date, params[:start_time])
+        @end_time   = parse_time_in_zone(@end_date, params[:end_time])
         @selected_amenities = params[:amenities]&.reject(&:blank?) || []
         @selected_status = params[:room_status]&.reject(&:blank?) || []
+        @room&.set_reference_datetime(@start_date, @start_time, @end_date, @end_time)
+        Rails.logger.info("set_filter_params start_date: #{@start_date}")
+        Rails.logger.info("set_filter_params end_date: #{@end_date}")
+        Rails.logger.info("set_filter_params start_time: #{@start_time}")
+        Rails.logger.info("set_filter_params end_time: #{@end_time}")
     end
 
     def set_filter_room_details_params
         Time.zone = 'Bangkok'
         @start_date = params[:start_date].presence || Time.zone.today.to_s
         @end_date   = params[:end_date].presence   || Time.zone.today.to_s
-        @start_time = params[:start_time].presence || Time.zone.now.strftime("%H:%M")
-        @end_time   = params[:end_time].presence   || Time.zone.now.strftime("%H:%M")
+        @start_time = parse_time_in_zone(@start_date, params[:start_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))
+        @end_time   = parse_time_in_zone(@end_date, params[:end_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))
         @selected_amenities = params[:amenities]&.reject(&:blank?) || []
         @selected_status = params[:room_status]&.reject(&:blank?) || []
-        # Only call set_reference_datetime if @room exists
         @room&.set_reference_datetime(@start_date, @start_time, @end_date, @end_time)
+        Rails.logger.info("set_filter_room_details_params start_date: #{@start_date}")
+        Rails.logger.info("set_filter_room_details_params end_date: #{@end_date}")
+        Rails.logger.info("set_filter_room_details_params start_time: #{@start_time}")
+        Rails.logger.info("set_filter_room_details_params end_time: #{@end_time}")
     end
 
     def apply_filters(rooms)

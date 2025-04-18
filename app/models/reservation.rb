@@ -17,7 +17,7 @@ class Reservation < ApplicationRecord
   enum :status, {
     pending: 0,
     checked_in: 1,
-    cancelled: 2,
+    canceled: 2,
     expired: 3,
     completed: 4
   }, default: :pending
@@ -85,11 +85,14 @@ class Reservation < ApplicationRecord
   end
 
   def start_time_is_in_the_future
+    Rails.logger.info("start_date: #{start_date} | current_date: #{current_date}")
+    Rails.logger.info("start_time: #{start_time} | current_time: #{current_time}")
     return if current_user&.has_role?(:admin)
 
-    if start_date.present? == current_date
+    if start_date.present?
       if start_time.present? && current_time.present?
         formatted_start_time = start_time.strftime("%H:%M")
+        Rails.logger.info("formatted_start_time: #{formatted_start_time} | current_time: #{current_time}")
         if formatted_start_time < current_time
           errors.add(:start_time, "must be in the future")
         end
@@ -102,7 +105,7 @@ class Reservation < ApplicationRecord
   def end_time_is_in_the_future
     return if current_user&.has_role?(:admin)
 
-    if start_date.present? == current_date
+    if start_date.present?
       if end_time.present? && current_time.present?
         formatted_end_time = end_time.strftime("%H:%M")
         if formatted_end_time < current_time

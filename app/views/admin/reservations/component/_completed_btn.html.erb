@@ -1,14 +1,14 @@
-<% if reservation.pending? || reservation.checked_in? %>
+<% if reservation.checked_in? %>
     <div data-controller="railsui-modal">
         <button type="button" 
                 data-action="click->railsui-modal#open" 
-                class="flex items-center gap-2 btn btn-dark h-10" 
+                class="flex items-center gap-2 btn bg-green-600 text-white focus:ring-green-100 hover:bg-green-700 hover:shadow-sm hover:shadow-slate-600/10 h-10" 
                 tabindex="0">
-            <%= icon "x-mark", class: "size-5" %>
-            Cancel
+            <%= icon "check-circle", class: "size-5" %>
+            Complete
         </button>
         <div
-            aria-labelledby="cancel-modal-title"
+            aria-labelledby="complete-modal-title"
             aria-modal="true"
             data-railsui-modal-target="container"
             class="hidden fixed inset-0 z-50 overflow-y-auto"
@@ -30,24 +30,24 @@
                         data-action="click->railsui-modal#close">
                     <%= icon "x-mark", class: "text-slate-400 size-6 group-hover:text-slate-500 pointer-events-none dark:group-hover:text-slate-800 dark:text-slate-400" %>
                 </button>
-                <div class="size-8 rounded-full bg-yellow-50 flex items-center justify-center dark:bg-yellow-500/30">
-                    <%= icon "exclamation-circle", class: "size-6 text-yellow-600 flex-shrink-0 dark:text-yellow-300" %>
+                <div class="size-8 rounded-full bg-green-50 flex items-center justify-center dark:bg-green-500/30">
+                    <%= icon "check-circle", class: "size-6 text-green-600 flex-shrink-0 dark:text-green-300" %>
                 </div>
 
                 <div class="flex-1">
-                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Cancel Reservation</h3>
+                    <h3 class="text-2xl font-extrabold text-slate-900 dark:text-slate-100 tracking-tight">Complete Reservation</h3>
 
                     <div class="prose prose-slate dark:prose-invert mb-6 mt-2 pr-6">
-                    <p>Are you sure you want to cancel this reservation? This action cannot be undone.</p>
+                    <p>Are you sure you want to mark this reservation as completed?</p>
                     </div>
 
                     <div class="flex justify-end items-center space-x-3">
                     <button class="btn btn-light" data-action="click->railsui-modal#close">Cancel</button>
-                    <%= button_to "Cancel Reservation", 
+                    <%= button_to "Complete Reservation", 
                         admin_reservation_path(reservation.slug), 
                         method: :patch,
                         params: { reservation: { status: "completed" } },
-                        class: "btn bg-yellow-600 text-white focus:ring-yellow-100 hover:bg-yellow-700 hover:shadow-sm hover:shadow-slate-600/10" %>
+                        class: "btn bg-green-600 text-white focus:ring-green-100 hover:bg-green-700 hover:shadow-sm hover:shadow-slate-600/10" %>
                     </div>
                 </div>
                 </div>

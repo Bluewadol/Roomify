@@ -100,8 +100,8 @@ class Admin::ReservationsController < Admin::BaseController
         Time.zone = 'Bangkok'
         @start_date = params[:start_date].presence || Time.zone.today.to_s
         @end_date   = params[:end_date].presence   || Time.zone.today.to_s
-        @start_time = params[:start_time].presence || Time.zone.now.strftime("%H:%M")
-        @end_time   = params[:end_time].presence   || Time.zone.now.strftime("%H:%M")
+        @start_time = parse_time_in_zone(@start_date, params[:start_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))
+        @end_time   = parse_time_in_zone(@end_date, params[:end_time]) || parse_time_in_zone(Time.zone.today, Time.zone.now.strftime("%H:%M"))
     end
     
     def set_rooms(current_reservation_id = nil)

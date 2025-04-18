@@ -23,11 +23,11 @@ class Admin::CheckInsController < ApplicationController
         else
             Rails.logger.error "Failed to save reservation status: #{@reservation.errors.full_messages.join(', ')}"
             @check_in.destroy
-            render :new, status: :unprocessable_entity, alert: 'Failed to update reservation status.'
+            redirect_to admin_reservation_path(@reservation), status: :unprocessable_entity, alert: 'Failed to update reservation status.'
         end
         else
-        Rails.logger.error "Check-in creation failed: #{@check_in.errors.full_messages.join(', ')}"
-        render :new, status: :unprocessable_entity, alert: @check_in.errors.full_messages.join(', ')
+            Rails.logger.error "Check-in creation failed: #{@check_in.errors.full_messages.join(', ')}"
+            redirect_to admin_reservation_path(@reservation), status: :unprocessable_entity, alert: @check_in.errors.full_messages.join(', ')
         end
     end    
 

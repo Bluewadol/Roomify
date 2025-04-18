@@ -1,26 +1,18 @@
 module FormatDateTimeHelper
     def format_datetime(date_or_time, time_only: false)
-        if date_or_time.nil?
-            return ""
-        end
-
+        return "" if date_or_time.nil?
+        
         if date_or_time.is_a?(Date)
             date_or_time.strftime("%d %b %Y")
-        elsif date_or_time.is_a?(Time)
+        elsif date_or_time.is_a?(Time) || date_or_time.is_a?(DateTime)
             if time_only
-                date_or_time.strftime("%I:%M %p")
+            date_or_time.strftime("%H:%M")
             else
-                date_or_time.strftime("%d %b %Y %I:%M %p")
-            end
-        elsif date_or_time.is_a?(DateTime)
-            if time_only
-                date_or_time.strftime("%I:%M %p")
-            else
-                date_or_time.strftime("%d %b %Y %I:%M %p")
+            date_or_time.strftime("%d %b %Y %H:%M")
             end
         else
             date_or_time.to_s
-        end        
+        end
     end
 
     def time_elapsed(from_time)

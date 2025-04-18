@@ -12,35 +12,50 @@ export default class extends Controller {
         this.isSubmitting = false;
         
         const urlParams = new URLSearchParams(window.location.search);
-        const bangkokDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
-        const formattedDate = bangkokDate.toISOString().split('T')[0]; 
+        const now = new Date();
+        const bangkokDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
+        const yyyy = bangkokDate.getFullYear();
+        const mm = String(bangkokDate.getMonth() + 1).padStart(2, '0'); 
+        const dd = String(bangkokDate.getDate()).padStart(2, '0');
+        const formattedDate = `${yyyy}-${mm}-${dd}`;
         const hours = bangkokDate.getHours().toString().padStart(2, '0');
         const minutes = bangkokDate.getMinutes().toString().padStart(2, '0');
         const formattedTime = `${hours}:${minutes}`;
 
-        if (!urlParams.has('start_date')) {
-            console.log("start_date not set, setting to today");
-            this.startDateFieldTarget.value = formattedDate;
-            this.syncToFilterForm();
-        }
-        
-        if (!urlParams.has('end_date')) {
-            console.log("end_date not set, setting to today");
-            this.endDateFieldTarget.value = formattedDate;
-            this.syncToFilterForm();
+        // Set values from URL parameters if they exist
+        if (this.hasStartDateFieldTarget) {
+            this.startDateFieldTarget.value = urlParams.get("start_date") || formattedDate;
+            if (this.hasStartDateFilterTarget) {
+                this.startDateFilterTarget.value = urlParams.get("start_date") || formattedDate;
+            }
         }
 
-        if (!urlParams.has('start_time')) {
-            console.log("start_time not set, setting to current time");
-            this.startTimeFieldTarget.value = formattedTime;
-            this.syncToFilterForm();
+        if (this.hasEndDateFieldTarget) {
+            this.endDateFieldTarget.value = urlParams.get("end_date") || formattedDate;
+            if (this.hasEndDateFilterTarget) {
+                this.endDateFilterTarget.value = urlParams.get("end_date") || formattedDate;
+            }
         }
 
-        if (!urlParams.has('end_time')) {
-            console.log("end_time not set, setting to current time");
-            this.endTimeFieldTarget.value = formattedTime;
-            this.syncToFilterForm();
+        if (this.hasStartTimeFieldTarget) {
+            this.startTimeFieldTarget.value = urlParams.get("start_time") || formattedTime;
+            if (this.hasStartTimeFilterTarget) {
+                this.startTimeFilterTarget.value = urlParams.get("start_time") || formattedTime;
+            }
         }
+
+        if (this.hasEndTimeFieldTarget) {
+            this.endTimeFieldTarget.value = urlParams.get("end_time") || formattedTime;
+            if (this.hasEndTimeFilterTarget) {
+                this.endTimeFilterTarget.value = urlParams.get("end_time") || formattedTime;
+            }
+        }
+
+        // Ensure URL parameters are set
+        if (!urlParams.has("start_date")) urlParams.set("start_date", formattedDate);
+        if (!urlParams.has("end_date")) urlParams.set("end_date", formattedDate);
+        if (!urlParams.has("start_time")) urlParams.set("start_time", formattedTime);
+        if (!urlParams.has("end_time")) urlParams.set("end_time", formattedTime);
 
         const roomIdFromParams = new URLSearchParams(window.location.search).get('room_id');
 
@@ -116,6 +131,10 @@ export default class extends Controller {
         }        
 
         this.updateBookingSummary();
+
+        const newUrl = new URL(window.location);
+        newUrl.search = urlParams.toString();
+        window.history.pushState({}, "", newUrl);
     }
 
     updateValue() {
@@ -228,18 +247,23 @@ export default class extends Controller {
     formatTime(value) {
         if (!value) return '';
     
-        const timeMatch = value.match(/^(\d{2}):(\d{2})/);
+        const timeMatch = value.match(/^(\d{2}):(\d{2})$/);
+        
         if (timeMatch) {
-            const hour = parseInt(timeMatch[1]);
-            const minutes = timeMatch[2];
-            const ampm = hour >= 12 ? 'PM' : 'AM';
-            const hour12 = hour % 12 || 12;
-            return `${hour12}:${minutes} ${ampm}`;
+            const [hour, minutes] = [parseInt(timeMatch[1]), timeMatch[2]];
+            
+            if (hour > 23 || minutes > 59) {
+                return 'Invalid time';
+            }
+    
+            const date = new Date();
+            date.setHours(hour);
+            date.setMinutes(minutes);
+            return date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
         }
     
-        return value.toString();
+        return value.toString(); 
     }
-    
     
     updateUrlParams(params) {
         const url = new URL(window.location);
@@ -273,11 +297,13 @@ export default class extends Controller {
     
     submitFilterForm() {
         if (this.hasFilterFormTarget) {
-            this.filterFormTarget.requestSubmit();
+            console.log("submitFilterForm");
+            this.filterFormTarget.submit();
         }
     }
     
     syncToFilterForm() {
+        console.log("syncToFilterForm");
         if (this.isSubmitting) return; 
 
         this.isSubmitting = true; 

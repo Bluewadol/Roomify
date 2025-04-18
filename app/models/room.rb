@@ -51,26 +51,9 @@ class Room < ApplicationRecord
 
         reservations
             .where('(start_date > ?) OR (end_date > ?) OR (start_date = ? AND start_time > ?) OR (end_date = ? AND start_time > ?)', start_date, start_date, start_date, start_time, start_date, start_time)
-            .where.not(status: [:canceled, :expired])
+            .where.not(status: [:canceled, :expired, :completed])
             .order(start_date: :asc, start_time: :asc)
             .first
-    end
-
-    def current_reservation
-        if @current_reservation
-            @current_reservation
-        elsif reservations_in_range
-            reservations_in_range.where.not(status: [:canceled, :expired, :completed]).first
-        else
-            start_date = Time.current.in_time_zone('Asia/Bangkok').to_date
-            start_time = Time.current.in_time_zone('Asia/Bangkok').strftime("%H:%M")
-            
-            reservations
-                .where('start_date <= ? AND end_date >= ?', start_date, start_date)
-                .where('start_time <= ? AND end_time > ?', start_time, start_time)
-                .where.not(status: [:canceled, :expired, :completed])
-                .first
-        end
     end
 
     private

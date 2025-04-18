@@ -4,17 +4,28 @@ export default class extends Controller {
   static targets = ["form", "startDateField", "endDateField"];
 
   connect() {
-    const bangkokDate = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
-    const formattedDate = bangkokDate.toISOString().split('T')[0]; 
+    const now = new Date();
+    const bangkokDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Bangkok" }));
+    const yyyy = bangkokDate.getFullYear();
+    const mm = String(bangkokDate.getMonth() + 1).padStart(2, '0'); 
+    const dd = String(bangkokDate.getDate()).padStart(2, '0');
+
+    const formattedDate = `${yyyy}-${mm}-${dd}`;
 
     const urlParams = new URLSearchParams(window.location.search);
     if (!urlParams.has('start_date') && !urlParams.has('end_date')) {
       if (this.hasStartDateFieldTarget) {
         this.startDateFieldTarget.value = formattedDate;
+        urlParams.set("start_date", formattedDate);
       }
       if (this.hasEndDateFieldTarget) {
         this.endDateFieldTarget.value = formattedDate;
+        urlParams.set("end_date", formattedDate);
       }
+      
+      const newUrl = new URL(window.location);
+      newUrl.search = urlParams.toString();
+      window.history.pushState({}, "", newUrl);
       
       this.formTarget.submit();
     } else {
