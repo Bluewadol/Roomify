@@ -448,6 +448,7 @@ DEPENDENCIES
   rolify (~> 6.0)
   rqrcode
   rubocop-rails-omakase
+  rubyzip (~> 2.3)
   selenium-webdriver
   solid_cable
   solid_cache
