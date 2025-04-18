@@ -11,14 +11,11 @@ module ReservationFilterable
     Rails.logger.info("start_time: #{@start_time}")
     Rails.logger.info("end_time: #{@end_time}")
     reservations = reservations.where.not(id: exclude_ids) if exclude_ids.present?
+
     reservations = filter_by_date(reservations)
-    reservations.each do |res|
-      Rails.logger.info("Res ID: filter_by_date #{res.id} | room: #{res.room_id} | room name: #{res.room.name} | start: #{res.start_time.strftime('%H:%M')} | end: #{res.end_time.strftime('%H:%M')}")
-    end
+
     reservations = filter_by_time(reservations)
-    reservations.each do |res|
-      Rails.logger.info("Res ID: filter_by_time #{res.id} | start: #{res.start_time.strftime('%H:%M')} | end: #{res.end_time.strftime('%H:%M')}")
-    end
+
     reservations
   end
 

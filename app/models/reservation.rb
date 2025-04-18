@@ -60,6 +60,7 @@ class Reservation < ApplicationRecord
     overlapping_reservations = Reservation.where(room_id: room.id)
                                           .where('start_date BETWEEN ? AND ?', start_date, end_date)
                                           .where('start_time < ? AND end_time > ?', end_time, start_time)
+                                          .where("status NOT IN (?)", [Reservation.statuses[:cancelled], Reservation.statuses[:completed]])
 
     overlapping_reservations = overlapping_reservations.where.not(id: id) if persisted?
 
