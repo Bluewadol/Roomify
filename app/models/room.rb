@@ -100,7 +100,8 @@ class Room < ApplicationRecord
     end
 
     def room_url
-        Rails.application.routes.url_helpers.room_url(self, host: "http://127.0.0.1:3000/")
+        # Rails.application.routes.url_helpers.room_url(self, host: "https://roomify-odds.onrender.com/")
+        Rails.application.routes.url_helpers.room_url(self)
       # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
     end
 
