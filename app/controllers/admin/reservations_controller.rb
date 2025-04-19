@@ -11,14 +11,14 @@ class Admin::ReservationsController < Admin::BaseController
         # Add pagination for upcoming reservations
         upcoming_per_page = params[:upcoming_per_page].present? ? params[:upcoming_per_page].to_i : 5
         @upcoming_reservations = @reservations
-            .where(status: [ :pending, :in_use ])
+            .where(status: [ :pending, :checked_in ])
             .order(start_date: :desc, start_time: :desc)
         @upcoming_reservations = Kaminari.paginate_array(@upcoming_reservations).page(params[:upcoming_page]).per(upcoming_per_page)
 
         # Add pagination for past reservations
         past_per_page = params[:past_per_page].present? ? params[:past_per_page].to_i : 10
         @past_reservations = @reservations
-            .where.not(status: [ :pending, :in_use ])
+            .where.not(status: [ :pending, :checked_in ])
             .order(start_date: :desc, start_time: :desc)
         @past_reservations = Kaminari.paginate_array(@past_reservations).page(params[:past_page]).per(past_per_page)
     end

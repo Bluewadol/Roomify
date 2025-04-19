@@ -29,7 +29,7 @@ class Admin::RoomsController < Admin::BaseController
 
         # Filter reservations for this room
         @reservations_in_range = filter_reservations(Reservation.where(room_id: @room.id))
-        @current_reservation = @reservations_in_range.where.not(status: [ :canceled, :expired, :completed ]).first
+        @current_reservation = @reservations_in_range.where.not(status: [ :canceled, :expired ]).first
 
         # Determine room status
         status = determine_room_status(@room, @reservations_in_range)
