@@ -1,14 +1,14 @@
-<div class="min-h-screen flex flex-col justify-center items-center text-center -mt-16">
-    <%= image_tag "roomify/logo.png", alt: "Roomify Logo", class: "w-32 h-32" %>
-    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Roomify</h1>
+<div class="min-h-screen flex flex-col justify-center items-center text-center -mt-16" data-testid="admin-dashboard">
+     <%= render "shared/logo", size: "24"%>
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4" data-testid="admin-title">Roomify</h1>
     
-    <div class="text-lg text-gray-600 dark:text-gray-300 mt-2">
-        <span class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, <%= current_user.name.presence || "Admin" %></span> - The best platform for managing your meeting rooms.
+    <div class="text-lg text-gray-600 dark:text-gray-300 mt-2" data-testid="admin-welcome-message">
+        <span class="text-2xl font-bold text-gray-900 dark:text-white" data-testid="admin-welcome-text">Welcome, <%= current_user.name.presence || "Admin" %></span> - The best platform for managing your meeting rooms.
     </div>
     
-    <div class="mt-6 flex space-x-4">        
-        <%= link_to "View Rooms", admin_rooms_path, class: "btn btn-white" %>
-        <%= link_to "My Reservations", admin_reservations_path, class: "btn btn-white" %>
-        <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-transparent" %>
+    <div class="mt-6 flex space-x-4" data-testid="admin-action-buttons">        
+        <%= link_to "View Rooms", admin_rooms_path, class: "btn btn-white dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:border-gray-600", data: { testid: "admin-rooms-button" } %>
+        <%= link_to "My Reservations", admin_reservations_path, class: "btn btn-white dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:border-gray-600", data: { testid: "admin-reservations-button" } %>
+        <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-transparent dark:text-white dark:hover:bg-gray-700", data: { testid: "admin-logout-button" } %>
     </div>
 </div>

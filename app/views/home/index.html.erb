@@ -1,28 +1,28 @@
-<div class="min-h-screen flex flex-col justify-center items-center text-center -mt-16">
-    <%= image_tag "roomify/logo.png", alt: "Roomify Logo", class: "w-32 h-32" %>
-    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4">Roomify</h1>
+<div class="min-h-screen flex flex-col justify-center items-center text-center -mt-16" data-testid="home-page">
+    <%= render "shared/logo", size: "24"%>
+    <h1 class="text-4xl font-bold text-gray-900 dark:text-white mb-4" data-testid="home-title">Roomify</h1>
     
-    <div class="text-lg text-gray-600 dark:text-gray-300 mt-2">
+    <div class="text-lg text-gray-600 dark:text-gray-300 mt-2" data-testid="welcome-message">
         <% if user_signed_in? %>
             <% if current_user.has_role?(:admin) %>
-                <span class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, Admin!</span>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white" data-testid="admin-welcome">Welcome, Admin!</span>
                 <span class="text-lg text-gray-600 dark:text-gray-300 mt-2">-</span>
             <% else %>
-                <span class="text-2xl font-bold text-gray-900 dark:text-white">Welcome, <%= current_user.name.presence || "User" %>!</span>
+                <span class="text-2xl font-bold text-gray-900 dark:text-white" data-testid="user-welcome">Welcome, <%= current_user.name.presence || "User" %>!</span>
                 <span class="text-lg text-gray-600 dark:text-gray-300 mt-2">-</span>
             <% end %>
         <% end %>
-        The best platform for managing your meeting rooms.
+        <span data-testid="home-description">The best platform for managing your meeting rooms.</span>
     </div>
     
-    <div class="mt-6 flex space-x-4">        
+    <div class="mt-6 flex space-x-4" data-testid="action-buttons">        
         <% if !user_signed_in? %>
-            <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary" %>
-            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary" %>
+            <%= link_to "Sign In", new_user_session_path, class: "btn btn-primary dark:bg-primary-600 dark:hover:bg-primary-700 dark:text-white", data: { testid: "sign-in-button" } %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-secondary dark:bg-secondary-600 dark:hover:bg-secondary-700 dark:text-white", data: { testid: "sign-up-button" } %>
         <% else %>
-            <%= link_to "View Rooms", rooms_path, class: "btn btn-white" %>
-            <%= link_to "My Reservations", reservations_path, class: "btn btn-white" %>
-            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-transparent" %>
+            <%= link_to "View Rooms", rooms_path, class: "btn btn-white dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:border-gray-600", data: { testid: "view-rooms-button" } %>
+            <%= link_to "My Reservations", reservations_path, class: "btn btn-white dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white dark:border-gray-600", data: { testid: "my-reservations-button" } %>
+            <%= button_to "Logout", destroy_user_session_path, method: :delete, class: "btn btn-transparent dark:text-white dark:hover:bg-gray-700", data: { testid: "logout-button" } %>
         <% end %>
     </div>
 </div>
