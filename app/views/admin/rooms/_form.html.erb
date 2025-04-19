@@ -108,7 +108,7 @@
             <%= icon('arrow-up-circle', class: 'size-5', variant: :solid) %>
         </template>
 
-        <div class="pt-6 border-t border-neutral-200 dark:border-neutral-700">
+        <div class="mt-6 py-6 border-t border-neutral-200 dark:border-neutral-700">
             <%= render "shared/typography", sub_heading: "Room Amenities" %>
             <p class="text-sm text-neutral-600 dark:text-neutral-400">Add amenities available in this room.</p>
         </div>
@@ -151,7 +151,7 @@
             </button>
         </div>
 
-        <div class="flex items-center justify-end space-x-4 pt-6 border-t border-neutral-200 dark:border-neutral-700">
+        <div class="flex mt-6 items-center justify-end space-x-4 pt-6 border-t border-neutral-200 dark:border-neutral-700">
             <%= link_to "Cancel", admin_rooms_path, class: "btn btn-white" %>
             <%= f.submit @room.persisted? ? "Update Room" : "Create Room", class: "btn btn-primary", data: { disable_with: "Saving..." } %>
         </div>
