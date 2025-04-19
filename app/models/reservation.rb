@@ -62,13 +62,16 @@ class Reservation < ApplicationRecord
 
   def room_availability
     return if room.nil? || start_date.nil? || end_date.nil? || start_time.nil? || end_time.nil?
+    Rails.logger.info("room_availability: #{room.id} | start_date: #{start_date} | end_date: #{end_date} | start_time: #{start_time} | end_time: #{end_time}")
     return unless start_date_changed? || end_date_changed? || start_time_changed? || end_time_changed?
+    Rails.logger.info("room_availability1: #{room.id} | start_date: #{start_date} | end_date: #{end_date} | start_time: #{start_time} | end_time: #{end_time}")
 
     overlapping_reservations = Reservation.where(room_id: room.id)
-                                          .where("start_date BETWEEN ? AND ?", start_date, end_date)
-                                          .where("start_time < ? AND end_time > ?", end_time, start_time)
-                                          .where("status NOT IN (?)", [ Reservation.statuses[:cancelled], Reservation.statuses[:completed] ])
+                                          .where("status NOT IN (?)", [ Reservation.statuses[:canceled], Reservation.statuses[:completed] ])
+                                          .where("(start_date <= ? AND end_date >= ?)", end_date, start_date)
+                                          .where("(start_time <= ? AND end_time >= ?)", end_time, start_time)
 
+    Rails.logger.info("overlapping_reservations: #{overlapping_reservations.count}")
     overlapping_reservations = overlapping_reservations.where.not(id: id) if persisted?
 
     if overlapping_reservations.exists?
