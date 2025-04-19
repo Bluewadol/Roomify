@@ -1,4 +1,5 @@
-<%= link_to root_path, class: "size-12 flex justify-center" do %>
-    <img src="<%= asset_path('roomify/logo.svg') %>" alt="Roomify Logo" class="w-12 h-auto text-primary-600 hover:text-primary-700 duration-300 transition ease-in-out dark:hover:text-primary-500" data-testid="logo-nav">
-    <span class="sr-only">Hound</span>
+<% size = local_assigns[:size] || "12" %>
+<%= link_to root_path, class: "size-#{size} flex justify-center" do %>
+    <%= render_icon_file('roomify/logo', class: "w-#{size} h-auto text-gray-900 dark:text-gray-500 hover:text-gray-700 dark:hover:text-gray-400 duration-300 transition ease-in-out") %>
+    <span class="sr-only">Roomify</span>
 <% end %>
