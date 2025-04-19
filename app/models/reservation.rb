@@ -40,6 +40,8 @@ class Reservation < ApplicationRecord
   validate :start_time_is_in_the_future, if: :start_time_changed?
   validate :end_time_is_in_the_future, if: :end_time_changed?
 
+  validate :room_status_is_available
+
   private
 
   def start_time_before_end_time
@@ -141,4 +143,10 @@ class Reservation < ApplicationRecord
   #     errors.add(:end_date, "must be today or in the future")
   #   end
   # end
+
+  def room_status_is_available
+    return if room.nil?
+    return if room.status == "available"
+    errors.add(:room_id, "is not available")
+  end
 end

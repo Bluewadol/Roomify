@@ -1,0 +1,9 @@
+<div class="flex flex-col gap-2 h-full">
+    <div class="flex items-center justify-between gap-2">
+        <%= render "shared/typography", sub_heading: "Now Status" %>
+        <%= status_badge(@room.status) %>
+    </div>
+    <div class="flex items-center gap-1.5 bg-gray-100 p-3 rounded-lg">
+        <p class="text-sm text-gray-700"><span class="font-medium">Status:</span> Unavailable in this time</p>
+    </div>
+</div>

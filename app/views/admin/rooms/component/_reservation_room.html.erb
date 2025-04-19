@@ -1,7 +1,11 @@
 <div class="w-full flex flex-col bg-white gap-4 rounded-lg p-4 shadow-md min-h-fit">
-    <% if @current_reservation.present? %>
-        <%= render "user/rooms/component/reservation_current_room" %>
+    <% if @room.status == "unavailable" %>
+        <%= render "shared/reservation_unavailable" %>
     <% else %>
-        <%= render "user/rooms/component/reservation_next_room" %>
+        <% if @current_reservation.present? %>
+            <%= render "user/rooms/component/reservation_current_room" %>
+        <% else %>
+            <%= render "user/rooms/component/reservation_next_room" %>
+        <% end %>
     <% end %>
 </div>
