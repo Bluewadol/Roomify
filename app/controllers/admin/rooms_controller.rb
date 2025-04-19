@@ -80,9 +80,12 @@ class Admin::RoomsController < Admin::BaseController
     end
 
     def destroy
-        @room.qr_code.purge
-        @room.destroy
-        redirect_to admin_rooms_path, notice: "Room deleted successfully."
+        @room = Room.friendly.find(params[:slug])
+        if @room.destroy
+            redirect_to admin_rooms_path, notice: "Room deleted successfully."
+        else
+            redirect_to admin_rooms_path, alert: "Failed to delete room: #{@room.errors.full_messages.join(', ')}"
+        end
     end
 
     require "zip"

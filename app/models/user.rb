@@ -3,8 +3,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable, :recoverable, :rememberable, :validatable
 
   has_one_attached :avatar
-  validates :name, presence: true, length: { maximum: 30 }, if: -> { name_changed? }
-  validates :phone_number, presence: false, uniqueness: true,
+  validates :name, presence: true, length: { maximum: 30 }, uniqueness: { case_sensitive: false, message: "should be unique" }, if: -> { name_changed? }
+  validates :phone_number, presence: false, uniqueness: { case_sensitive: false, message: "should be unique" },
     format: { with: /\A\d{10}\z/, message: "must be a 10-digit number" },
     if: -> { phone_number_changed? }
   validate :validate_avatar_file_type

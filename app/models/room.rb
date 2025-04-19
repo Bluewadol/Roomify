@@ -18,7 +18,9 @@ class Room < ApplicationRecord
     belongs_to :created_by, class_name: "User"
     belongs_to :updated_by, class_name: "User"
 
-    validates :name, presence: true, uniqueness: true
+    validates :name, presence: true, 
+                    uniqueness: { case_sensitive: false, message: "should be unique" },
+                    length: { maximum: 50 }
     validates :capacity_min, presence: true, numericality: { only_integer: true, greater_than: 0 }
     validates :capacity_max, presence: true, numericality: { only_integer: true, greater_than: 0 }
     validates :description, length: { maximum: 200 }
@@ -32,6 +34,14 @@ class Room < ApplicationRecord
     after_create :generate_qr_code
 
     attr_accessor :reference_start_date, :reference_start_time, :reference_end_date, :reference_end_time
+
+    # enum room_type: {
+    #     meeting_room: "meeting_room",
+    #     conference_room: "conference_room",
+    #     training_room: "training_room",
+    #     private_office: "private_office",
+    #     shared_workspace: "shared_workspace"
+    # }
 
     def set_reference_datetime(date, time, end_date = nil, end_time = nil)
         @reference_start_date = date
@@ -102,7 +112,7 @@ class Room < ApplicationRecord
     def room_url
         # Rails.application.routes.url_helpers.room_url(self, host: "https://roomify-odds.onrender.com/")
         Rails.application.routes.url_helpers.room_url(self)
-      # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
+        # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
     end
 
     def should_generate_new_friendly_id?
@@ -110,7 +120,7 @@ class Room < ApplicationRecord
     end
 
     def normalize_name
-        self.name = name.strip.gsub(/\s+/, " ") if name.present?
+        self.name = name.strip if name.present?
     end
 
     def capacity_max_greater_than_min

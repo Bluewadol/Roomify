@@ -11,7 +11,7 @@
         <input type="range" 
             id="<%= id %>-slider" 
             name="<%= field %>" 
-            min="1" 
+            min="0" 
             max="<%= maximum || params[field] || 1 %>" 
             step="1" 
             class="accent-primary-500 bg-transparent rounded-lg cursor-pointer w-full" 
@@ -19,7 +19,7 @@
             onchange="this.form.submit(); changeSliderStyle(this);" />
 
         <div class="flex justify-between text-sm text-gray-500 dark:text-gray-500 w-full">
-            <span> 1 </span>
+            <span> 0 </span>
             <span><%= maximum || 1 %> <%= unit %></span>
         </div>           
     </div>

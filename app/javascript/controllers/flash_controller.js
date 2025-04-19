@@ -8,7 +8,7 @@ export default class extends Controller {
     this.startProgress();
     this.timeout = setTimeout(() => {
       this.close();
-    }, 3000);
+    }, 4000);
   }
 
   startProgress() {

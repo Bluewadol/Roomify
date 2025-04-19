@@ -1,5 +1,5 @@
 # Admin users
-admin1 = User.find_or_create_by!(email: 'admin01@example.com') do |u|
+admin1 = User.find_or_create_by!(email: 'admin01@odds.team') do |u|
     u.password = 'Hf3tV4grPv93@uz'
     u.password_confirmation = 'Hf3tV4grPv93@uz'
     u.name = 'Admin01'
@@ -8,7 +8,7 @@ end
 admin1.add_role(:admin) unless admin1.has_role?(:admin)
 puts "Admin01 user created successfully!"
 
-admin2 = User.find_or_create_by!(email: 'admin02@example.com') do |u|
+admin2 = User.find_or_create_by!(email: 'admin02@odds.team') do |u|
     u.password = 'Hf3tV4grPv93@u2'
     u.password_confirmation = 'Hf3tV4grPv93@u2'
     u.name = 'Admin02'
@@ -18,7 +18,7 @@ admin2.add_role(:admin) unless admin2.has_role?(:admin)
 puts "Admin02 user created successfully!"
 
 # Regular users
-user3 = User.find_or_create_by!(email: 'user03@example.com') do |u|
+user3 = User.find_or_create_by!(email: 'user03@odds.team') do |u|
     u.password = 'P@ssw0rd123!'
     u.password_confirmation = 'P@ssw0rd123!'
     u.name = 'User03'
@@ -27,7 +27,7 @@ end
 user3.add_role(:user) unless user3.has_role?(:user)
 puts "User03 created successfully!"
 
-user4 = User.find_or_create_by!(email: 'user04@example.com') do |u|
+user4 = User.find_or_create_by!(email: 'user04@odds.team') do |u|
     u.password = 'P@ssw0rd456!'
     u.password_confirmation = 'P@ssw0rd456!'
     u.name = 'User04'
@@ -36,7 +36,7 @@ end
 user4.add_role(:user) unless user4.has_role?(:user)
 puts "User04 created successfully!"
 
-user5 = User.find_or_create_by!(email: 'user05@example.com') do |u|
+user5 = User.find_or_create_by!(email: 'user05@odds.team') do |u|
     u.password = 'P@ssw0rd789!'
     u.password_confirmation = 'P@ssw0rd789!'
     u.name = 'User05'
@@ -45,7 +45,7 @@ end
 user5.add_role(:user) unless user5.has_role?(:user)
 puts "User05 created successfully!"
 
-user6 = User.find_or_create_by!(email: 'user06@example.com') do |u|
+user6 = User.find_or_create_by!(email: 'user06@odds.team') do |u|
     u.password = 'P@ssw0rd012!'
     u.password_confirmation = 'P@ssw0rd012!'
     u.name = 'User06'
@@ -54,7 +54,7 @@ end
 user6.add_role(:user) unless user6.has_role?(:user)
 puts "User06 created successfully!"
 
-user7 = User.find_or_create_by!(email: 'user07@example.com') do |u|
+user7 = User.find_or_create_by!(email: 'user07@odds.team') do |u|
     u.password = 'P@ssw0rd345!'
     u.password_confirmation = 'P@ssw0rd345!'
     u.name = 'User07'
