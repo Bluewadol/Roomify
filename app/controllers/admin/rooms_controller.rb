@@ -121,6 +121,7 @@ class Admin::RoomsController < Admin::BaseController
     def set_room
         @room = Room.friendly
                     .includes(:room_amenities)
+                    .includes(:updated_by)
                     .find(params[:slug])
 
         @room.reservations = Reservation.where(room_id: @room.id).order(updated_at: :desc)

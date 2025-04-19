@@ -2,9 +2,23 @@
     <%= form_with(model: @room, url: @room.persisted? ? admin_room_path(@room) : admin_rooms_path, method: @room.persisted? ? :patch : :post, local: true, html: { class: "space-b-6", multipart: true }) do |f| %>
         <div class="flex justify-between items-center flex-wrap gap-2">
             <%= render "shared/typography", heading: @room.persisted? ? "Update Room" : "Create Room" %>
-            <%= render "shared/status_switch", form: f, object: @room %>
+            <%= render "shared/status_switch", form: f, object: @≈ %>
         </div>
         <%= error_messages(@room) if @room.errors.any? %>
+        <div class="pt-6">
+            <%= render "shared/typography", sub_heading: "Room Details" %>
+            <p class="text-sm text-neutral-600 dark:text-neutral-400 mb-4">Fill in your room details below. This information will help users understand your room better.</p>
+        </div>
+        <% if @room.updated_by.present? %>
+            <div class="flex sm:gap-2 text-sm items-center text-gray-500 flex-wrap justify-start pb-4">
+                <%= render "shared/typography", sub_body: "update at : #{format_datetime(@room.updated_at)}" %>
+                <div class="flex gap-2 text-sm items-center">
+                    <span>by : </span>
+                    <%= render "shared/user_info_modal", user: @room.updated_by, size: 26%>
+                    <span><%= @room.updated_by ? (@room.updated_by.name.present? ? @room.updated_by.name : @room.updated_by.email) : "Unknown" %></span>
+                </div>
+            </div>
+        <% end %>
         <div class="grid grid-cols-1 sm:grid-cols-2 sm:gap-x-10 sm:gap-y-4 gap-4">
             <div class="form-group ">
                 <%= f.label :name, "Room Name", class: "form-label" %>
@@ -52,7 +66,7 @@
             <p class="text-sm text-neutral-600 dark:text-neutral-400">Upload images of your room. Maximum 4 images allowed.</p>
         </div>
         <div data-controller="image-upload" data-image-upload-max-files-value="4">
-            <div class="mb-4 flex flex-col gap-4">
+            <div class="mb-4 flex flex-col gap-4 pt-4">
                 <%= render "shared/typography", body: "Current Images" %>
                 <div class="flex flex-col gap-4" id="old-images">
                     <% if @room.persisted? && @room.images.attached? %>
