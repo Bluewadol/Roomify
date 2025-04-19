@@ -18,7 +18,7 @@ class Room < ApplicationRecord
     belongs_to :created_by, class_name: "User"
     belongs_to :updated_by, class_name: "User"
 
-    validates :name, presence: true, 
+    validates :name, presence: true,
                     uniqueness: { case_sensitive: false, message: "should be unique" },
                     length: { maximum: 50 }
     validates :capacity_min, presence: true, numericality: { only_integer: true, greater_than: 0 }
@@ -112,7 +112,7 @@ class Room < ApplicationRecord
     def room_url
         # Rails.application.routes.url_helpers.room_url(self, host: "https://roomify-odds.onrender.com/")
         Rails.application.routes.url_helpers.room_url(self)
-        # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
+      # Rails.application.routes.url_helpers.checkin_url(host: "http://127.0.0.1:3000")
     end
 
     def should_generate_new_friendly_id?

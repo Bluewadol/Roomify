@@ -14,6 +14,9 @@ module ReservationFilterable
     return reservations.none if @start_date.blank? && @end_date.blank? && @start_time.blank? && @end_time.blank?
 
     reservations = reservations.where.not(id: exclude_ids) if exclude_ids.present?
+    reservations = reservations.where.not(status: [ Reservation.statuses[:canceled], Reservation.statuses[:completed] ])
+    Rails.logger.info("reservations: #{reservations.count}")
+
     reservations = filter_by_date(reservations)
     reservations = filter_by_time(reservations)
 
