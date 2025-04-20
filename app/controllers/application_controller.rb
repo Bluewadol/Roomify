@@ -22,8 +22,8 @@ class ApplicationController < ActionController::Base
   private
 
   def public_page?
-    request.path == rooms_path || 
-    request.path.start_with?('/rooms/')
+    request.path == rooms_path ||
+    request.path.start_with?("/rooms/")
   end
 
   def set_user

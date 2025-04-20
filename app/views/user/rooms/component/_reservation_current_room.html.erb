@@ -3,7 +3,7 @@
         <%= render "shared/typography", sub_heading: "Now Status" %>
         <%= status_badge(@room.status) %>
     </div>
-    <div class="flex flex-col gap-1.5 bg-red-50 p-3 rounded-lg">
+    <div class="flex flex-col gap-1.5 <% if user_signed_in? && (@room.next_reservation.user_id == current_user.id || @room.next_reservation.members.include?(current_user)) && (@room.next_reservation.pending?) %> bg-yellow-50 <% else %> bg-emerald-50 <% end %> p-3 rounded-lg">
         <div class="flex justify-between text-sm items-center flex-wrap gap-2">
             <span class="flex items-center gap-1"> 
                 <span class="font-medium">Reservation ID : </span> 
@@ -11,11 +11,13 @@
             </span>
             <%= status_badge(@current_reservation.status) %>
         </div>
-        <div class="flex gap-2 text-sm items-center">
+        <div class="flex gap-2 text-sm items-center flex-wrap">
             <%= icon('user', class: 'size-5') %>
             <span>Reserved by : </span>
-            <%= render "shared/user_info_modal", user: @current_reservation.user, size: 26 %>
-            <span><%= @current_reservation.user.name.present? ? @current_reservation.user.name : @current_reservation.user.email %></span>
+            <span class="flex items-center gap-1"> 
+                <%= render "shared/user_info_modal", user: @current_reservation.user, size: 26 %>
+                <%= @current_reservation.user.name.present? ? @current_reservation.user.name : @current_reservation.user.email %>
+            </span>
         </div>
         <div class="flex gap-2 text-sm items-center">
             <%= icon('user-group', class: 'size-5', variant: :solid) %>

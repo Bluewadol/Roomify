@@ -10,7 +10,7 @@ class CheckIn < ApplicationRecord
 
   def user_is_member_of_reservation
     return if current_user.nil? # Skip validation if current_user is nil
-    
+
     if !current_user.has_role?(:admin)
       unless reservation.user_id == user_id || reservation.members.include?(user)
         errors.add(:user_id, "must be either the owner or a member of the reservation")
