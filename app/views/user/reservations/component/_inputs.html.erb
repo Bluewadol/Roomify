@@ -17,7 +17,7 @@
     <%= form.hidden_field :room_id, value: @room&.id, id: "room_id_field", data: { room_selector_target: "roomIdField" } %>
     <div class="mb-4 flex space-x-4">
         <div class="w-1/2">
-            <%= form.label :start_date, "Start Date", class: "form-label" %>
+            <%= form.label :start_date, "Date", class: "form-label" %>
             <div class="relative">
                 <%= form.date_field :start_date, 
                     class: input_class(@reservation, :start_date), 
@@ -71,7 +71,7 @@
         <%= form.label :description, "Reservation Description", class: "form-label" %>
         <div class="relative">
             <%= form.text_area :description, 
-                class: "form-input w-full min-h-[42px] resize-none overflow-hidden", 
+                class: "form-input w-full min-h-[42px] resize-none overflow-hidden dark:bg-gray-900/50 dark:text-gray-200 dark:border-gray-600", 
                 placeholder: "Enter meeting purpose of...", 
                 data: { 
                     room_selector_target: "descriptionField",

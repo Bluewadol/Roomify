@@ -1,14 +1,14 @@
-<div class="rounded-lg bg-white overflow-hidden w-full shadow-md p-4 h-fit">
+<div class="rounded-lg bg-white dark:bg-gray-700 overflow-hidden w-full shadow-md p-4 h-fit" data-testid="reservation-inputs">
     <div class="flex gap-2 md:gap-0 h-auto md:h-14 w-full flex-wrap justify-between items-center">
         <div class="mb-2">
             <%= render "shared/typography", sub_heading: "Select Details" %>
         </div>
     </div>
     <%= error_messages(@reservation) if @reservation.errors.any? %>
-    <%= form.hidden_field :room_id, value: @room&.id, id: "room_id_field", data: { room_selector_target: "roomIdField" } %>
-        <div class="flex mb-2 gap-4">
-            <div class="w-1/2">
-                <%= form.label :status, "Status", class: "form-label" %>
+    <%= form.hidden_field :room_id, value: @room&.id, id: "room_id_field", data: { room_selector_target: "roomIdField", testid: "room-id-field" } %>
+        <div class="flex mb-2 gap-4" data-testid="status-type-container">
+            <div class="w-1/2" data-testid="status-container">
+                <%= form.label :status, "Status", class: "form-label dark:text-gray-200" %>
                 <div class="relative">
                     <%= render "shared/combobox", 
                     form: form, 
@@ -19,8 +19,8 @@
                     label: "" %>
                 </div>
             </div>
-            <div class="w-1/2">
-                <%= form.label :reservation_type, "Reservation Type", class: "form-label" %>
+            <div class="w-1/2" data-testid="type-container">
+                <%= form.label :reservation_type, "Reservation Type", class: "form-label dark:text-gray-200" %>
                 <div class="relative">
                     <%= render "shared/combobox", 
                         form: form, 
@@ -32,58 +32,58 @@
                 </div>
             </div>
         </div>
-    <div class="mb-4 flex space-x-4">
-        <div class="w-1/2">
-            <%= form.label :start_date, "Start Date", class: "form-label" %>
+    <div class="mb-4 flex space-x-4" data-testid="date-container">
+        <div class="w-1/2" data-testid="start-date-container">
+            <%= form.label :start_date, "Date", class: "form-label dark:text-gray-200" %>
             <div class="relative">
                 <%= form.date_field :start_date, 
                     class: input_class(@reservation, :start_date), 
                     value: params[:start_date] || @reservation.start_date || Date.today,
-                    data: { room_selector_target: "startDateField" } %>
+                    data: { room_selector_target: "startDateField", testid: "start-date-input" } %>
                 <%= error_icon(@reservation, :start_date) %>
             </div>
             <%= field_error_tag(@reservation, :start_date) %>
         </div>
 
-        <div class="w-1/2">
+        <div class="w-1/2" data-testid="end-date-container">
             <%= form.label :end_date, "End Date", class: "form-label hidden" %>
             <div class="relative">
                 <%= form.hidden_field :end_date, 
                     class: input_class(@reservation, :end_date), 
                     value: params[:start_date] || @reservation.start_date || Date.today,
-                    data: { room_selector_target: "endDateField" } %>
+                    data: { room_selector_target: "endDateField", testid: "end-date-input" } %>
                 <%= error_icon(@reservation, :end_date) %>
             </div>
             <%= field_error_tag(@reservation, :end_date) %>
         </div>
     </div>
-    <div class="mb-4 flex space-x-4">
-        <div class="w-1/2">
-            <%= form.label :start_time, "Start Time", class: "form-label" %>
+    <div class="mb-4 flex space-x-4" data-testid="time-container">
+        <div class="w-1/2" data-testid="start-time-container">
+            <%= form.label :start_time, "Start Time", class: "form-label dark:text-gray-200" %>
             <div class="relative">
                 <%= form.time_field :start_time, 
                     class: input_class(@reservation, :start_time), 
                     value: params[:start_time] || @reservation.start_time,
-                    data: { room_selector_target: "startTimeField" } %>
+                    data: { room_selector_target: "startTimeField", testid: "start-time-input" } %>
                 <%= error_icon(@reservation, :start_time) %>
             </div>
             <%= field_error_tag(@reservation, :start_time) %>
         </div>
 
-        <div class="w-1/2">
-            <%= form.label :end_time, "End Time", class: "form-label" %>
+        <div class="w-1/2" data-testid="end-time-container">
+            <%= form.label :end_time, "End Time", class: "form-label dark:text-gray-200" %>
             <div class="relative">
                 <%= form.time_field :end_time, 
                     class: input_class(@reservation, :end_time), 
                     value: params[:end_time] || @reservation.end_time,
-                    data: { room_selector_target: "endTimeField" } %>
+                    data: { room_selector_target: "endTimeField", testid: "end-time-input" } %>
                 <%= error_icon(@reservation, :end_time) %>
             </div>
             <%= field_error_tag(@reservation, :end_time) %>
         </div>
     </div>
-    <div>
-        <%= form.label :description, "Reservation Description", class: "form-label" %>
+    <div data-testid="description-container">
+        <%= form.label :description, "Reservation Description", class: "form-label dark:text-gray-200" %>
         <div class="relative">
             <%= form.text_area :description, 
                 class: "form-input w-full min-h-[42px] resize-none overflow-hidden", 
@@ -91,7 +91,8 @@
                 data: { 
                     room_selector_target: "descriptionField",
                     controller: "auto-height",
-                    action: "input->auto-height#adjustHeight"
+                    action: "input->auto-height#adjustHeight",
+                    testid: "description-input"
                 } %>
             <%= error_icon(@reservation, :description) %>
         </div>
