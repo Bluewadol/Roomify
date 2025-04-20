@@ -99,7 +99,7 @@ class Reservation < ApplicationRecord
     return if current_user&.has_role?(:admin)
     return unless start_time_changed?
 
-    if start_date.present?
+    if start_date.present? && !(start_date > current_date)
       if start_time.present? && current_time.present?
         formatted_start_time = start_time.strftime("%H:%M")
         Rails.logger.info("formatted_start_time: #{formatted_start_time} | current_time: #{current_time}")
@@ -116,7 +116,7 @@ class Reservation < ApplicationRecord
     return if current_user&.has_role?(:admin)
     return unless end_time_changed?
 
-    if start_date.present?
+    if start_date.present? && !(end_time > current_date)
       if end_time.present? && current_time.present?
         formatted_end_time = end_time.strftime("%H:%M")
         if formatted_end_time < current_time
