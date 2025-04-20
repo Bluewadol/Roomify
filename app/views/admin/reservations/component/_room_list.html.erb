@@ -1,38 +1,45 @@
 <% if @rooms.present? %>
-    <% @rooms.to_a.each do |room| %>
-        <div class="flex border border-gray-300 rounded-md p-4 mb-2 justify-between items-center room-box hover:bg-gray-50 cursor-pointer"
+    <% @rooms.to_a.each_with_index do |room, index| %>
+        <div class="flex border border-gray-300 dark:border-gray-600 rounded-md p-4 mb-2 justify-between items-center room-box hover:bg-gray-50 dark:hover:bg-gray-600 cursor-pointer"
             data-room-selector-target="roomBox"
             data-room-id="<%= room.id %>"
             data-room-name="<%= room.name %>"
-            data-action="click->room-selector#select">
-            <div class="flex gap-4 flex-grow">
+            data-action="click->room-selector#select"
+            data-testid="room-item-<%= index %>">
+            <div class="flex gap-4 flex-grow items-center" data-testid="room-content">
                 <% if room.images.attached? %>
-                    <%= image_tag url_for(room.images[0].variant(resize_to_fill: [96, 80]).processed), class: "rounded-lg shadow-md" %>
+                    <%= image_tag url_for(room.images[0].variant(resize_to_fill: [96, 80]).processed), 
+                        class: "rounded-lg shadow-md w-24 h-20", 
+                        data: { testid: "room-image" } %>
                 <% else %>
-                    <div class="bg-gray-300 h-20 w-24 flex items-center justify-center rounded-lg shadow-md">
-                        <%= icon('rectangle-group', class: 'size-5 text-black', variant: :solid) %> 
+                    <div class="bg-gray-300 dark:bg-gray-600 h-20 w-24 flex items-center justify-center rounded-lg shadow-md" data-testid="room-placeholder">
+                        <%= icon('rectangle-group', class: 'size-5 text-black dark:text-gray-200', variant: :solid) %> 
                     </div>
                 <% end %>
-                <div class="text-sm text-gray-500 dark:text-gray-500">
-                    <%= render "shared/typography", sub_heading: room.name  %>
-                    <div class="room-capacity mb-2">
+                <div class="text-sm text-gray-500 dark:text-gray-400" data-testid="room-details">
+                    <%= render "shared/typography", sub_heading: room.name %>
+                    <div class="room-capacity mb-2" data-testid="room-capacity">
                         <span>Capacity:</span> <%= room.capacity_min == room.capacity_max ? room.capacity_max : "#{room.capacity_min} - #{room.capacity_max}" %> people
                     </div>
-                    <div class="flex gap-2">
-                        <% room.room_amenities.each do |amenity| %>
-                            <span><%= amenity.amenity_name %> (<%= amenity.quantity %>)</span>
+                    <div class="flex gap-2 flex-wrap" data-testid="room-amenities">
+                        <% room.room_amenities.each_with_index do |amenity, amenity_index| %>
+                            <span data-testid="amenity-<%= amenity_index %>"><%= amenity.amenity_name %> (<%= amenity.quantity %>)</span>
                         <% end %>
                     </div>
                 </div>
             </div>
-            <div class="flex flex-col relative justify-start items-center w-auto h-full">
+            <div class="flex flex-col relative justify-start items-center w-auto h-full" data-testid="room-actions">
                 <%= status_badge(room.status) %>
-                <%= link_to "detail", admin_room_path(room), class: "absolute bottom-0 right-1 w-full text-right text-sm text-gray-500 dark:text-gray-500 hover:underline cursor-pointer", onclick: "event.stopPropagation();" %>
+                <%= link_to "detail", 
+                    admin_room_path(room), 
+                    class: "absolute bottom-0 right-1 w-full text-right text-sm text-gray-500 dark:text-gray-400 hover:underline cursor-pointer", 
+                    onclick: "event.stopPropagation();",
+                    data: { testid: "room-detail-link" } %>
             </div>
         </div>
     <% end %>
 <% else %>
-    <div class="flex justify-center items-center h-full">
+    <div class="flex justify-center items-center h-full" data-testid="empty-state">
         <%= render "shared/typography", sub_body: "No room available" %>
     </div>
 <% end %>

@@ -6,9 +6,11 @@
         </div>
         <%= render "shared/typography", sub_body: @room.description %>
     </div>
-    <div class="flex gap-2 items-center text-sm text-gray-600 dark:text-gray-600">
-        <%= icon('user-group', class: 'size-5 text-gray-800 dark:text-gray-800', variant: :solid) %>
-        <span>Capacity: <%= @capacity_range %> People</span>
+    <div class="flex gap-2 items-center text-sm text-gray-600 dark:text-gray-600 flex-wrap">
+        <span class="flex gap-2 items-center">
+            <%= icon('user-group', class: 'size-5 text-gray-800 dark:text-gray-800', variant: :solid) %>
+            Capacity: <%= @capacity_range %> People
+        </span>
         <% if @room.room_amenities.any? %>
             <div class="text-sm leading-relaxed">
                 <% @room.room_amenities.each do |amenity| %>
