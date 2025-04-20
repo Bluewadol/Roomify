@@ -8,6 +8,19 @@
 #   end
 
 # Load all seed files from db/seeds directory
-Dir[File.join(Rails.root, 'db', 'seeds', '*.rb')].sort.each do |seed|
-  load seed
+# Dir[File.join(Rails.root, 'db', 'seeds', '*.rb')].sort.each do |seed|
+#   load seed i need user room
+# end
+# โหลด seeds แบบจัดลำดับ user ก่อน room
+%w[
+  users
+  rooms
+].each do |filename|
+  seed_file = Rails.root.join("db", "seeds", "#{filename}.rb")
+  if File.exist?(seed_file)
+    puts "⏳ Loading seed: #{filename}.rb"
+    load seed_file
+  else
+    puts "⚠️ Seed file not found: #{filename}.rb"
+  end
 end
