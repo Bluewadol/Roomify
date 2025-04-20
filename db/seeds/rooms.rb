@@ -1,8 +1,8 @@
 admin = User.find_by(email: 'admin01@odds.team')
 puts "🔑 พบผู้ดูแลระบบ: #{admin.email}"
 
-Room.destroy_all
 RoomAmenity.destroy_all
+Room.destroy_all
 
 territory_1 = Room.find_or_create_by!(slug: "territory-1") do |room|
     room.name = "Territory 1"
@@ -42,10 +42,10 @@ image_path2 = Rails.root.join("app/assets/images/seeds/image_2.png")
 if File.exist?(image_path2)
     territory_1.images.attach(
         io: File.open(image_path2),
-        filename: "image_3.png",
+        filename: "image_2.png",
         content_type: "image/png"
     )
-    puts "🖼️ แนบรูปภาพ image_3.png แล้ว"
+    puts "🖼️ แนบรูปภาพ image_2.png แล้ว"
 end
 
 puts "✅ Seeded Territory 1 พร้อม amenities แล้ว"
