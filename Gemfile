@@ -79,3 +79,7 @@ gem "friendly_id", "~> 5.4.0"
 gem "kaminari"
 
 gem "rubyzip", "~> 2.3"
+
+gem "cloudinary", "~> 1.24"
+
+gem "dotenv-rails"
