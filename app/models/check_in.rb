@@ -1,6 +1,7 @@
 class CheckIn < ApplicationRecord
   belongs_to :reservation
   belongs_to :user
+  attr_accessor :current_user
 
   validate :user_is_member_of_reservation
   # validate :check_in_time_within_allowed_window
@@ -8,8 +9,12 @@ class CheckIn < ApplicationRecord
   private
 
   def user_is_member_of_reservation
-    unless reservation.user_id == user_id || reservation.members.include?(user)
-      errors.add(:user_id, "must be either the owner or a member of the reservation")
+    return if current_user.nil? # Skip validation if current_user is nil
+    
+    if !current_user.has_role?(:admin)
+      unless reservation.user_id == user_id || reservation.members.include?(user)
+        errors.add(:user_id, "must be either the owner or a member of the reservation")
+      end
     end
   end
 

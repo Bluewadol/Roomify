@@ -4,6 +4,7 @@
     <% else %>
         <% if @current_reservation.present? %>
             <%= render "user/rooms/component/reservation_current_room" %>
+            <%= render "user/reservations/component/check_in_btn", reservation: @current_reservation %>
         <% else %>
             <%= render "user/rooms/component/reservation_next_room" %>
         <% end %>

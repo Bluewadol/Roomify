@@ -75,6 +75,7 @@
                 </div>
             </div>
         </div>
+        <%= render "user/reservations/component/check_in_btn", reservation: @room.next_reservation, room: @room %>
     <% else %>
         <div class="flex items-center gap-1.5 bg-emerald-50 p-3 rounded-lg">
             <p class="text-sm text-gray-700"><span class="font-medium">Status:</span> Available all the time</p>

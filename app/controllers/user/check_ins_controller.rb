@@ -1,6 +1,7 @@
 class User::CheckInsController < ApplicationController
     before_action :set_reservation, only: [ :new, :create ]
     before_action :validate_reservation_status, only: [ :new, :create ]
+    before_action :set_current_user, only: [ :new, :create ]
 
     def new
       @check_in = CheckIn.new(reservation_id: @reservation.id)
@@ -46,5 +47,9 @@ class User::CheckInsController < ApplicationController
 
     def check_in_params
       params.require(:check_in).permit(:reservation_id, :user_id, :check_in_time)
+    end
+
+    def set_current_user
+      @current_user = current_user
     end
 end
