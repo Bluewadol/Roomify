@@ -22,6 +22,7 @@ class ApplicationController < ActionController::Base
   private
 
   def public_page?
+    request.path == root_path ||
     request.path == rooms_path ||
     request.path.start_with?("/rooms/")
   end
