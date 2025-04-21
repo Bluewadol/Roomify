@@ -2,7 +2,7 @@ admin = User.find_by(email: 'admin01@odds.team')
 puts "🔑 พบผู้ดูแลระบบ: #{admin.email}"
 
 RoomAmenity.destroy_all
-Room.destroy_all
+Room.destroy_all 
 
 territory_1 = Room.find_or_create_by!(slug: "territory-1") do |room|
     room.name = "Territory 1"
@@ -200,13 +200,11 @@ image_path2 = Rails.root.join("app/assets/images/seeds/image_1.png")
 if File.exist?(image_path2)
     territory_3.images.attach(
         io: File.open(image_path2),
-        filename: "image_5.png",
+        filename: "image_1.png",
         content_type: "image/png"
     )
     puts "🖼️ แนบรูปภาพ image_1.png แล้ว"
 end
-
-puts "✅ Seeded Territory 3 พร้อม amenities แล้ว"
 
 all_nighter_1 = Room.find_by(slug: "all-nighter-1")
 [
@@ -221,8 +219,8 @@ all_nighter_1 = Room.find_by(slug: "all-nighter-1")
 end
 
 puts "✅ Seeded All Nighter 1 พร้อม amenities แล้ว"
-image_path = Rails.root.join("app/assets/images/seeds/All-Nighter-1.png")
 
+image_path = Rails.root.join("app/assets/images/seeds/All-Nighter-1.png")
 if File.exist?(image_path)
     all_nighter_1.images.attach(
         io: File.open(image_path),
@@ -231,8 +229,6 @@ if File.exist?(image_path)
     )
     puts "🖼️ แนบรูปภาพ All-Nighter-1.png แล้ว"
 end
-
-puts "✅ Seeded All Nighter 1 พร้อม amenities แล้ว"
 
 all_nighter_2 = Room.find_by(slug: "all-nighter-2")
 [
@@ -251,8 +247,8 @@ all_nighter_2 = Room.find_by(slug: "all-nighter-2")
 end
 
 puts "✅ Seeded All Nighter 2 พร้อม amenities แล้ว"
-image_path = Rails.root.join("app/assets/images/seeds/All-Nighter-2.png")
 
+image_path = Rails.root.join("app/assets/images/seeds/All-Nighter-2.png")
 if File.exist?(image_path)
     all_nighter_2.images.attach(
         io: File.open(image_path),
@@ -261,8 +257,6 @@ if File.exist?(image_path)
     )
     puts "🖼️ แนบรูปภาพ All-Nighter-2.png แล้ว"
 end
-
-puts "✅ Seeded All Nighter 2 พร้อม amenities แล้ว"
 
 global = Room.find_by(slug: "global")
 [
@@ -280,8 +274,8 @@ global = Room.find_by(slug: "global")
 end
 
 puts "✅ Seeded Global พร้อม amenities แล้ว"
-image_path = Rails.root.join("app/assets/images/seeds/Global.png")
 
+image_path = Rails.root.join("app/assets/images/seeds/Global.png")
 if File.exist?(image_path)
     global.images.attach(
         io: File.open(image_path),
@@ -295,13 +289,11 @@ image_path2 = Rails.root.join("app/assets/images/seeds/image_3.png")
 if File.exist?(image_path2)
     global.images.attach(
         io: File.open(image_path2),
-        filename: "image_2.png",
+        filename: "image_3.png",
         content_type: "image/png"
     )
-    puts "🖼️ แนบรูปภาพ image_2.png แล้ว"
+    puts "🖼️ แนบรูปภาพ image_3.png แล้ว"
 end
-
-puts "✅ Seeded Global พร้อม amenities แล้ว"
 
 meeting_1 = Room.find_by(slug: "meeting-1")
 [
@@ -316,8 +308,8 @@ meeting_1 = Room.find_by(slug: "meeting-1")
 end
 
 puts "✅ Seeded Meeting 1 พร้อม amenities แล้ว"
-image_path = Rails.root.join("app/assets/images/seeds/Meeting-1.png")
 
+image_path = Rails.root.join("app/assets/images/seeds/Meeting-1.png")
 if File.exist?(image_path)
     meeting_1.images.attach(
         io: File.open(image_path),
@@ -327,7 +319,6 @@ if File.exist?(image_path)
     puts "🖼️ แนบรูปภาพ Meeting-1.png แล้ว"
 end
 
-puts "✅ Seeded Meeting 1 พร้อม amenities แล้ว"
 image_path2 = Rails.root.join("app/assets/images/seeds/image_2.jpg")
 if File.exist?(image_path2)
     meeting_1.images.attach(
@@ -337,8 +328,6 @@ if File.exist?(image_path2)
     )
     puts "🖼️ แนบรูปภาพ image_2.jpg แล้ว"
 end
-
-puts "✅ Seeded Meeting 1 พร้อม amenities แล้ว"
 
 meeting_2 = Room.find_by(slug: "meeting-2")
 [
@@ -363,5 +352,3 @@ if File.exist?(image_path)
     )
     puts "🖼️ แนบรูปภาพ Meeting-2.png แล้ว"
 end
-
-puts "✅ Seeded Meeting 2 พร้อม amenities แล้ว"
