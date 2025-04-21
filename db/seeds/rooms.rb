@@ -38,15 +38,15 @@ if File.exist?(image_path)
     puts "🖼️ แนบรูปภาพ Territory-1.png แล้ว"
 end
 
-image_path2 = Rails.root.join("app/assets/images/seeds/image_2.png")
-if File.exist?(image_path2)
-    territory_1.images.attach(
-        io: File.open(image_path2),
-        filename: "image_2.png",
-        content_type: "image/png"
-    )
-    puts "🖼️ แนบรูปภาพ image_2.png แล้ว"
-end
+# image_path2 = Rails.root.join("app/assets/images/seeds/image_2.png")
+# if File.exist?(image_path2)
+#     territory_1.images.attach(
+#         io: File.open(image_path2),
+#         filename: "image_2.png",
+#         content_type: "image/png"
+#     )
+#     puts "🖼️ แนบรูปภาพ image_2.png แล้ว"
+# end
 
 puts "✅ Seeded Territory 1 พร้อม amenities แล้ว"
 
@@ -84,15 +84,15 @@ if File.exist?(image_path)
     puts "🖼️ แนบรูปภาพ Territory-2.png แล้ว"
 end
 
-image_path2 = Rails.root.join("app/assets/images/seeds/image_4.png")
-if File.exist?(image_path2)
-    territory_2.images.attach(
-        io: File.open(image_path2),
-        filename: "image_4.png",
-        content_type: "image/png"
-    )
-    puts "🖼️ แนบรูปภาพ image_4.png แล้ว"
-end
+# image_path2 = Rails.root.join("app/assets/images/seeds/image_4.png")
+# if File.exist?(image_path2)
+#     territory_2.images.attach(
+#         io: File.open(image_path2),
+#         filename: "image_4.png",
+#         content_type: "image/png"
+#     )
+#     puts "🖼️ แนบรูปภาพ image_4.png แล้ว"
+# end
 
 puts "✅ Seeded Territory 2 พร้อม amenities แล้ว"
 
@@ -285,15 +285,15 @@ if File.exist?(image_path)
     puts "🖼️ แนบรูปภาพ Global.png แล้ว"
 end
 
-image_path2 = Rails.root.join("app/assets/images/seeds/image_3.png")
-if File.exist?(image_path2)
-    global.images.attach(
-        io: File.open(image_path2),
-        filename: "image_3.png",
-        content_type: "image/png"
-    )
-    puts "🖼️ แนบรูปภาพ image_3.png แล้ว"
-end
+# image_path2 = Rails.root.join("app/assets/images/seeds/image_3.png")
+# if File.exist?(image_path2)
+#     global.images.attach(
+#         io: File.open(image_path2),
+#         filename: "image_3.png",
+#         content_type: "image/png"
+#     )
+#     puts "🖼️ แนบรูปภาพ image_3.png แล้ว"
+# end
 
 meeting_1 = Room.find_by(slug: "meeting-1")
 [
@@ -319,15 +319,15 @@ if File.exist?(image_path)
     puts "🖼️ แนบรูปภาพ Meeting-1.png แล้ว"
 end
 
-image_path2 = Rails.root.join("app/assets/images/seeds/image_2.jpg")
-if File.exist?(image_path2)
-    meeting_1.images.attach(
-        io: File.open(image_path2),
-        filename: "image_2.jpg",
-        content_type: "image/jpg"
-    )
-    puts "🖼️ แนบรูปภาพ image_2.jpg แล้ว"
-end
+# image_path2 = Rails.root.join("app/assets/images/seeds/image_2.jpg")
+# if File.exist?(image_path2)
+#     meeting_1.images.attach(
+#         io: File.open(image_path2),
+#         filename: "image_2.jpg",
+#         content_type: "image/jpg"
+#     )
+#     puts "🖼️ แนบรูปภาพ image_2.jpg แล้ว"
+# end
 
 meeting_2 = Room.find_by(slug: "meeting-2")
 [
