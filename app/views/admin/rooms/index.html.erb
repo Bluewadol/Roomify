@@ -1,38 +1,38 @@
-<div class="container mx-auto p-6" data-controller="reset-filter">
+<div class="container mx-auto p-6" data-controller="reset-filter" data-testid="admin-rooms-page">
     <%= form_with(url: admin_rooms_path, method: :get, local: true, 
         class: "p-0 w-full flex flex-wrap",
         data: { testid: "filter-admin-list-room-form", reset_filter_target: "form" }) do |form| %>
         <div class="flex justify-between items-center flex-wrap w-full mb-4">
-            <%= render "shared/typography", heading: "Rooms Management" %>
+            <%= render "shared/typography", heading: "Rooms Management", class: "text-slate-900 dark:text-slate-100" %>
             <div class="w-full lg:w-2/3 flex flex-wrap justify-start lg:justify-end gap-4 items-start">
                 <%= render "shared/search_input", form: form, field: :name, value: params[:name] %>
                 <div class="flex gap-4 items-center md:justify-end w-full md:w-auto justify-between">
-                    <%= btn_link_to("New Room", new_admin_room_path, btn_class: "btn-primary", icon_name: "plus", variant: :solid) %>
-                    <%= btn_link_to("All QR Codes", download_all_qr_codes_admin_rooms_path, btn_class: "btn-white", icon_name: "inbox-arrow-down", target: "_blank") %>
+                    <%= btn_link_to("New Room", new_admin_room_path, btn_class: "btn-primary", icon_name: "plus", variant: :solid, data: { testid: "new-room-button" }) %>
+                    <%= btn_link_to("All QR Codes", download_all_qr_codes_admin_rooms_path, btn_class: "btn-white dark:bg-gray-700 dark:text-slate-100 dark:hover:bg-gray-600", icon_name: "inbox-arrow-down", data: { testid: "download-qr-codes-button" }) %>
                 </div>
             </div>
         </div>
         <div class="flex gap-4 w-full h-full items-stretch">
-            <div class="flex flex-col gap-4 h-auto "> 
-                <div class="flex flex-col rounded-md bg-white p-6 pb-2 dark:bg-slate-800 dark:text-white shadow-md md:w-[300px]">
+            <div class="flex flex-col gap-4 h-auto" data-testid="filters-section"> 
+                <div class="flex flex-col rounded-md bg-white dark:bg-gray-700 p-6 shadow-md md:w-[300px]">
                     <div class="flex flex-col gap-2">
-                        <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date].presence, label: "Start date", data: { reset_filter_target:"startDateField" } %>
-                        <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date].presence, label: "End date", data: { reset_filter_target:"endDateField" } %>
+                        <%= render 'shared/date_time_field', form: form, field: :start_date, field_type: :date_field, value: params[:start_date].presence, label: "Start date", data: { reset_filter_target:"startDateField", testid: "start-date-field" } %>
+                        <%= render 'shared/date_time_field', form: form, field: :end_date, field_type: :date_field, value: params[:end_date].presence, label: "End date", data: { reset_filter_target:"endDateField", testid: "end-date-field" } %>
                     </div>
 
                     <div class="flex flex-col gap-2">
-                        <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time], label: "Start time" %>
-                        <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time], label: "End time" %>
+                        <%= render 'shared/date_time_field', form: form, field: :start_time, field_type: :time_field, value: params[:start_time], label: "Start time", data: { testid: "start-time-field" } %>
+                        <%= render 'shared/date_time_field', form: form, field: :end_time, field_type: :time_field, value: params[:end_time], label: "End time", data: { testid: "end-time-field" } %>
                     </div>
                 </div>
-                <%= render "shared/slider", field: "capacity", id: "capacity", label: "Capacity", maximum: @maximum_capacity, unit: "people" %>
-                <%= render "shared/multi_checkboxes", form: form, id: "amenities", label: "Amenities", field: "amenities", options: @amenities %>
-                <%= render "shared/multi_checkboxes", form: form, id: "room_status", label: "Room Status", field: "room_status", options: @room_status %>
+                <%= render "shared/slider", field: "capacity", id: "capacity", label: "Capacity", maximum: @maximum_capacity, unit: "people", data: { testid: "capacity-slider" } %>
+                <%= render "shared/multi_checkboxes", form: form, id: "amenities", label: "Amenities", field: "amenities", options: @amenities, data: { testid: "amenities-checkboxes" } %>
+                <%= render "shared/multi_checkboxes", form: form, id: "room_status", label: "Room Status", field: "room_status", options: @room_status, data: { testid: "room-status-checkboxes" } %>
                 <div class="flex justify-start">
-                    <button type="button" data-action="reset-filter#reset" class="btn btn-black">Reset Filters</button>
+                    <button type="button" data-action="reset-filter#reset" class="btn btn-black dark:bg-gray-600 dark:text-slate-100 dark:hover:bg-gray-500" data-testid="reset-filters-button">Reset Filters</button>
                 </div>
             </div>
-            <div class="flex flex-col rounded-md gap-2 bg-white px-6 pb-6 pt-2 dark:bg-slate-800 dark:text-white shadow-md w-full h-full">
+            <div class="flex flex-col rounded-md gap-2 bg-white dark:bg-gray-700 px-6 pb-6 pt-2 shadow-md w-full h-full" data-testid="rooms-table-section">
                 <%= render "admin/rooms/component/table", rooms: @rooms %>
                 <div class="mt-4">
                     <%= form_with(url: admin_rooms_path, method: :get, local: true) do |f| %>
@@ -40,8 +40,9 @@
                             collection: @rooms, 
                             prefix: "room", 
                             path_helper: ->(page, params) { admin_rooms_path(params) },
-                            show_per_page: true,
-                            per_page_options: [5, 10, 25, 50, 100] %>
+                            show_per_page: false,
+                            per_page_options: [5, 10, 25, 50, 100],
+                            data: { testid: "rooms-pagination" } %>
                     <% end %>
                 </div>
             </div>

@@ -1,12 +1,20 @@
-<div class="w-full flex flex-col bg-white rounded-lg p-4 shadow-md min-h-fit">
-        <%= render "shared/typography", sub_heading: "Room QR Code" %>
+<div class="w-full flex flex-col bg-white dark:bg-gray-700 rounded-lg p-4 shadow-md min-h-fit gap-2" data-testid="qr-code-container">
+        <%= render "shared/typography", sub_heading: "Room QR Code", class: "text-slate-900 dark:text-slate-100" %>
         <% if @room.qr_code.attached? %>
-            <%= image_tag url_for(@room.qr_code.variant(resize_to_limit: [250, 250]).processed) %>
-            <%= link_to 'Download QR Code', rails_blob_path(@room.qr_code, disposition: 'attachment'), class: 'btn btn-light' %>
+            <%= image_tag url_for(@room.qr_code.variant(resize_to_limit: [250, 250]).processed), class: "mx-auto mb-2", data: { testid: "qr-code-image" } %>
+            <% cloudinary_url = @room.qr_code.blob.url %>
+            <% downloadable_url = cloudinary_url.sub('/upload/', "/upload/fl_attachment:room-#{@room.slug}-qr-code/") %>
+
+            <%= link_to 'Download QR Code', downloadable_url,
+                class: 'btn btn-light dark:bg-gray-600 dark:text-slate-100 dark:hover:bg-gray-500',
+                data: { testid: "download-qr-code-button" },
+                download: "room-#{@room.slug}-qr-code.png" %>
+
         <% else %>
             <%= render "shared/empty_state", 
                 icon_name: "qr-code",
-                message: "No QR Code" 
+                message: "No QR Code",
+                data: { testid: "empty-qr-code-state" }
             %>
         <% end %>
 </div>
