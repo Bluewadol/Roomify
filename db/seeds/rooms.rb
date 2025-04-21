@@ -4,11 +4,6 @@ puts "🔑 พบผู้ดูแลระบบ: #{admin.email}"
 RoomAmenity.destroy_all
 Room.destroy_all 
 
-ActiveStorage::Blob.unattached.find_each do |blob|
-    puts "Purging unused blob: #{blob.filename}"
-    blob.purge
-end
-
 territory_1 = Room.find_or_create_by!(slug: "territory-1") do |room|
     room.name = "Territory 1"
     room.status = 0
