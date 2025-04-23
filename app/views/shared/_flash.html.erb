@@ -14,7 +14,7 @@
             <p class="text-sm font-medium text-left">Failed!</p>
         <% end %>
 
-        <p class="mt-1 text-sm text-left"><%= flash_message %></p>
+        <p class="mt-1 text-sm text-left" data-testid="flash-message"><%= flash_message %></p>
         <div data-flash-target="progress" class="h-1 bg-white mt-2 w-full"></div>
     </div>
 <% end %>

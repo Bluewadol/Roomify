@@ -15,7 +15,7 @@ module InputHelper
     def error_icon(resource, field)
         return unless resource.errors[field].any?
 
-        content_tag(:span, class: "absolute right-3 top-[11px] text-red-700") do
+        content_tag(:span, class: "absolute right-3 top-[11px] text-red-700", data: { testid: "#{field}-error-icon" }) do
             icon("exclamation-circle", class: "size-5 stroke-current")
         end
     end
@@ -23,7 +23,7 @@ module InputHelper
     def field_error_tag(resource, field)
         return unless resource.errors[field].any?
 
-        content_tag(:p, resource.errors[field].first, class: "mt-1 text-sm text-rose-700")
+        content_tag(:p, resource.errors[field].first, class: "mt-1 text-sm text-rose-700", data: { testid: "#{field}-error-message" })
     end
 
     def error_messages(resource)
