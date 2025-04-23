@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_04_12_104641) do
+ActiveRecord::Schema[8.0].define(version: 2025_04_22_145446) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_12_104641) do
     t.datetime "updated_at", null: false
     t.index ["reservation_id"], name: "index_reservation_members_on_reservation_id"
     t.index ["user_id"], name: "index_reservation_members_on_user_id"
+  end
+
+  create_table "reservation_subscribers", force: :cascade do |t|
+    t.bigint "reservation_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "order", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reservation_id", "user_id"], name: "index_reservation_subscribers_on_reservation_id_and_user_id", unique: true
+    t.index ["reservation_id"], name: "index_reservation_subscribers_on_reservation_id"
+    t.index ["user_id"], name: "index_reservation_subscribers_on_user_id"
   end
 
   create_table "reservations", force: :cascade do |t|
@@ -155,6 +166,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_04_12_104641) do
   add_foreign_key "check_ins", "users"
   add_foreign_key "reservation_members", "reservations"
   add_foreign_key "reservation_members", "users"
+  add_foreign_key "reservation_subscribers", "reservations"
+  add_foreign_key "reservation_subscribers", "users"
   add_foreign_key "reservations", "rooms"
   add_foreign_key "reservations", "users"
   add_foreign_key "reservations", "users", column: "updated_by_id"

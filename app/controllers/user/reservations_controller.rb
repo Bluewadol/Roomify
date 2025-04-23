@@ -1,7 +1,7 @@
 class User::ReservationsController < ApplicationController
   include ReservationFilterable
 
-  before_action :set_reservation, only: %i[show edit update destroy]
+  before_action :set_reservation, only: %i[show edit update destroy subscribe unsubscribe]
   before_action :set_filter_params, only: [ :new, :edit ]
   before_action :set_current_user, only: [ :new, :edit ]
 
@@ -100,6 +100,46 @@ class User::ReservationsController < ApplicationController
     else
       redirect_to reservation_path(@reservation), alert: "You don't have permission to delete this reservation."
     end
+  end
+
+  def subscribe
+    if @reservation.subscribers.include?(current_user)
+      redirect_to reservation_path(@reservation), alert: "You are already subscribed to this reservation"
+      return
+    end
+
+    order = @reservation.subscribers.count + 1
+    ReservationSubscriber.create!(
+      reservation: @reservation,
+      user: current_user,
+      order: order
+    )
+
+    redirect_to reservation_path(@reservation), notice: "Successfully subscribed to the reservation"
+  end
+
+  def unsubscribe
+    subscriber = @reservation.reservation_subscribers.find_by(user_id: params[:user_id])
+    
+    # Check if the current user is either the reservation owner or the subscriber themselves
+    unless @reservation.user_id == current_user.id || params[:user_id].to_i == current_user.id
+      flash[:alert] = "You don't have permission to remove this subscriber"
+      redirect_to reservation_path(@reservation)
+      return
+    end
+    
+    if subscriber
+      subscriber.destroy
+      # Reorder remaining subscribers
+      @reservation.reservation_subscribers.order(:order).each_with_index do |sub, index|
+        sub.update(order: index + 1)
+      end
+      flash[:notice] = "Successfully removed subscriber"
+    else
+      flash[:alert] = "Subscriber not found"
+    end
+    
+    redirect_to reservation_path(@reservation)
   end
 
   private

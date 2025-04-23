@@ -7,6 +7,10 @@ Rails.application.routes.draw do
 
   resources :reservations, controller: "user/reservations", param: :slug do
     resource :check_in, only: [ :new, :create ], controller: "user/check_ins"
+    member do
+      post :subscribe
+      delete :unsubscribe
+    end
   end
 
   namespace :admin do

@@ -18,69 +18,41 @@
             <%= render "user/reservations/component/completed_btn", reservation: @reservation %>
         <% end %>
     </div>
-    <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
-        <div class="flex justify-between flex-wrap">
-            <%= render "shared/typography", sub_body: "Reservation ID : #{@reservation.slug} (#{@reservation.reservation_type})" %>
-            <div class="flex sm:gap-2 text-sm items-center text-gray-500 flex-wrap justify-start lg:justify-end">
-                <%= render "shared/typography", sub_body: "update at : #{format_datetime(@reservation.updated_at)}" %>
-                <div class="flex gap-2 text-sm items-center">
-                    <span>by : </span>
-                    <%= render "shared/user_info_modal", user: @reservation.updated_by, size: 26 %>
-                    <span><%= @reservation.updated_by ? (@reservation.updated_by.name.present? ? @reservation.updated_by.name : @reservation.updated_by.email) : "Unknown" %></span>
-                </div>
-            </div>
-        </div>
-        <div class="flex justify-between">
-            <%= render "shared/typography", sub_heading: "#{@reservation.room.name}" %>
-            <%= status_badge(@reservation.status) %>
-        </div>
-        <div class="flex gap-2 flex-col">
-            <div class="flex gap-2 text-sm">
-                <%= icon('calendar-days', class: 'size-5', variant: :solid) %>
-                <% if @reservation.start_date == @reservation.end_date %>
-                    <%= format_datetime(@reservation.start_date) %>
-                <% else %>
-                    <%= format_datetime(@reservation.start_date) %> - <%= format_datetime(@reservation.end_date) %>
+    <div class="flex flex-col gap-4">
+        <%= render "user/reservations/component/reservation_details", reservation: @reservation %>
+        <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
+            <div class="flex justify-between items-center mb-4">
+                <%= render "shared/typography", sub_heading: "Subscribers" %>
+                <% if user_signed_in? && !@reservation.subscribers.include?(current_user) %>
+                    <%= button_to "Subscribe", subscribe_reservation_path(@reservation), 
+                        method: :post, 
+                        class: "btn btn-primary",
+                        data: { turbo: false } %>
                 <% end %>
             </div>
-            <div class="flex gap-2 text-sm">
-                <%= icon('clock', class: 'size-5') %>
-                <%= format_datetime(@reservation.start_time, time_only: true) %> - <%= format_datetime(@reservation.end_time, time_only: true) %>
-            </div>
-            <div class="flex gap-2 text-sm items-center">
-                <%= icon('user', class: 'size-5') %>
-                <span>Reserved by : </span>
-                <%= render "shared/user_info_modal", user: @reservation.user , size: 26%>
-                <span><%= @reservation.user.name.present? ? @reservation.user.name : @reservation.user.email %></span>
-            </div>
-            <div class="flex gap-2 text-sm items-center">
-                <%= icon('user-group', class: 'size-5', variant: :solid) %>
-                <span>Member : </span>
-                <% if @reservation.members.present? %>
-                    <% @reservation.members.each do |member| %>
-                        <span><%= render "shared/user_info_modal", user: member, size: 26%></span>
-                        <span><%= member.name.present? ? member.name : member.email %></span>
-                    <% end %>
-                <% else %>
-                    <span class="text-gray-500">No member</span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <% @reservation.subscribers.order('reservation_subscribers.order ASC').each do |subscriber| %>
+                    <div class="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm">
+                        <%= render "shared/user_info_modal", user: subscriber, size: 40 %>
+                        <div class="flex flex-col flex-grow">
+                            <span class="font-medium"><%= subscriber.name.present? ? subscriber.name : subscriber.email %></span>
+                            <span class="text-sm text-gray-500">Order #<%= @reservation.reservation_subscribers.find_by(user: subscriber).order %></span>
+                        </div>
+                        <% if @reservation.user_id == current_user.id || subscriber.id == current_user.id %>
+                            <%= button_to unsubscribe_reservation_path(@reservation, user_id: subscriber.id),
+                                method: :delete,
+                                class: "btn btn-white btn-sm",
+                                data: { turbo: false, turbo_confirm: "Are you sure you want to remove this subscriber?" } do %>
+                                <%= icon('x-mark', class: 'size-4') %>
+                            <% end %>
+                        <% end %>
+                    </div>
                 <% end %>
             </div>
-            <% if @reservation.description.present? %>
-                <div class="flex flex-col text-sm w-full" data-controller="description-toggle">
-                    <div class="flex justify-between items-center">
-                        <%= render "shared/typography", sub_heading: "Booking Purpose" %>
-                    </div>
-                    <div class="description-content overflow-hidden" style="max-height: 3em;">
-                        <p class="whitespace-pre-wrap"><%= @reservation.description %></p>
-                    </div>
-                    <div 
-                        class="text-primary-600 text-xs mt-1 hover:underline focus:outline-none description-toggle-btn cursor-pointer"
-                        data-action="click->description-toggle#toggle"
-                        data-description-toggle-target="toggleButton">
-                        See All
-                    </div>
-                </div>
-            <% end %>
+        </div>
+        <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
+            <%= render "shared/typography", sub_heading: "Comments" %>
+            Coming soon
         </div>
     </div>
 </div>

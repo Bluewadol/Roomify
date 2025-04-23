@@ -12,6 +12,8 @@ class Reservation < ApplicationRecord
   belongs_to :room
   has_many :reservation_members, dependent: :destroy
   has_many :members, through: :reservation_members, source: :user
+  has_many :reservation_subscribers, dependent: :destroy
+  has_many :subscribers, through: :reservation_subscribers, source: :user
   has_one :check_in, dependent: :destroy
 
   enum :status, {
