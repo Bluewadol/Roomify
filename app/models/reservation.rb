@@ -116,7 +116,7 @@ class Reservation < ApplicationRecord
     return if current_user&.has_role?(:admin)
     return unless end_time_changed?
 
-    if start_date.present? && !(end_time > current_date)
+    if start_date.present? && !(end_date > current_date)
       if end_time.present? && current_time.present?
         formatted_end_time = end_time.strftime("%H:%M")
         if formatted_end_time < current_time
