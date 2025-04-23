@@ -1,3 +1,7 @@
+<% reservation_datetime = @reservation.start_date.to_time.change(hour: @reservation.start_time.hour, min: @reservation.start_time.min).in_time_zone('Asia/Bangkok') %>
+<% reservation_endtime = @reservation.end_date.to_time.change(hour: @reservation.end_time.hour, min: @reservation.end_time.min).in_time_zone('Asia/Bangkok') %>
+<% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
+
 <div class="container mx-auto p-6 flex flex-col gap-2">
     <div class="flex justify-between items-center mb-2">
         <%= render "shared/typography", heading: "Reservation Details" %>
@@ -23,7 +27,7 @@
         <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
             <div class="flex justify-between items-center mb-4">
                 <%= render "shared/typography", sub_heading: "Subscribers" %>
-                <% if user_signed_in? && !@reservation.subscribers.include?(current_user) %>
+                <% if user_signed_in? && !@reservation.subscribers.include?(current_user) && @reservation.pending? && @reservation.start_date > current_date %>
                     <%= button_to "Subscribe", subscribe_reservation_path(@reservation), 
                         method: :post, 
                         class: "btn btn-primary",
@@ -38,7 +42,7 @@
                             <span class="font-medium"><%= subscriber.name.present? ? subscriber.name : subscriber.email %></span>
                             <span class="text-sm text-gray-500">Order #<%= @reservation.reservation_subscribers.find_by(user: subscriber).order %></span>
                         </div>
-                        <% if @reservation.user_id == current_user.id || subscriber.id == current_user.id %>
+                        <% if (@reservation.user_id == current_user.id || subscriber.id == current_user.id) && @reservation.pending? && @reservation.start_date > current_date %>
                             <%= button_to unsubscribe_reservation_path(@reservation, user_id: subscriber.id),
                                 method: :delete,
                                 class: "btn btn-white btn-sm",
