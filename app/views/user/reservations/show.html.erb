@@ -6,7 +6,8 @@
     <div class="flex justify-between items-center mb-2">
         <%= render "shared/typography", heading: "Reservation Details" %>
         <div class="flex items-center gap-2">
-            <%= (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.pending?) %>
+            <%= (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.status == "pending") %>
+            <%= (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.status == "checked_in") %>
                 <span class="px-3 py-1 rounded-full text-sm font-medium
                 <%= @reservation.status == "pending" ? 'bg-yellow-100 text-yellow-800' : 
                    @reservation.status == "checked_in" ? 'bg-green-100 text-green-800' : 
@@ -41,7 +42,7 @@
                 <%= render "user/reservations/component/check_in_btn", reservation: @reservation %>
                 <%= render "user/reservations/component/cancel_btn", reservation: @reservation %>
             </div>
-        <% elsif (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.checked_in?) %>
+        <% elsif (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.status == "checked_in") %>
             <%= render "user/reservations/component/completed_btn", reservation: @reservation %>
         <% end %>
     </div>
