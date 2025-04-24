@@ -3,10 +3,13 @@
 <% time_window_start = reservation_datetime - 15.minutes %>
 <% time_window_end = reservation_datetime + 30.minutes %>
 <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
-<%# <% if user_signed_in? && (reservation.user_id == current_user.id || reservation.members.include?(current_user)) && (reservation.status == "pending") %> %>
+<% if user_signed_in? && (reservation.user_id == current_user.id || reservation.members.include?(current_user)) && (reservation.status == "pending") %>
+    1 test user_signed_in
     <% if reservation.status == "pending" && @is_reservation_endtime_more_current_time %>
+        2 test reservation pending
         <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
+            3 test current_time_in_bkk
             <%= render "user/reservations/component/check_in_modal", reservation: reservation %>
         <% end %>
     <% end %>
-<%# <% end %> 
+<% end %>
