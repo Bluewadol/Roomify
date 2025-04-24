@@ -1,4 +1,4 @@
-<% if reservation.pending? %>
+<% if reservation.status == "pending" %>
     <div data-controller="railsui-modal">
         <button type="button" 
                 data-action="click->railsui-modal#open" 
