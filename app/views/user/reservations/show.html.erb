@@ -27,7 +27,7 @@
         <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
             <div class="flex justify-between items-center mb-4">
                 <%= render "shared/typography", sub_heading: "Subscribers" %>
-                <% if user_signed_in? && !@reservation.subscribers.include?(current_user) && @reservation.pending? && @reservation.start_date > current_time_in_bkk %>
+                <% if user_signed_in? && !@reservation.subscribers.include?(current_user) && @reservation.pending? && @reservation.start_date > current_time_in_bkk && @reservation.user_id == current_user.id %>
                     <%= button_to "Subscribe", subscribe_reservation_path(@reservation), 
                         method: :post, 
                         class: "btn btn-primary",
