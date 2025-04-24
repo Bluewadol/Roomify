@@ -4,7 +4,7 @@
 <% time_window_end = reservation_datetime %>
 <% current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok') %>
 
-<% if reservation.checked_in? && (time_window_start <= current_time_in_bkk) %>
+<% if reservation.checked_in? && @is_reservation_endtime_more_current_time %>
     <div data-controller="railsui-modal">
         <button type="button" 
                 data-action="click->railsui-modal#open" 

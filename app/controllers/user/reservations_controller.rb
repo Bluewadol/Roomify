@@ -29,7 +29,9 @@ class User::ReservationsController < ApplicationController
     @all_reservations = Kaminari.paginate_array(@all_reservations).page(params[:all_page]).per(params[:all_per_page])
   end
 
-  def show; end
+  def show
+    validate_check_in_time()
+  end
 
   def new
     set_rooms()
@@ -201,5 +203,17 @@ class User::ReservationsController < ApplicationController
 
   def set_current_user
     @current_user = current_user
+  end
+
+  def validate_check_in_time
+    @reservation_datetime = @reservation.start_date.to_time.change(hour: @reservation.start_time.hour, min: @reservation.start_time.min).in_time_zone('Asia/Bangkok')
+    @reservation_endtime = @reservation.end_date.to_time.change(hour: @reservation.end_time.hour, min: @reservation.end_time.min).in_time_zone('Asia/Bangkok')
+    @time_window_start = @reservation_datetime - 15.minutes
+    @time_window_end = @reservation_datetime + 30.minutes
+    @current_time_in_bkk = Time.current.in_time_zone('Asia/Bangkok')
+
+    @time_window_end = @reservation_datetime + 30.minutes
+    @time_window_start = @reservation_datetime - 15.minute
+    @is_reservation_endtime_more_current_time = @reservation_endtime >= @current_time_in_bkk
   end
 end
