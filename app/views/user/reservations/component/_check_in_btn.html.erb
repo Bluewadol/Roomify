@@ -7,6 +7,9 @@
     1 test user_signed_in
     <% if reservation.status == "pending" && @is_reservation_endtime_more_current_time %>
         2 test reservation pending
+        time_window_start: <%= time_window_start %>
+        time_window_end: <%= time_window_end %>
+        current_time_in_bkk: <%= current_time_in_bkk %>
         <% if current_time_in_bkk.between?(time_window_start, time_window_end) %>
             3 test current_time_in_bkk
             <%= render "user/reservations/component/check_in_modal", reservation: reservation %>

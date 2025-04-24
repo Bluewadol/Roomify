@@ -24,7 +24,7 @@ class Admin::ReservationsController < Admin::BaseController
     end
 
     def show; end
-
+    
     def new
         set_rooms()
         @reservation = Reservation.new
