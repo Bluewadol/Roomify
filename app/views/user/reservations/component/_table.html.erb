@@ -7,6 +7,13 @@
                     ).html_safe
             }
         },
+        { header: "Description", field: ->(reservation) { 
+            ApplicationController.render(
+                    partial: "shared/typography",
+                    locals: { body: reservation.description.present? ? reservation.description.truncate(20) : "No description"}
+                    ).html_safe
+            }
+        },
         { header: "Date", field: ->(reservation) {  
             if reservation.start_date == reservation.end_date
                 format_datetime(reservation.start_date)
@@ -38,6 +45,6 @@
             }
         end)
     ].compact,
-    rows: upcoming ? @upcoming_reservations : @past_reservations, 
+    rows: upcoming ? @upcoming_reservations : all ? @all_reservations : @past_reservations, 
     path: ->(reservation) { reservation_path(reservation) }
 %>

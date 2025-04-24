@@ -24,6 +24,9 @@ class User::ReservationsController < ApplicationController
       .where.not(status: [ :pending, :checked_in ])
       .order(start_date: :desc, start_time: :desc)
     @past_reservations = Kaminari.paginate_array(@past_reservations).page(params[:past_page]).per(past_per_page)
+
+    @all_reservations = Reservation.includes(:room).order(start_date: :desc, start_time: :desc)
+    @all_reservations = Kaminari.paginate_array(@all_reservations).page(params[:all_page]).per(params[:all_per_page])
   end
 
   def show; end
