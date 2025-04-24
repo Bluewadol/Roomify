@@ -23,6 +23,9 @@
             <span class="text-sm text-gray-600">(current_user.id : <%= current_user.id %>)</span>
                 <span class="text-sm text-gray-600">(@reservation.user_id : <%= @reservation.user_id %>)</span>
                 <span class="text-sm text-gray-600">(@reservation.members.include?(current_user) : <%= @reservation.members.include?(current_user) %>)</span>
+                <span class="text-sm text-gray-600">(current_time_in_bkk : <%= current_time_in_bkk %>)</span>
+                <span class="text-sm text-gray-600">(reservation_datetime : <%= reservation_datetime %>)</span>
+                <span class="text-sm text-gray-600">(reservation_endtime : <%= reservation_endtime %>)</span>
         </div>
         <% if (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.pending?) %>
             <div class="flex gap-4">
