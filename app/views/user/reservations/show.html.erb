@@ -27,7 +27,7 @@
         <div class="rounded-lg bg-white p-4 flex flex-col gap-2">
             <div class="flex justify-between items-center mb-4">
                 <%= render "shared/typography", sub_heading: "Subscribers" %>
-                <% if user_signed_in? && !@reservation.subscribers.include?(current_user) && @reservation.pending? && @reservation.start_date > current_date %>
+                <% if user_signed_in? && !@reservation.subscribers.include?(current_user) && @reservation.pending? && @reservation.start_date > current_time_in_bkk %>
                     <%= button_to "Subscribe", subscribe_reservation_path(@reservation), 
                         method: :post, 
                         class: "btn btn-primary",
@@ -35,22 +35,26 @@
                 <% end %>
             </div>
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                <% @reservation.subscribers.order('reservation_subscribers.order ASC').each do |subscriber| %>
-                    <div class="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm">
-                        <%= render "shared/user_info_modal", user: subscriber, size: 40 %>
-                        <div class="flex flex-col flex-grow">
-                            <span class="font-medium"><%= subscriber.name.present? ? subscriber.name : subscriber.email %></span>
-                            <span class="text-sm text-gray-500">Order #<%= @reservation.reservation_subscribers.find_by(user: subscriber).order %></span>
-                        </div>
-                        <% if (@reservation.user_id == current_user.id || subscriber.id == current_user.id) && @reservation.pending? && @reservation.start_date > current_date %>
-                            <%= button_to unsubscribe_reservation_path(@reservation, user_id: subscriber.id),
-                                method: :delete,
-                                class: "btn btn-white btn-sm",
-                                data: { turbo: false, turbo_confirm: "Are you sure you want to remove this subscriber?" } do %>
-                                <%= icon('x-mark', class: 'size-4') %>
+                <% if @reservation.subscribers.any? %>
+                    <% @reservation.subscribers.order('reservation_subscribers.order ASC').each do |subscriber| %>
+                        <div class="flex items-center gap-3 p-3 bg-gray-100 rounded-lg shadow-sm">
+                            <%= render "shared/user_info_modal", user: subscriber, size: 40 %>
+                            <div class="flex flex-col flex-grow">
+                                <span class="font-medium"><%= subscriber.name.present? ? subscriber.name : subscriber.email %></span>
+                                <span class="text-sm text-gray-500">Order #<%= @reservation.reservation_subscribers.find_by(user: subscriber).order %></span>
+                            </div>
+                            <% if (@reservation.user_id == current_user.id || subscriber.id == current_user.id) && @reservation.pending? && @reservation.start_date > current_time_in_bkk %>
+                                <%= button_to unsubscribe_reservation_path(@reservation, user_id: subscriber.id),
+                                    method: :delete,
+                                    class: "btn btn-white btn-sm",
+                                    data: { turbo: false, turbo_confirm: "Are you sure you want to remove this subscriber?" } do %>
+                                    <%= icon('x-mark', class: 'size-4') %>
+                                <% end %>
                             <% end %>
-                        <% end %>
-                    </div>
+                        </div>
+                    <% end %>
+                <% else %>
+                    <%= render "shared/typography", sub_body: "No subscribers" %>
                 <% end %>
             </div>
         </div>
