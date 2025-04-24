@@ -5,6 +5,25 @@
 <div class="container mx-auto p-6 flex flex-col gap-2">
     <div class="flex justify-between items-center mb-2">
         <%= render "shared/typography", heading: "Reservation Details" %>
+        <div class="flex items-center gap-2">
+            <span class="px-3 py-1 rounded-full text-sm font-medium
+                <%= @reservation.pending? ? 'bg-yellow-100 text-yellow-800' : 
+                   @reservation.checked_in? ? 'bg-green-100 text-green-800' : 
+                   'bg-gray-100 text-gray-800' %>">
+                <%= @reservation.status.titleize %>
+            </span>
+            <span class="text-sm text-gray-600"> status : <%= @reservation.status %></span>
+            <% if @reservation.user_id == current_user.id %>
+                <span class="text-sm text-gray-600">(You are the host)</span>
+            <% elsif @reservation.members.include?(current_user) %>
+                <span class="text-sm text-gray-600">(You are a member)</span>
+            <% else %>
+                <span class="text-sm text-gray-600">(You not a member)</span>
+            <% end %>
+            <span class="text-sm text-gray-600">(current_user.id : <%= current_user.id %>)</span>
+                <span class="text-sm text-gray-600">(@reservation.user_id : <%= @reservation.user_id %>)</span>
+                <span class="text-sm text-gray-600">(@reservation.members.include?(current_user) : <%= @reservation.members.include?(current_user) %>)</span>
+        </div>
         <% if (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.pending?) %>
             <div class="flex gap-4">
                     <%= btn_link_to "Edit", edit_reservation_path(@reservation, 
