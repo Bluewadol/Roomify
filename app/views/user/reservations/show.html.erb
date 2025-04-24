@@ -28,7 +28,7 @@
                 <span class="text-sm text-gray-600">(reservation_datetime : <%= reservation_datetime %>)</span>
                 <span class="text-sm text-gray-600">(reservation_endtime : <%= reservation_endtime %>)</span>
         </div>
-        <% if (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.pending?) %>
+        <% if (@reservation.user_id == current_user.id || @reservation.members.include?(current_user)) && (@reservation.status == "pending") %>
             <div class="flex gap-4">
                     <%= btn_link_to "Edit", edit_reservation_path(@reservation, 
                         room_id: @reservation.room_id, 
