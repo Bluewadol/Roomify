@@ -80,6 +80,6 @@ gem "kaminari"
 
 gem "rubyzip", "~> 2.3"
 
-gem "cloudinary", "~> 1.24"
+gem "cloudinary", "~> 2.3"
 
 gem "dotenv-rails"
